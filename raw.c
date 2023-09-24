@@ -62,10 +62,10 @@ new_face(int vcount, float *v)
    Faces *face;
 
    face = polyray_malloc(sizeof(Faces));
-   face->verts = polyray_malloc(vcount * sizeof(long));
+   face->verts = polyray_malloc(vcount * sizeof(int));
    face->vcount = vcount;
    for (i=0;i<vcount;i++)
-      face->verts[i] = (long)v[i] - 1;
+      face->verts[i] = (int)v[i] - 1;
    face->next = NULL;
    return face;
 }
@@ -102,9 +102,9 @@ Vertexcmp(fVec V1, fVec V2)
 }
 
 static void
-average_vertices(long cnt, fVec *V, fVec *N, float smooth_angle)
+average_vertices(int cnt, fVec *V, fVec *N, float smooth_angle)
 {
-   long i, j, k, smooth_count;
+   int i, j, k, smooth_count;
    fVec Nt, N0, LastV;
    int share_flag;
    unsigned char *nflag;
@@ -175,9 +175,9 @@ average_vertices(long cnt, fVec *V, fVec *N, float smooth_angle)
    sitting next to each other.  Note that a fuzz value
    would be nice in the vertex comparison. */
 static void
-sort_raw_triangles(long cnt, fVec *V, fVec *N, long *vindices)
+sort_raw_triangles(int cnt, fVec *V, fVec *N, int *vindices)
 {
-   long i, j, l, ir, rrv;
+   int i, j, l, ir, rrv;
    fVec rra, rrn;
 
    /* Sort based on the vertex values.  Swap the normals
@@ -233,10 +233,10 @@ sort_raw_triangles(long cnt, fVec *V, fVec *N, long *vindices)
 /* Average vertex normals for the entire mesh.  Note that N0 must be
    allocated, be the same size as V0, and contain valid values */
 static void
-smooth_raw_triangles(long cnt, fVec *V0, fVec *N0, float smooth_angle)
+smooth_raw_triangles(int cnt, fVec *V0, fVec *N0, float smooth_angle)
 {
-   long *vindices, *vtmp;
-   long i, j;
+   int *vindices, *vtmp;
+   int i, j;
    fVec *V, *N;
 
    /* Copy the vertices into temporary arrays */
@@ -246,7 +246,7 @@ smooth_raw_triangles(long cnt, fVec *V0, fVec *N0, float smooth_angle)
    /* Reference vertices to triangles.  It's easy since the
       triangle vertices are stored one after another in
       the array. */
-   vindices = polyray_malloc(cnt * sizeof(long));
+   vindices = polyray_malloc(cnt * sizeof(int));
    for (i=0,vtmp=vindices;i<cnt;i++,vtmp++) {
       VecCopy(V0[i], V[i]);
       VecCopy(N0[i], N[i]);
@@ -282,7 +282,7 @@ Process_Raw_File(FILE *filep, char *rawfile, trivstack **tristackptr, float smoo
    Flt d;
    triverts *tempt;
    trivstack *tristack;
-   long lcnt;
+   int lcnt;
    int vcnt, ntype, wflag;
    void *texptr;
 
@@ -445,14 +445,14 @@ Process_Raw_File(FILE *filep, char *rawfile, trivstack **tristackptr, float smoo
 }
 
 static void
-make_triangle_objects(Object *obj, long vcnt, trivstack *tristack,
+make_triangle_objects(Object *obj, int vcnt, trivstack *tristack,
                       fVec *V, fVec *N, fVec *U)
 {
    RawData *raw = (RawData *)obj->o_data;
    TriangleObject *tobj;
    trivstack *laststack;
    triverts *tri, *last_tri;
-   long i, cnt;
+   int i, cnt;
    bbox_info box;
 
    obj->o_vertices->n = vcnt;
@@ -533,7 +533,7 @@ process_raw_triangles(Object *obj, trivstack *tristack)
    RawData *raw = (RawData *)obj->o_data;
    fVec *V, *N, *U;
    int nflag, uvflag;
-   long vcnt;
+   int vcnt;
    trivstack *laststack;
 
    /* Allocate the triangle storage */

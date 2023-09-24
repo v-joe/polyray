@@ -36,7 +36,7 @@
 #define HASH_SIZE 65535
 #define spline(x) ((3.0 - 2.0 * (x)) * (x) * (x))
 static int mult_table_size = 5;
-static unsigned long mult_table[] = { 99137, 113713, 55237, 994472, 441973 };
+static unsigned int mult_table[] = { 99137, 113713, 55237, 994472, 441973 };
 
 /* Ripple/Wave variables */
 #define MAX_RIPPLE_CENTERS 5
@@ -150,10 +150,10 @@ eval_ripple(SUBST_PTR subst, NODE_PTR node, Vec vval)
 }
 
 static Flt
-hash3d(unsigned long x, unsigned long y, unsigned long z)
+hash3d(unsigned int x, unsigned int y, unsigned int z)
 {
    int i;
-   unsigned long K, Kt;
+   unsigned int K, Kt;
    Flt result;
 
    K = x | y | z;
@@ -168,7 +168,7 @@ hash3d(unsigned long x, unsigned long y, unsigned long z)
 static Flt
 flt_noise(Vec P)
 {
-   unsigned long ix, iy, iz, jx, jy, jz;
+   unsigned int ix, iy, iz, jx, jy, jz;
    Flt sx0, sy0, sz0, sx1, sy1, sz1;
    Flt t, result;
    Vec Pt;
@@ -204,9 +204,9 @@ static Perlin_Flag = 1;
 
 #define Perlin_noise_setup(P, i,b0,b1,r0,r1)\
         t = P[i] + 10000.0231;\
-        b0 = ((long)t) & (Perlin_B - 1);\
+        b0 = ((int)t) & (Perlin_B - 1);\
         b1 = (b0 + 1) & (Perlin_B - 1);\
-        r0 = t - (long)t;\
+        r0 = t - (int)t;\
         r1 = r0 - 1.0;
 
 static void
@@ -1324,7 +1324,7 @@ eval_node(SUBST_PTR subst, NODE_PTR node, Flt *fval, Vec vval,
    Flt fleft, fright, ftmp;
    Vec vleft, vright, tvec;
    int i, Flag = 0;
-   unsigned long nr;
+   unsigned int nr;
    Ray ray;
 
    if (node == NULL) {

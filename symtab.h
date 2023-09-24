@@ -34,7 +34,7 @@ extern void Copy_Object(Object *, Object *);
 
 /* Global image variables */
 extern int             buffer_update;
-extern unsigned long   buffer_size;
+extern unsigned int   buffer_size;
 
 /* Declarations of a whole bunch of global variables. */
 extern int             Rendering_Method;
@@ -53,7 +53,7 @@ extern int             antialias;
 extern char            outfilebase[128];
 extern int             filebaseflag;
 extern int             File_Generation_Flag;
-extern long            MaxBufferRAM;
+extern int            MaxBufferRAM;
 extern Flt             csg_leg_tolerance;
 extern Flt             csg_subdivision_depth;
 
@@ -68,13 +68,13 @@ extern DrawNode *Draw_Commands;
 
 extern char *POLYRAY_PATH_STRING;
 
-extern unsigned long nChecked;
-extern unsigned long nRays;
-extern unsigned long nShadows;
-extern unsigned long nReflected;
-extern unsigned long nRefracted;
-extern unsigned long nTIR;
-extern unsigned long nJittered;
+extern unsigned int nChecked;
+extern unsigned int nRays;
+extern unsigned int nShadows;
+extern unsigned int nReflected;
+extern unsigned int nRefracted;
+extern unsigned int nTIR;
+extern unsigned int nJittered;
 
 /* Rendering quality variables */
 extern int pixelsize;
@@ -108,11 +108,11 @@ extern Vec ViewVec;
 extern Light *Lights;
 extern int   nLights;
 
-extern unsigned long totalShadows, totalShadowCaches;
-extern unsigned long maxQueueSize;
-extern unsigned long totalQueues;
-extern unsigned long totalQueueResets;
-extern unsigned long nEnqueued;
+extern unsigned int totalShadows, totalShadowCaches;
+extern unsigned int maxQueueSize;
+extern unsigned int totalQueues;
+extern unsigned int totalQueueResets;
+extern unsigned int nEnqueued;
 
 extern int clustersize;
 

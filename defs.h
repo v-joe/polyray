@@ -39,8 +39,8 @@
 
 #if defined(_WINDOWS)
 int _cdecl farfree(void _far *ptr);
-void _far * _cdecl farmalloc(unsigned long size);
-unsigned long _cdecl farcoreleft(void);
+void _far * _cdecl farmalloc(unsigned int size);
+unsigned int _cdecl farcoreleft(void);
 void _far _pascal FatalAppExit(unsigned int, char _far *);
 #elif defined( DOS386 )
 #define far
@@ -513,8 +513,8 @@ typedef struct t_triangle_object {
    bbox_info       o_bnd;      /* Bounding box limits */
    Object         *o_parent;   /* Parent object */
    Texture        *o_texture;  /* Texture characteristics */
-   long            o_vert[3];  /* Vertices of the triangle */
-   long            o_nvert[3]; /* Vertex normals */
+   int             o_vert[3];  /* Vertices of the triangle */
+   int             o_nvert[3]; /* Vertex normals */
    } TriangleObject;
 
 struct t_isect {
@@ -660,7 +660,7 @@ struct object_stack_struct {
 
 struct object_list_struct {
    ostackptr list;
-   unsigned long count;
+   unsigned int count;
    };
 
 struct transform_stack_struct {
@@ -688,7 +688,7 @@ typedef struct Pic {
    unsigned char *line_flags;   /* Which lines have been rendered? */
    char *resume;                /* Name of old image file */
    FILE *ofilep;                /* File handle for the old image  */
-   unsigned long *line_offsets; /* Line offsets in old image file */
+   unsigned int *line_offsets;  /* Line offsets in old image file */
    } Pic;
 
 struct t_object_tree {

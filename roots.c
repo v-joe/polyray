@@ -86,18 +86,18 @@ factor1(int n, int *c, int *s)
 }
 
 /* Calculate the binomial coefficent of n,r. */
-long
+int
 binomial(int n, int r)
 {
    int h,i,j,k,l;
-   unsigned long result;
+   unsigned int result;
    static int stack1[BINOMSIZE], stack2[BINOMSIZE];
    if (n<0 || r<0 || r>n)
       result = 0L;
    else if (r==n)
       result = 1L;
    else if (r < 15 && n < 15)
-      result = (long)binomials[n][r];
+      result = (int)binomials[n][r];
    else {
       j = 0;
       for (i=r+1;i<=n;i++)

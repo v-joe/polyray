@@ -8,7 +8,7 @@ int warnings_flag = 1;  /* By default, print all warnings */
 int errors_flag = 1;    /* By default, print all errors */
 #define EXIT_NOW(val) { SetMessageLog(NULL); free_all_memory(); exit(val); }
 
-static FILE *message_log = stderr; /* File to write all messages */
+FILE *message_log; /* File to write all messages */
 
 typedef struct file_table {
    FILE *file;       /* Handle for this file */

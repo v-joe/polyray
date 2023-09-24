@@ -291,7 +291,7 @@ void
 AddLightObjects(BinTree *Root)
 {
    ostackptr objs;
-   long ocnt, tcnt;
+   int ocnt, tcnt;
 
    objs = Root->members.list;
    ocnt = Root->members.count;
@@ -446,11 +446,11 @@ compslabs(void const *in_a, void const *in_b)
 }
 
 static void
-FindAxis(Object **Prims, long first, long last)
+FindAxis(Object **Prims, int first, int last)
 {
   bbox_info bbox;
   Vec mins, maxs;
-  long i;
+  int i;
   Flt d = -PLY_HUGE, e;
 
   MakeVector( PLY_HUGE, PLY_HUGE, PLY_HUGE, mins);
@@ -502,9 +502,9 @@ SurfaceArea(Vec lengths)
 /* Calculate the bounding box containing Prims[first] through Prims[last-1] */
 static void
 CalcBounds(bbox_info *bounds, Object **Prims,
-           long first, long last)
+           int first, int last)
 {
-    long i;
+    int i;
     Flt tmin, tmax;
     Vec bmin, bmax;
     bbox_info bbox;
@@ -541,9 +541,9 @@ CalcBounds(bbox_info *bounds, Object **Prims,
 
 /* Generates a table of bound box surface areas */
 static void
-BuildAreaTable(Object **Prims, long a, long b, Flt *areas)
+BuildAreaTable(Object **Prims, int a, int b, Flt *areas)
 {
-   long i, imin, dir;
+   int i, imin, dir;
    Vec bmin, bmax, lengths;
    Flt tmin, tmax;
    bbox_info bbox;
@@ -587,11 +587,11 @@ BuildAreaTable(Object **Prims, long a, long b, Flt *areas)
 }
 
 static int
-SortAndSplit(Object **Root, Object **Prims, long *nPrims,
-             long first, long last)
+SortAndSplit(Object **Root, Object **Prims, int *nPrims,
+             int first, int last)
 {
    CompositeObject *cp;
-   long size, i, m;
+   int size, i, m;
    Flt *area_left, *area_right;
    Flt best_index, new_index;
 
@@ -673,9 +673,9 @@ SortAndSplit(Object **Root, Object **Prims, long *nPrims,
 void
 BuildBoundingSlabs(BinTree *Root)
 {
-   long low, high;
+   int low, high;
    ostackptr objs;
-   long ocnt, tcnt;
+   int ocnt, tcnt;
    Object **Prims;
 
    /* Make sure there are objects to work with */

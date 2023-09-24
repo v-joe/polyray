@@ -12,11 +12,11 @@ struct memory_chain_struct {
    };
 
 /* Memory monitoring variables */
-unsigned long nMalloc = 0;
-unsigned long nFree   = 0;
+unsigned int nMalloc = 0;
+unsigned int nFree   = 0;
 
-static unsigned long nMallocCount = 0;
-static unsigned long nFreeCount = 0;
+static unsigned int nMallocCount = 0;
+static unsigned int nFreeCount = 0;
 static memory_chain memory_chain_head = NULL;
 static int debug_memory = 1;
 
@@ -37,7 +37,7 @@ debug_malloc(char *filename, int lineno, size_t size)
       ptr = malloc(size + ptr_blk_size);
       if (ptr == NULL)
          error("Failed malloc(%ld) at line %d of file %s\n",
-               (long)size, lineno, filename);
+               (int)size, lineno, filename);
       memptr = (memory_chain)ptr;
 #if defined( DEBUG_POINTERS )
       memptr->filename = filename;
@@ -140,10 +140,10 @@ allocation_status()
          while (tempptr != NULL) {
 #if defined( DEBUG_POINTERS )
             message("   File: '%s', Line: %d, Size: %ld, ptr: %p\n",
-                   tempptr->filename, tempptr->lineno, (long)tempptr->size,
+                   tempptr->filename, tempptr->lineno, (int)tempptr->size,
                    tempptr);
 #else
-            message("   Size: %ld, ptr: %p\n", (long)tempptr->size, tempptr);
+            message("   Size: %ld, ptr: %p\n", (int)tempptr->size, tempptr);
 #endif
             tempptr = tempptr->next;
             }

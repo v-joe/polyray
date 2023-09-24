@@ -11,13 +11,13 @@ typedef unsigned char byte;
 #include <sys/shm.h>
 #include <X11/extensions/XShm.h>
 #endif
-#include "d.xbm"
+//#include "d.xbm"
 
 Display		*theDisplay = NULL;
 int		theScreen;
 int		theDepth, bits_per_RGB;
-unsigned long	theBlackPixel;
-unsigned long	theWhitePixel;
+unsigned int	theBlackPixel;
+unsigned int	theWhitePixel;
 XEvent		theEvent;
 Window		theWindow, openWindow();
 GC		theGC;
@@ -25,7 +25,7 @@ GC		theGC;
 Visual		*theVisual;
 XStandardColormap theStdcmap;
 XImage		*theImage;
-unsigned long	theCmap;
+unsigned int	theCmap;
 int		theCells;
 
 Atom		wm_delw;
@@ -89,7 +89,7 @@ void bestColor(Display *dpy)
   bits_per_RGB = (theDepth==24?32:theDepth);
 
   if(vl->class == TrueColor) {
-    unsigned long msk,mul;
+    unsigned int msk,mul;
 
     truecolor = 1;
 
@@ -154,7 +154,7 @@ void bestColor(Display *dpy)
   }
 }
 
-unsigned long rgb_to_pixel (byte Red, byte Green, byte Blue)
+unsigned int rgb_to_pixel (byte Red, byte Green, byte Blue)
 {
   return theStdcmap.base_pixel+rmul[rdiv[Red]]+gmul[gdiv[Green]]+
 			       bmul[bdiv[Blue]];
@@ -163,10 +163,10 @@ unsigned long rgb_to_pixel (byte Red, byte Green, byte Blue)
  /* that was either built by hand or got from RGB_BEST_MAP         */
 
 /*
-register unsigned long color,red,green,blue;
- red = (unsigned long)Red;
- green = (unsigned long)Green;
- blue = (unsigned long)Blue;
+register unsigned int color,red,green,blue;
+ red = (unsigned int)Red;
+ green = (unsigned int)Green;
+ blue = (unsigned int)Blue;
  color = theStdcmap.base_pixel
   +((red   *(theStdcmap.red_max+1)  )>>8) * theStdcmap.red_mult
   +((green *(theStdcmap.green_max+1))>>8) * theStdcmap.green_mult
@@ -261,7 +261,7 @@ Window openWindow(int x,int y,int width,int height,int flag,GC *theNewGC,
 {
   XSetWindowAttributes	theWindowAttributes;
   XSizeHints		theSizeHints;
-  unsigned long		theWindowMask;
+  unsigned int		theWindowMask;
   Window		theNewWindow;
   Pixmap		theIconPixmap;
   XWMHints		theWMHints;
@@ -285,6 +285,7 @@ Window openWindow(int x,int y,int width,int height,int flag,GC *theNewGC,
 				theWindowMask,
 				&theWindowAttributes);
 
+/*
   theIconPixmap = XCreateBitmapFromData(theDisplay,
                                         theNewWindow,
                                         d_bits,
@@ -292,6 +293,7 @@ Window openWindow(int x,int y,int width,int height,int flag,GC *theNewGC,
                                         d_height);
 
   theWMHints.icon_pixmap        = theIconPixmap;
+*/
   theWMHints.initial_state      = NormalState;
   theWMHints.flags              = IconPixmapHint | StateHint;
 
@@ -334,7 +336,7 @@ Window openWindow(int x,int y,int width,int height,int flag,GC *theNewGC,
 int createGC(Window theNewWindow, GC *theNewGC)
 {
   XGCValues theGCValues;
-  *theNewGC = XCreateGC(theDisplay, theNewWindow, (unsigned long) 0, 
+  *theNewGC = XCreateGC(theDisplay, theNewWindow, (unsigned int) 0, 
 			&theGCValues);
 
   if (*theNewGC == 0) {
@@ -746,7 +748,7 @@ int pixels=0;
 
 void X11_PutPixel(int x,int y,byte R,byte G,byte B)
 {
-  unsigned long         color,tmp;
+  unsigned int          color,tmp;
   unsigned char         *rgbpos;
   time_t		t;
 
@@ -770,7 +772,7 @@ void X11_PutPixel(int x,int y,byte R,byte G,byte B)
   /* XPutPixel(theImage, x, y, color ); */
   rgbpos=theImage->data+ytab[y]+(x<<xshift);
   switch (theImage->bits_per_pixel) {
-    case 32: *((unsigned long int *) rgbpos)=color; break;
+    case 32: *((unsigned int *) rgbpos)=color; break;
     case 15: case 16: *((unsigned short int *) rgbpos)=color & 65535; break;
     case 8: *rgbpos = color; break;
   }

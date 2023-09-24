@@ -255,8 +255,8 @@ PrintStatistics(time_t ptime, time_t ttime, int wait)
         (Check_Abort_Flag != 0) && Abort_Flag))
       display_close(wait);
    if (tickflag > 0) {
-      status("preprocess time            %-8ld seconds\n", (long)ptime);
-      status("tracing time               %-8ld seconds\n", (long)ttime);
+      status("preprocess time            %-8ld seconds\n", (int)ptime);
+      status("tracing time               %-8ld seconds\n", (int)ttime);
       if (Rendering_Method == RAY_TRACING) {
          status("number of eye rays cast:   %-8lu\n", nRays);
          status("number of shadow rays:     %-8lu\n", nShadows);
@@ -522,7 +522,7 @@ render_scene(int argc, char **argv, Viewpoint *eye, char *infilename,
    Pic *pic;
    time_t ptime, ttime;
    int y;
-   long ram_needed, max_lines;
+   int ram_needed, max_lines;
 
    /* At last we get to the main driver loop. */
    for (;;) {
@@ -734,6 +734,10 @@ render_scene(int argc, char **argv, Viewpoint *eye, char *infilename,
 #endif
 }
 
+extern FILE *message_log;
+extern FILE *yyin;
+extern FILE *yyout;
+
 int
 main(int argc, char **argv)
 {
@@ -743,6 +747,10 @@ main(int argc, char **argv)
    int wait = 0;
    int Start_Line = -1, End_Line = -1;
    time_t atime;
+
+   message_log = stderr;
+   yyin = stdin;
+   yyout = stdout;
 
 #if defined( MAC )
    // InitProfile(1000, 200);

@@ -93,7 +93,7 @@ getch()
 #include <pc.h>
 #define MK_FP(seg, ofs) ((void *)(0xE0000000 + ((seg)<<4) + ofs))
 #define FP_OFF(ptr) (unsigned short)(ptr)
-#define FP_SEG(ptr) (unsigned short)(((unsigned long)ptr >> 16) & 0x0FFF)
+#define FP_SEG(ptr) (unsigned short)(((unsigned int)ptr >> 16) & 0x0FFF)
 #define segread(x) (void)(x)
 #define getch() getkey()
 #define __far
@@ -107,20 +107,20 @@ getch()
 unsigned short __8087cw = IC_AFFINE | RC_NEAR | PC_64  | 0x007F;
 void clear_direction(void);
 #pragma aux clear_direction = 0xFC parm [] modify nomemory;
-  typedef unsigned long DWORD;
+  typedef unsigned int DWORD;
 
   #define D32RealSeg(P)   ((((DWORD) (P)) >> 4) & 0xFFFF)
   #define D32RealOff(P)   (((DWORD) (P)) & 0xF)
 
   static struct rminfo {          /* DPMI Real Mode Call structure */
-    long EDI;
-    long ESI;
-    long EBP;
-    long reserved_by_system;
-    long EBX;
-    long EDX;
-    long ECX;
-    long EAX;
+    int EDI;
+    int ESI;
+    int EBP;
+    int reserved_by_system;
+    int EBX;
+    int EDX;
+    int ECX;
+    int EAX;
     short flags;
     short ES,DS,FS,GS,IP,CS,SP,SS;
   } RMI;
@@ -136,7 +136,7 @@ void clear_direction(void);
   #ifdef MK_FP
   #undef MK_FP
   #endif
-  #define MK_FP(seg,ofs)  ((void *)(((unsigned long)(seg) << 4) + (unsigned)(ofs)))
+  #define MK_FP(seg,ofs)  ((void *)(((unsigned int)(seg) << 4) + (unsigned)(ofs)))
   #define __far
 #else
 #define __far
@@ -205,7 +205,7 @@ static unsigned maxy = 200;
 static unsigned line_length = 320;
 static unsigned screen_maxx = 320;
 static unsigned screen_maxy = 200;
-static unsigned long granularity = 65536;
+static unsigned int granularity = 65536;
 
 typedef unsigned char pallette_array[256][3];
 static pallette_array *pallette = NULL;
@@ -418,7 +418,7 @@ setvesamode(int mode)
    /* The mode is supported - save useful information and initialize
       the graphics display */
    line_length = VgaPtr->BytesPerScanLine;
-   granularity = ((unsigned long)VgaPtr->WinGranularity) << 10;
+   granularity = ((unsigned int)VgaPtr->WinGranularity) << 10;
    screen_maxx = VgaPtr->XResolution;
    screen_maxy = VgaPtr->YResolution;
 
@@ -647,7 +647,7 @@ static void
 plotpoint(int x, int y, quantized_color *color)
 {
    unsigned char __far *fp;
-   unsigned long fpa, fpb;
+   unsigned int fpa, fpb;
    unsigned bank;
    int i;
 
@@ -661,7 +661,7 @@ plotpoint(int x, int y, quantized_color *color)
       bios_putpixel(x, y, color->byte[0]);
       }
    else {
-      fpa = (unsigned long)line_length * y + (x * color->bytes);
+      fpa = (unsigned int)line_length * y + (x * color->bytes);
       for (i=0;i<color->bytes;i++,fpa++) {
          if (Display_Flag > 1) {
             /* Only have more than 64K pixels in VESA modes */
@@ -1069,4 +1069,3 @@ display_line(int x0, int y0, int x1, int y1, Vec color)
 }
 
 #endif
-

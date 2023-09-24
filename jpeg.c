@@ -29,7 +29,7 @@ jmp_buf JPEG_environ;
 typedef unsigned char UINT8;
 typedef unsigned short UINT16;
 typedef short INT16;
-typedef long INT32;
+typedef int INT32;
 #if !defined( FALSE )
 #define FALSE   0
 #endif
@@ -66,15 +66,15 @@ typedef struct {                /* Basic info about one component */
         short dc_tbl_no;        /* DC entropy table selector (0..3) */
         short ac_tbl_no;        /* AC entropy table selector (0..3) */
   /* These values are computed during compression or decompression startup */
-        long true_comp_width;   /* component's image width in samples */
-        long true_comp_height;  /* component's image height in samples */
+        int true_comp_width;   /* component's image width in samples */
+        int true_comp_height;  /* component's image height in samples */
         /* the above are the logical dimensions of the downsampled image */
   /* These values are computed before starting a scan of the component */
         short MCU_width;        /* number of blocks per MCU, horizontally */
         short MCU_height;       /* number of blocks per MCU, vertically */
         short MCU_blocks;       /* MCU_width * MCU_height */
-        long downsampled_width; /* image width in samples, after expansion */
-        long downsampled_height; /* image height in samples, after expansion */
+        int downsampled_width; /* image width in samples, after expansion */
+        int downsampled_height; /* image height in samples, after expansion */
         /* the above are the true_comp_xxx values rounded up to multiples of */
         /* the MCU dimensions; these are the working dimensions of the array */
         /* as it is passed through the DCT or IDCT step.  NOTE: these values */
@@ -176,8 +176,8 @@ static char *input_buffer_ptr = NULL;
 static FILE *input_file = NULL;
 static COLOR_SPACE out_color_space;    /* colorspace of output */
 
-static long image_width;        /* overall image width */
-static long image_height;       /* overall image height */
+static int image_width;         /* overall image width */
+static int image_height;        /* overall image height */
 
 static short data_precision;    /* bits of precision in image data */
 
@@ -211,8 +211,8 @@ static short color_out_comps;   /* # of color components output */
 static short comps_in_scan;     /* # of JPEG components input this time */
 static jpeg_component_info *cur_comp_info[MAX_COMPS_IN_SCAN];
 
-static long MCUs_per_row;       /* # of MCUs across the image */
-static long MCU_rows_in_scan;   /* # of MCU rows in the image */
+static int MCUs_per_row;        /* # of MCUs across the image */
+static int MCU_rows_in_scan;    /* # of MCU rows in the image */
 
 static short blocks_in_MCU;     /* # of DCT blocks per MCU */
 static short MCU_membership[MAX_BLOCKS_IN_MCU];
@@ -227,11 +227,11 @@ static d_pipeline_controller_ptr d_pipeline_controller;
 typedef void (*dMCU_ptr)(JBLOCKIMAGE);
 dMCU_ptr disassemble_MCU;
 typedef void (*colorout_init_ptr)(void);
-typedef void (*color_convert_ptr)(int, long, JSAMPIMAGE, JSAMPIMAGE);
+typedef void (*color_convert_ptr)(int, int, JSAMPIMAGE, JSAMPIMAGE);
 typedef void (*colorout_term_ptr)(void);
-typedef void (*downsample_ptr)(int, long, int, long, int, JSAMPARRAY,
+typedef void (*downsample_ptr)(int, int, int, int, int, JSAMPARRAY,
                                JSAMPARRAY, JSAMPARRAY , JSAMPARRAY);
-typedef void (*upsample_ptr)(int, long, int, long, int, JSAMPARRAY,
+typedef void (*upsample_ptr)(int, int, int, int, int, JSAMPARRAY,
                                     JSAMPARRAY, JSAMPARRAY, JSAMPARRAY);
 typedef void (*quantize_method_ptr)(int, JSAMPIMAGE, JSAMPARRAY);
 typedef void (*quantize_caller_ptr)(quantize_method_ptr);
@@ -967,8 +967,8 @@ typedef struct small_sarray_struct * small_sarray_ptr;
 
 typedef struct small_sarray_struct {
         small_sarray_ptr next;  /* next in list of allocated sarrays */
-        long numrows;           /* # of rows in this array */
-        long rowsperchunk;      /* max # of rows per allocation chunk */
+        int numrows;            /* # of rows in this array */
+        int rowsperchunk;       /* max # of rows per allocation chunk */
         JSAMPROW dummy;         /* ensures alignment of following storage */
       } small_sarray_hdr;
 
@@ -979,13 +979,13 @@ static small_sarray_ptr small_sarray_list; /* head of list */
 #define MAX_ALLOC_CHUNK         1000000000L
 
 static JSAMPARRAY
-alloc_small_sarray (long samplesperrow, long numrows)
+alloc_small_sarray (int samplesperrow, int numrows)
 /* Allocate a "small" (all-in-memory) 2-D sample array */
 {
   small_sarray_ptr hdr;
   JSAMPARRAY result;
   JSAMPROW workspace;
-  long rowsperchunk, currow, i;
+  int rowsperchunk, currow, i;
 
   /* Calculate max # of rows allowed in one allocation chunk */
   rowsperchunk = MAX_ALLOC_CHUNK / (samplesperrow * sizeof(JSAMPLE));
@@ -1029,7 +1029,7 @@ free_small_sarray (JSAMPARRAY ptr)
 {
   small_sarray_ptr hdr;
   small_sarray_ptr * llink;
-  long i;
+  int i;
 
   hdr = (small_sarray_ptr) ptr;
   hdr--;                        /* point back to header */
@@ -1062,21 +1062,21 @@ typedef struct small_barray_struct * small_barray_ptr;
 
 typedef struct small_barray_struct {
         small_barray_ptr next;  /* next in list of allocated barrays */
-        long numrows;           /* # of rows in this array */
-        long rowsperchunk;      /* max # of rows per allocation chunk */
+        int numrows;            /* # of rows in this array */
+        int rowsperchunk;       /* max # of rows per allocation chunk */
         JBLOCKROW dummy;        /* ensures alignment of following storage */
       } small_barray_hdr;
 
 static small_barray_ptr small_barray_list; /* head of list */
 
 static JBLOCKARRAY
-alloc_small_barray (long blocksperrow, long numrows)
+alloc_small_barray (int blocksperrow, int numrows)
 /* Allocate a "small" (all-in-memory) 2-D coefficient-block array */
 {
   small_barray_ptr hdr;
   JBLOCKARRAY result;
   JBLOCKROW workspace;
-  long rowsperchunk, currow, i;
+  int rowsperchunk, currow, i;
 
   /* Calculate max # of rows allowed in one allocation chunk */
   rowsperchunk = MAX_ALLOC_CHUNK / (blocksperrow * sizeof(JBLOCK));
@@ -1121,7 +1121,7 @@ free_small_barray (JBLOCKARRAY ptr)
 {
   small_barray_ptr hdr;
   small_barray_ptr * llink;
-  long i;
+  int i;
 
   hdr = (small_barray_ptr) ptr;
   hdr--;                        /* point back to header */
@@ -1147,20 +1147,20 @@ free_small_barray (JBLOCKARRAY ptr)
 
 typedef struct big_sarray_control * big_sarray_ptr;
 struct big_sarray_control {
-        long rows_in_array;     /* total virtual array height */
-        long samplesperrow;     /* width of array (and of memory buffer) */
-        long unitheight;        /* # of rows accessed by access_big_sarray() */
+        int rows_in_array;     /* total virtual array height */
+        int samplesperrow;     /* width of array (and of memory buffer) */
+        int unitheight;        /* # of rows accessed by access_big_sarray() */
         JSAMPARRAY mem_buffer;  /* the in-memory buffer */
-        long rows_in_mem;       /* height of memory buffer */
-        long rowsperchunk;      /* allocation chunk size in mem_buffer */
-        long cur_start_row;     /* first logical row # in the buffer */
+        int rows_in_mem;       /* height of memory buffer */
+        int rowsperchunk;      /* allocation chunk size in mem_buffer */
+        int cur_start_row;     /* first logical row # in the buffer */
         big_sarray_ptr next;    /* link to next big sarray control block */
 };
 
 static big_sarray_ptr big_sarray_list; /* head of list */
 
 static big_sarray_ptr
-request_big_sarray (long samplesperrow, long numrows, long unitheight)
+request_big_sarray (int samplesperrow, int numrows, int unitheight)
 /* Request a "big" (virtual-memory) 2-D sample array */
 {
   big_sarray_ptr result;
@@ -1178,24 +1178,24 @@ request_big_sarray (long samplesperrow, long numrows, long unitheight)
   return result;
 }
 
-static long
-jmem_available (long min_bytes_needed, long max_bytes_needed)
+static int
+jmem_available (int min_bytes_needed, int max_bytes_needed)
 {
   return max_bytes_needed;
 }
 
 static void
-alloc_big_arrays (long extra_small_samples, long extra_small_blocks,
-                  long extra_medium_space)
+alloc_big_arrays (int extra_small_samples, int extra_small_blocks,
+                  int extra_medium_space)
 /* Allocate the in-memory buffers for any unrealized "big" arrays */
 /* 'extra' values are upper bounds for total future small-array requests */
 /* and far-heap requests */
 {
-  long total_extra_space = extra_small_samples * sizeof(JSAMPLE)
+  int total_extra_space = extra_small_samples * sizeof(JSAMPLE)
                            + extra_small_blocks * sizeof(JBLOCK)
                            + extra_medium_space;
-  long space_per_unitheight, maximum_space, avail_mem;
-  long unitheights, max_unitheights;
+  int space_per_unitheight, maximum_space, avail_mem;
+  int unitheights, max_unitheights;
   big_sarray_ptr sptr;
 
   /* Compute the minimum space needed (unitheight rows in each buffer)
@@ -1260,7 +1260,7 @@ alloc_big_arrays (long extra_small_samples, long extra_small_blocks,
 }
 
 static JSAMPARRAY
-access_big_sarray (big_sarray_ptr ptr, long start_row, boolean writable)
+access_big_sarray (big_sarray_ptr ptr, int start_row, boolean writable)
 {
   /* debugging check */
   if (start_row < 0 || start_row+ptr->unitheight > ptr->rows_in_array ||
@@ -1325,8 +1325,8 @@ static big_sarray_ptr *fullsize_image;
 static JSAMPIMAGE fullsize_ptrs; /* workspace for access_big_sarray() result */
 #endif
 
-static long
-jround_up(long a, long b)
+static int
+jround_up(int a, int b)
 /* Compute a rounded up to next multiple of b; a >= 0, b > 0 */
 {
   a += b-1;
@@ -1350,7 +1350,7 @@ disassemble_term(void)
 static void
 jcopy_sample_rows (JSAMPARRAY input_array, int source_row,
                    JSAMPARRAY output_array, int dest_row,
-                   int num_rows, long num_cols)
+                   int num_rows, int num_cols)
 /* Copy some rows of samples from one place to another.
  * num_rows rows are copied from input_array[source_row++]
  * to output_array[dest_row++]; these areas should not overlap.
@@ -1358,7 +1358,7 @@ jcopy_sample_rows (JSAMPARRAY input_array, int source_row,
  */
 {
   JSAMPROW inptr, outptr;
-  long count;
+  int count;
   int row;
 
   input_array += source_row;
@@ -1391,7 +1391,7 @@ static void
 disassemble_noninterleaved_MCU(JBLOCKIMAGE image_data)
 {
   JBLOCKROW MCU_data[1];
-  long mcuindex;
+  int mcuindex;
 
   /* this is pretty easy since there is one component and one block per MCU */
 
@@ -1416,7 +1416,7 @@ static void
 disassemble_interleaved_MCU(JBLOCKIMAGE image_data)
 {
   JBLOCKROW MCU_data[MAX_BLOCKS_IN_MCU];
-  long mcuindex;
+  int mcuindex;
   short blkn, ci, xpos, ypos;
   jpeg_component_info * compptr;
   JBLOCKROW image_ptr;
@@ -1474,8 +1474,8 @@ jseldmcu(void)
  * you would be well advised to improve this code.
  */
 static void
-int_upsample(int which_component, long input_cols, int input_rows,
-             long output_cols, int output_rows,
+int_upsample(int which_component, int input_cols, int input_rows,
+             int output_cols, int output_rows,
              JSAMPARRAY above, JSAMPARRAY input_data, JSAMPARRAY below,
              JSAMPARRAY output_data)
 {
@@ -1485,7 +1485,7 @@ int_upsample(int which_component, long input_cols, int input_rows,
   short h_expand, h;
   short v_expand, v;
   int inrow, outrow;
-  long incol;
+  int incol;
 
   h_expand = max_h_samp_factor / compptr->h_samp_factor;
   v_expand = max_v_samp_factor / compptr->v_samp_factor;
@@ -1515,15 +1515,15 @@ int_upsample(int which_component, long input_cols, int input_rows,
  * of the way between input pixel centers.
  */
 static void
-h2v1_upsample(int which_component, long input_cols, int input_rows,
-              long output_cols, int output_rows,
+h2v1_upsample(int which_component, int input_cols, int input_rows,
+              int output_cols, int output_rows,
               JSAMPARRAY above, JSAMPARRAY input_data, JSAMPARRAY below,
               JSAMPARRAY output_data)
 {
   JSAMPROW inptr, outptr;
   int invalue;
   int inrow;
-  long colctr;
+  int colctr;
 
   for (inrow = 0; inrow < input_rows; inrow++) {
     inptr = input_data[inrow];
@@ -1557,15 +1557,15 @@ h2v1_upsample(int which_component, long input_cols, int input_rows,
  * of the way between input pixel centers.
  */
 static void
-h2v2_upsample(int which_component, long input_cols, int input_rows,
-              long output_cols, int output_rows,
+h2v2_upsample(int which_component, int input_cols, int input_rows,
+              int output_cols, int output_rows,
               JSAMPARRAY above, JSAMPARRAY input_data, JSAMPARRAY below,
               JSAMPARRAY output_data)
 {
   JSAMPROW inptr0, inptr1, outptr;
   int thiscolsum, lastcolsum, nextcolsum;
   int inrow, outrow, v;
-  long colctr;
+  int colctr;
 
   outrow = 0;
   for (inrow = 0; inrow < input_rows; inrow++) {
@@ -1613,8 +1613,8 @@ h2v2_upsample(int which_component, long input_cols, int input_rows,
  * This version handles the special case of a full-size component.
  */
 static void
-fullsize_upsample(int which_component, long input_cols, int input_rows,
-                  long output_cols, int output_rows,
+fullsize_upsample(int which_component, int input_cols, int input_rows,
+                  int output_cols, int output_rows,
                   JSAMPARRAY above, JSAMPARRAY input_data, JSAMPARRAY below,
                   JSAMPARRAY output_data)
 {
@@ -1689,9 +1689,9 @@ interleaved_scan_setup(void)
     compptr->MCU_blocks = compptr->MCU_width * compptr->MCU_height;
     /* compute physical dimensions of component */
     compptr->downsampled_width = jround_up(compptr->true_comp_width,
-                                           (long) (compptr->MCU_width*DCTSIZE));
+                                           (int) (compptr->MCU_width*DCTSIZE));
     compptr->downsampled_height = jround_up(compptr->true_comp_height,
-                                            (long) (compptr->MCU_height*DCTSIZE));
+                                            (int) (compptr->MCU_height*DCTSIZE));
     /* Sanity check */
     if (compptr->downsampled_width !=
         (MCUs_per_row * (compptr->MCU_width*DCTSIZE)))
@@ -1722,9 +1722,9 @@ noninterleaved_scan_setup(void)
   compptr->MCU_blocks = 1;
   /* compute physical dimensions of component */
   compptr->downsampled_width = jround_up(compptr->true_comp_width,
-                                         (long) DCTSIZE);
+                                         (int) DCTSIZE);
   compptr->downsampled_height = jround_up(compptr->true_comp_height,
-                                          (long) DCTSIZE);
+                                          (int) DCTSIZE);
 
   MCUs_per_row = compptr->downsampled_width / DCTSIZE;
   MCU_rows_in_scan = compptr->downsampled_height / DCTSIZE;
@@ -1739,7 +1739,7 @@ noninterleaved_scan_setup(void)
 
 
 static JSAMPIMAGE
-alloc_sampimage(int num_comps, long num_rows, long num_cols)
+alloc_sampimage(int num_comps, int num_rows, int num_cols)
 /* Allocate an in-memory sample image (all components same size) */
 {
   JSAMPIMAGE image;
@@ -1762,7 +1762,7 @@ alloc_MCU_row(void)
   image = (JBLOCKIMAGE)alloc_small(comps_in_scan * sizeof(JBLOCKARRAY));
   for (ci = 0; ci < comps_in_scan; ci++)
     image[ci] = alloc_small_barray(cur_comp_info[ci]->downsampled_width /
-                                   DCTSIZE,(long)cur_comp_info[ci]->MCU_height);
+                                   DCTSIZE,(int)cur_comp_info[ci]->MCU_height);
   return image;
 }
 
@@ -1801,7 +1801,7 @@ alloc_sampling_buffer(JSAMPIMAGE sampled_data[2])
     /* Allocate the real storage */
     sampled_data[0][ci] = alloc_small_sarray(
                                 cur_comp_info[ci]->downsampled_width,
-                                (long) (vs * (DCTSIZE+2)));
+                                (int) (vs * (DCTSIZE+2)));
 
     /* Create space for the scrambled-order pointers */
     sampled_data[1][ci] = (JSAMPARRAY)alloc_small
@@ -1882,7 +1882,7 @@ prepare_range_limit_table(void)
 
 static void
 duplicate_row (JSAMPARRAY image_data,
-               long num_cols, int source_row, int num_rows)
+               int num_cols, int source_row, int num_rows)
 /* Duplicate the source_row at source_row+1 .. source_row+num_rows */
 /* This happens only at the bottom of the image, */
 /* so it needn't be super-efficient */
@@ -1896,7 +1896,7 @@ duplicate_row (JSAMPARRAY image_data,
 }
 
 static void
-expand(JSAMPIMAGE sampled_data, JSAMPIMAGE fullsize_data, long fullsize_width,
+expand(JSAMPIMAGE sampled_data, JSAMPIMAGE fullsize_data, int fullsize_width,
         short above, short current, short below, short out)
 /* Do upsampling expansion of a single row group (of each component). */
 /* above, current, below are indexes of row groups in sampled_data;       */
@@ -1964,7 +1964,7 @@ scan_big_image(quantize_method_ptr quantize_method)
 /* This is the "iterator" routine used by the 2-pass color quantizer. */
 /* We also use it directly in some cases. */
 {
-  long pixel_rows_output;
+  int pixel_rows_output;
   short ci;
 
   for (pixel_rows_output = 0; pixel_rows_output < image_height;
@@ -1978,7 +1978,7 @@ scan_big_image(quantize_method_ptr quantize_method)
      * Note that output_workspace is simply workspace for the quantizer;
      * when it's ready to output, it must call put_pixel_rows itself.
      */
-    (*quantize_method)((int) MIN((long) rows_in_mem,
+    (*quantize_method)((int) MIN((int) rows_in_mem,
                                  image_height - pixel_rows_output),
                        fullsize_ptrs, output_workspace[0]);
   }
@@ -2261,7 +2261,7 @@ reverse_DCT(JBLOCKIMAGE coeff_data, JSAMPIMAGE output_data, int start_row)
   JBLOCKROW browptr;
   JSAMPARRAY srowptr;
   jpeg_component_info * compptr;
-  long blocksperrow, bi;
+  int blocksperrow, bi;
   short numrows, ri;
   short ci;
 
@@ -2334,14 +2334,14 @@ reverse_DCT(JBLOCKIMAGE coeff_data, JSAMPIMAGE output_data, int start_row)
 static void read_scan_trailer(void) { }
 
 static void
-process_comment(long comment_length)
+process_comment(int comment_length)
 {
    while (comment_length-- > 0)
       (void)JGETC();
 }
 
 /* Routines to parse JPEG markers & save away the useful info.  */
-static long
+static int
 get_2bytes(void)
 {
   INT32 a;
@@ -2681,9 +2681,9 @@ read_scan_header(void)
 static void
 simple_dcontroller(void)
 {
-  long fullsize_width;          /* # of samples per row in full-size buffers */
-  long cur_mcu_row;             /* counts # of MCU rows processed */
-  long pixel_rows_output;       /* # of pixel rows actually emitted */
+  int fullsize_width;          /* # of samples per row in full-size buffers */
+  int cur_mcu_row;             /* counts # of MCU rows processed */
+  int pixel_rows_output;       /* # of pixel rows actually emitted */
   int mcu_rows_per_loop;        /* # of MCU rows processed per outer loop */
   /* Work buffer for dequantized coefficients (IDCT input) */
   JBLOCKIMAGE coeff_data;
@@ -2699,7 +2699,7 @@ simple_dcontroller(void)
   /* Compute dimensions of full-size pixel buffers */
   /* Note these are the same whether interleaved or not. */
   rows_in_mem = max_v_samp_factor * DCTSIZE;
-  fullsize_width = jround_up(image_width, (long)(max_h_samp_factor * DCTSIZE)); 
+  fullsize_width = jround_up(image_width, (int)(max_h_samp_factor * DCTSIZE)); 
 
   /* Prepare for single scan containing all components */
   if (comps_in_scan == 1) {
@@ -2722,18 +2722,18 @@ simple_dcontroller(void)
   alloc_sampling_buffer(sampled_data);
   /* fullsize_data is sample data after upsampling */
   fullsize_data = alloc_sampimage((int)num_components,
-                                  (long) rows_in_mem, fullsize_width);
+                                  (int) rows_in_mem, fullsize_width);
   /* output_workspace is the color-processed data */
   output_workspace = alloc_sampimage((int)color_out_comps,
-                                     (long) rows_in_mem, fullsize_width);
+                                     (int) rows_in_mem, fullsize_width);
 
   /* Tell the memory manager to instantiate big arrays.
    * We don't need any big arrays in this controller,
    * but some other module (like the output file writer) may need one.
    */
-  alloc_big_arrays((long) 0,                    /* no more small sarrays */
-                   (long) 0,                    /* no more small barrays */
-                   (long) 0);                   /* no more "medium" objects */
+  alloc_big_arrays((int) 0,                    /* no more small sarrays */
+                   (int) 0,                    /* no more small barrays */
+                   (int) 0);                   /* no more "medium" objects */
 
   /* Initialize to read scan data */
 
@@ -2847,9 +2847,9 @@ simple_dcontroller(void)
 static void
 complex_dcontroller()
 {
-  long fullsize_width;          /* # of samples per row in full-size buffers */
-  long cur_mcu_row;             /* counts # of MCU rows processed */
-  long pixel_rows_output;       /* # of pixel rows actually emitted */
+  int fullsize_width;           /* # of samples per row in full-size buffers */
+  int cur_mcu_row;              /* counts # of MCU rows processed */
+  int pixel_rows_output;        /* # of pixel rows actually emitted */
   int mcu_rows_per_loop;        /* # of MCU rows processed per outer loop */
   /* Work buffer for dequantized coefficients (IDCT input) */
   JBLOCKIMAGE coeff_data;
@@ -2864,36 +2864,36 @@ complex_dcontroller()
   /* Note these are the same whether interleaved or not. */
   rows_in_mem = max_v_samp_factor * DCTSIZE;
   fullsize_width = jround_up(image_width,
-                             (long) (max_h_samp_factor * DCTSIZE));
+                             (int) (max_h_samp_factor * DCTSIZE));
 
   /* Allocate all working memory that doesn't depend on scan info */
   prepare_range_limit_table();
   /* output_workspace is the color-processed data */
   output_workspace = alloc_sampimage((int)color_out_comps,
-                                     (long) rows_in_mem, fullsize_width);
+                                     (int) rows_in_mem, fullsize_width);
 
   /* Get a big image: fullsize_image is sample data after upsampling. */
   fullsize_image = (big_sarray_ptr *)alloc_small
                         (num_components * sizeof(big_sarray_ptr));
   for (ci = 0; ci < num_components; ci++)
     fullsize_image[ci] = request_big_sarray(fullsize_width,
-                            jround_up(image_height, (long) rows_in_mem),
-                            (long)rows_in_mem);
+                            jround_up(image_height, (int) rows_in_mem),
+                            (int)rows_in_mem);
 
   /* Also get an area for pointers to currently accessible chunks */
   fullsize_ptrs = (JSAMPIMAGE)alloc_small
                                 (num_components * sizeof(JSAMPARRAY));
 
   /* Tell the memory manager to instantiate big arrays */
-  alloc_big_arrays((long) (fullsize_width       /* max width in samples */
+  alloc_big_arrays((int) (fullsize_width       /* max width in samples */
          * max_v_samp_factor*(DCTSIZE+2)        /* max height */
          * num_components),             /* max components per scan */
          /* extra barray space is for MCU-row buffers: */
-         (long)(fullsize_width / DCTSIZE)       /* max width in blocks */
+         (int)(fullsize_width / DCTSIZE)       /* max width in blocks */
          * max_v_samp_factor            /* max height */
          * num_components,              /* max components per scan */
          /* no extra "medium"-object space */
-         (long)0);
+         (int)0);
 
   /* If file is single-scan, we can do color quantization prescan on-the-fly
    * during the scan (we must be doing 2-pass quantization, else this method
@@ -2930,7 +2930,7 @@ complex_dcontroller()
     for (ci = 0; ci < comps_in_scan; ci++)
       fullsize_ptrs[ci] = access_big_sarray(
                              fullsize_image[cur_comp_info[ci]->component_index],
-                             (long) 0, TRUE);
+                             (int) 0, TRUE);
     
     /* Initialize to read scan data */
     
@@ -3262,13 +3262,13 @@ ycc_rgb_init(void)
 
 /* Convert some rows of samples to the output colorspace.  */
 static void
-ycc_rgb_convert(int num_rows, long num_cols,
+ycc_rgb_convert(int num_rows, int num_cols,
                 JSAMPIMAGE input_data, JSAMPIMAGE output_data)
 {
   int y, cb, cr;
   JSAMPROW inptr0, inptr1, inptr2;
   JSAMPROW outptr0, outptr1, outptr2;
-  long col;
+  int col;
   /* copy these pointers into registers if possible */
   JSAMPLE * range_limit = sample_range_limit;
   int *Crrtab = Cr_r_tab;
@@ -3316,7 +3316,7 @@ static void null_init(void) { }
 
 /* Color conversion for no colorspace change: just copy the data.  */
 static void
-null_convert(int num_rows, long num_cols,
+null_convert(int num_rows, int num_cols,
              JSAMPIMAGE input_data, JSAMPIMAGE output_data)
 {
   short ci;
@@ -3485,7 +3485,7 @@ put_pixel_rows(int num_rows, JSAMPIMAGE pixel_data)
      to an output file in which the data is stored 3 bytes per pixel. */
   unsigned char *image_ptr;
   JSAMPROW ptr0, ptr1, ptr2;
-  long col;
+  int col;
   int row;
   
    for (row = 0; row < num_rows; row++) {
@@ -3666,9 +3666,9 @@ static UINT8  *sp;          /* stack pointer */
 /* Static state for interlaced image processing */
 
 static boolean is_interlaced;   /* TRUE if have interlaced image */
-static long pass2_offset;       /* # of pixel rows in pass 1 */
-static long pass3_offset;       /* # of pixel rows in passes 1&2 */
-static long pass4_offset;       /* # of pixel rows in passes 1,2,3 */
+static int pass2_offset;       /* # of pixel rows in pass 1 */
+static int pass3_offset;       /* # of pixel rows in passes 1&2 */
+static int pass4_offset;       /* # of pixel rows in passes 1,2,3 */
 
 
 /* Forward declarations */
@@ -4063,7 +4063,7 @@ input_GIF_init(void)
 static void
 get_noninterlaced_row(void)
 {
-  long col;
+  int col;
   unsigned char *row_ptr;
 
    row_ptr = output_image->image[current_row];
@@ -4078,7 +4078,7 @@ get_noninterlaced_row(void)
 static void
 get_interlaced_row(void)
 {
-  long col, irow;
+  int col, irow;
 
   /* Figure out which row of interlaced image is needed, and access it. */
   switch ((int) (current_row & 7L)) {

@@ -19,7 +19,7 @@ struct VecVerts_struct {
 typedef struct Face_struct Faces;
 struct Face_struct {
    int vcount;
-   long *verts, *tverts, *nverts;
+   int *verts, *tverts, *nverts;
    Texture *texture;
    Faces *next;
    };
@@ -38,7 +38,7 @@ struct trivertstack_struct {
    Texture *texture;   /* Texture to apply to all triangles */
    triverts *verts;    /* List of triangles */
    Faces *fstack;      /* Stack of face indices */
-   long tcount;        /* Number of triangles in this raw object */
+   int tcount;         /* Number of triangles in this raw object */
    int nflag;          /* Are there vertex normals? */
    int uvflag;         /* Is there u/v information for the vertices? */
    trivstack *next;    /* Next bag of triangles */

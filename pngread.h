@@ -48,15 +48,15 @@ typedef signed char     S8;
 typedef unsigned char   U8;
 typedef signed short    S16;
 typedef unsigned short  U16;
-typedef signed long     S32;
-typedef unsigned long   U32;
+typedef signed int     S32;
+typedef unsigned int   U32;
 #else
 #define S8 signed char
 #define U8 unsigned char
 #define S16 signed short
 #define U16 unsigned short
-#define S32 signed long
-#define U32 unsigned long
+#define S32 signed int
+#define U32 unsigned int
 #endif
 
 #ifndef TRUE
@@ -209,7 +209,7 @@ extern U16 ASCII_tags[N_KEYWORDS];
 #  define ASSERT(x) ((x)?(void)0:Assert(__FILE__,__LINE__))
 #  define TRACE_STR(x) (fprintf(stderr,"TR: %s\n",(x)),\
                          fflush(stderr))
-#  define TRACE_INT(x) (fprintf(stderr,"TR: %ld\n",(long)(x)),\
+#  define TRACE_INT(x) (fprintf(stderr,"TR: %ld\n",(int)(x)),\
                          fflush(stderr))
 #else
 #  define ASSERT(x)
@@ -251,7 +251,7 @@ int inflate(void);
 
 typedef unsigned char uch;
 typedef unsigned short ush;
-typedef unsigned long ulg;
+typedef unsigned int ulg;
 typedef void *voidp;
 
 #define slide (ps.inflate_window)

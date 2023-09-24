@@ -4,7 +4,7 @@
 /* Routines for managing the output image */
 
 extern int           buffer_update;
-extern unsigned long buffer_size;
+extern unsigned int buffer_size;
 
 extern Pic *TGAOpen(char *, Viewpoint *, int, int, int);
 extern void TGAClose(Pic *);

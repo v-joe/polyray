@@ -595,7 +595,7 @@ Get_Coordinate_Transform(Transform *trans, Vec origin, Vec up, Flt r, Flt len)
 Transform *
 Normalize_View(Viewpoint *eye)
 {
-   long xs, ys;
+   int xs, ys;
    Flt d, XScale, YScale;
    Vec Va, right;
    Transform *Tv = Get_Transformation();

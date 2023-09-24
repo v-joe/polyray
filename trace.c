@@ -29,7 +29,7 @@
 
 float
 Trace(Viewpoint *Eye, int level, Flt weight, Ray *ray,
-      Vec color, Flt *opacity, Flt ior, unsigned long *nr) 
+      Vec color, Flt *opacity, Flt ior, unsigned int *nr) 
 {
    Isect hit;
    Vec C, U;

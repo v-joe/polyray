@@ -38,8 +38,8 @@ struct SmoothGroup_struct {
 
 #define MAX_VERTICES_PER_FACE 16
 
-static long vertex_count, vertex_texture_count, vertex_normal_count;
-static long face_count, object_count;
+static int vertex_count, vertex_texture_count, vertex_normal_count;
+static int face_count, object_count;
 static Texture *current_texture;
 
 static char rbuf[MAXTRILINE];
@@ -97,28 +97,28 @@ end_of_line()
 }
 
 static int
-read_vertex(FILE *filep, long *v, long *vt, long *vn)
+read_vertex(FILE *filep, int *v, int *vt, int *vn)
 {
    float v0, vt0, vn0;
 
    skip_white_space(filep);
    if (sscanf(&rbuf[rbuf_offset], "%g/%g/%g", &v0, &vt0, &vn0) == 3) {
-      *v  = (long)v0;
-      *vt = (long)vt0;
-      *vn = (long)vn0;
+      *v  = (int)v0;
+      *vt = (int)vt0;
+      *vn = (int)vn0;
       }
    else if (sscanf(&rbuf[rbuf_offset], "%g//%g", &v0, &vn0) == 2) {
-      *v  = (long)v0;
-      *vt = (long)0L;
-      *vn = (long)vn0;
+      *v  = (int)v0;
+      *vt = (int)0L;
+      *vn = (int)vn0;
       }
    else if (sscanf(&rbuf[rbuf_offset], "%g/%g", &v0, &vt0) == 2) {
-      *v  = (long)v0;
-      *vt = (long)vt0;
-      *vn = (long)0L;
+      *v  = (int)v0;
+      *vt = (int)vt0;
+      *vn = (int)0L;
       }
    else if (sscanf(&rbuf[rbuf_offset], "%g", &v0) == 1) {
-      *v  = (long)v0;
+      *v  = (int)v0;
       *vt = 0L;
       *vn = 0L;
       }
@@ -134,9 +134,9 @@ read_face(FILE *filep)
 {
    Faces *face;
    int i, vcount, vtp_flag, vnp_flag;
-   long v[MAX_VERTICES_PER_FACE], *vp;
-   long vt[MAX_VERTICES_PER_FACE], *vtp;
-   long vn[MAX_VERTICES_PER_FACE], *vnp;
+   int v[MAX_VERTICES_PER_FACE], *vp;
+   int vt[MAX_VERTICES_PER_FACE], *vtp;
+   int vn[MAX_VERTICES_PER_FACE], *vnp;
 
    vp = &v[0];
    vtp = &vt[0];
@@ -161,13 +161,13 @@ read_face(FILE *filep)
       }
 
    face = polyray_malloc(sizeof(Faces));
-   face->verts = polyray_malloc(vcount * sizeof(long));
+   face->verts = polyray_malloc(vcount * sizeof(int));
    if (vtp_flag)
-      face->tverts = polyray_malloc(vcount * sizeof(long));
+      face->tverts = polyray_malloc(vcount * sizeof(int));
    else
       face->tverts = NULL;
    if (vnp_flag)
-      face->nverts = polyray_malloc(vcount * sizeof(long));
+      face->nverts = polyray_malloc(vcount * sizeof(int));
    else
       face->nverts = NULL;
    face->vcount = vcount;
@@ -195,12 +195,12 @@ read_face(FILE *filep)
 }
 
 static void
-make_triangles(Object *obj, long vertex_count, long normal_count,
+make_triangles(Object *obj, int vertex_count, int normal_count,
                Faces *fstack, VecVerts *vstack, VecVerts *nstack)
 {
    RawData *raw = obj->o_data;
    fVec *V, *N;
-   long tcnt, triangle_count;
+   int tcnt, triangle_count;
    VecVerts *vtemp;
    Faces *ftemp1, *ftemp2;
    TriangleObject *tobj;
@@ -350,11 +350,11 @@ Process_Obj_File(Object *obj, FILE *filep)
 {
    char ctype[MAXTRILINE], tbuf1[MAXTRILINE], tbuf2[MAXTRILINE];
    float v0, v1, v2, v3;
-   long lcnt;
+   int lcnt;
    int icnt, ntype, wflag, state;
    int i, j;
    void *texptr;
-   long foffset;
+   int foffset;
    VecVerts *vstack, *nstack, *vtemp;
    Faces *fstack, *ftemp1;
 

@@ -635,7 +635,7 @@ build_crc_table(
 
         typedef unsigned char uch;
         typedef unsigned short ush;
-        typedef unsigned long ulg;
+        typedef unsigned int ulg;
 
     This module uses the external functions malloc() and free() (and
     probably memset() or bzero() in the memzero() macro).  Their
@@ -688,9 +688,9 @@ struct huft {
 
 
 /* Function prototypes */
-int huft_build(unsigned *, unsigned, unsigned, ush *, ush *,
+static int huft_build(unsigned *, unsigned, unsigned, ush *, ush *,
                    struct huft **, int *);
-int huft_free(struct huft *);
+static int huft_free(struct huft *);
 int inflate_codes(struct huft *, struct huft *, int, int);
 int inflate_stored(void);
 int inflate_fixed(void);

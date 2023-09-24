@@ -357,8 +357,8 @@ ReadTGAFooter(FILE *filep, int yres, unsigned char *line_flags)
 {
    char tgafooter[TARGA_FOOTER_LEN];
    unsigned char tag_entry[TAG_ENTRY_LEN];
-   long extension_offset, directory_offset;
-   long polyray_tag_offset, polyray_tag_length;
+   int extension_offset, directory_offset;
+   int polyray_tag_offset, polyray_tag_length;
    int i, j, lowb, highb, tag_count, tag_id;
 
    if (fseek(filep, -TARGA_FOOTER_LEN, SEEK_END))
@@ -373,14 +373,14 @@ ReadTGAFooter(FILE *filep, int yres, unsigned char *line_flags)
       /* This TGA file doesn't have any additional information */
       return 0;
 
-   extension_offset  =  (long)tgafooter[0] +
-                       ((long)tgafooter[1] <<  8) +
-                       ((long)tgafooter[2] << 16) +
-                       ((long)tgafooter[3] << 24);
-   directory_offset  =  (long)tgafooter[0] +
-                       ((long)tgafooter[1] <<  8) +
-                       ((long)tgafooter[2] << 16) +
-                       ((long)tgafooter[3] << 24);
+   extension_offset  =  (int)tgafooter[0] +
+                       ((int)tgafooter[1] <<  8) +
+                       ((int)tgafooter[2] << 16) +
+                       ((int)tgafooter[3] << 24);
+   directory_offset  =  (int)tgafooter[0] +
+                       ((int)tgafooter[1] <<  8) +
+                       ((int)tgafooter[2] << 16) +
+                       ((int)tgafooter[3] << 24);
 
    /* If there is a developers area, then let's look for a table that
       indicates which lines have been rendered */
@@ -399,14 +399,14 @@ ReadTGAFooter(FILE *filep, int yres, unsigned char *line_flags)
          return 0;
       tag_id = tag_entry[0] + (tag_entry[1] << 8);
       if (tag_id == POLYRAY_RENDERED_LINE_TAG) {
-         polyray_tag_offset  =  (long)tag_entry[2] +
-                               ((long)tag_entry[3] <<  8) +
-                               ((long)tag_entry[4] << 16) +
-                               ((long)tag_entry[5] << 24);
-         polyray_tag_length  =  (long)tag_entry[6] +
-                               ((long)tag_entry[7] <<  8) +
-                               ((long)tag_entry[8] << 16) +
-                               ((long)tag_entry[9] << 24);
+         polyray_tag_offset  =  (int)tag_entry[2] +
+                               ((int)tag_entry[3] <<  8) +
+                               ((int)tag_entry[4] << 16) +
+                               ((int)tag_entry[5] << 24);
+         polyray_tag_length  =  (int)tag_entry[6] +
+                               ((int)tag_entry[7] <<  8) +
+                               ((int)tag_entry[8] << 16) +
+                               ((int)tag_entry[9] << 24);
 
          if (polyray_tag_length != yres) {
             warning("Old image has improper # of render tags %d vs %d",
@@ -451,7 +451,7 @@ TGAOpen(char *filename, Viewpoint *eye, int resume, int cflag,
    unsigned cmbytes, width, length;
    char tfilename[256];
    unsigned char rc, gc, bc, oc;
-   long last_valid_byte, pixels, image_size;
+   int last_valid_byte, pixels, image_size;
    unsigned char tgaheader[TARGA_HEADER_LEN];
    int footer_flag;
 
@@ -527,13 +527,13 @@ TGAOpen(char *filename, Viewpoint *eye, int resume, int cflag,
          goto create_new_file;
          }
       else
-         last_valid_byte += (long)idlen;
+         last_valid_byte += (int)idlen;
 
       /* Figure out how many bytes in the color map */
-           if (cmsiz <=  8) cmbytes = (long)cmlen ;
-      else if (cmsiz <= 16) cmbytes = (long)cmlen * 2L;
-      else if (cmsiz <= 24) cmbytes = (long)cmlen * 3L;
-      else if (cmsiz <= 32) cmbytes = (long)cmlen * 4L;
+           if (cmsiz <=  8) cmbytes = (int)cmlen ;
+      else if (cmsiz <= 16) cmbytes = (int)cmlen * 2L;
+      else if (cmsiz <= 24) cmbytes = (int)cmlen * 3L;
+      else if (cmsiz <= 32) cmbytes = (int)cmlen * 4L;
       else error("Can't handle color maps with %d bits/pixel\n", cmlen);
 
       /* Skip over the the color map */
@@ -561,7 +561,7 @@ TGAOpen(char *filename, Viewpoint *eye, int resume, int cflag,
          information.  At this point we allocate an array to hold
          offsets into the file.  Each offset in the array points to
          the beginning of a scan line of pixels. */
-      tmp->line_offsets = polyray_malloc((eye->view_yres+1) * sizeof(long));
+      tmp->line_offsets = polyray_malloc((eye->view_yres+1) * sizeof(int));
       tmp->line_offsets[0] = last_valid_byte;
       line_count = 1;
 
@@ -569,7 +569,7 @@ TGAOpen(char *filename, Viewpoint *eye, int resume, int cflag,
          each line. */
       if (tmp->cflag) {
          pixels = 0;
-         image_size = (long)eye->view_yres * (long)eye->view_xres;
+         image_size = (int)eye->view_yres * (int)eye->view_xres;
          while (pixels < image_size)
             /* Grab a header */
             if ((h = fgetc(tmp->ofilep)) == EOF)

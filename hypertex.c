@@ -170,7 +170,7 @@ HypertextureIntersect(Viewpoint *Eye, Object *obj, Ray *ray,
    fVec V;
    Surface *surf;
    Ray new_ray;
-   unsigned long nr;
+   unsigned int nr;
    unsigned short old_sflags;
 
    exper = FnData->fn;

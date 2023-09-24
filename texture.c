@@ -483,7 +483,7 @@ eval_hexagon(Viewpoint *Eye, Object *obj, Texture *text,
              Vec W, Vec P, Vec N, Vec I,
              float u, float v, int level)
 {
-   long temp, x0, x1, y0, y1, xh, yh;
+   int temp, x0, x1, y0, y1, xh, yh;
    Flt x, y, xt, yt;
    Vec VP, VW;
    Hexagon *hex = text->data;
@@ -499,8 +499,8 @@ eval_hexagon(Viewpoint *Eye, Object *obj, Texture *text,
    /* Scale to make everything fit */
    x = 2.0 * VP[0] / 3.0;
    y = 2.0 * VP[2] / sqrt(3.0);
-   x0 = (long)floor(x); x1 = x0 + 1; xt = x - (Flt)x0;
-   y0 = (long)floor(y); y1 = y0 + 1; yt = y - (Flt)y0;
+   x0 = (int)floor(x); x1 = x0 + 1; xt = x - (Flt)x0;
+   y0 = (int)floor(y); y1 = y0 + 1; yt = y - (Flt)y0;
    temp = x0 + y0;
    if (temp & 1) {
       /* Odd hex */

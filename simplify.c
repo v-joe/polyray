@@ -126,7 +126,7 @@ simplify_power(NODE_PTR node, int minus_flag)
 {
    NODE_PTR left, right, t0, t1, t2, head;
    int n, i;
-   unsigned long j;
+   unsigned int j;
 
    left = node->left;
    right = node->right;

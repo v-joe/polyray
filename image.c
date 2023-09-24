@@ -1213,7 +1213,7 @@ lookup_image_color(Img *image, Flt x, Flt y, int rflag,
    unsigned char bytes[4];
    unsigned char r, g, b, o;
    int i, indexx, indexy;
-   long map_index;
+   int map_index;
 
    /* Calculate the floating point offset into the image */
    if (!calculate_offset(image, x, y, rflag, &indexx, &indexy)) {
@@ -1293,7 +1293,7 @@ lookup_height(Img *image, Flt x, Flt y, int rflag, Flt *height)
    unsigned char bytes[4];
    unsigned char r, g, b;
    int i, indexx, indexy;
-   long map_index;
+   int map_index;
    float depth;
 
    if (!calculate_offset(image, x, y, rflag, &indexx, &indexy)) {

@@ -51,17 +51,17 @@ DrawNode *Draw_Commands = NULL;
 char *POLYRAY_PATH_STRING = "POLYRAY_PATH";
 
 /* Statistics variables */
-unsigned long nChecked = 0;
-unsigned long nRays = 0;
-unsigned long nShadows = 0;
-unsigned long nReflected = 0;
-unsigned long nRefracted = 0;
-unsigned long nTIR = 0;
-unsigned long nJittered = 0;
+unsigned int nChecked = 0;
+unsigned int nRays = 0;
+unsigned int nShadows = 0;
+unsigned int nReflected = 0;
+unsigned int nRefracted = 0;
+unsigned int nTIR = 0;
+unsigned int nJittered = 0;
 
 /* Global image variables */
 int             buffer_update = 0;
-unsigned long   buffer_size = 0;
+unsigned int   buffer_size = 0;
 
 /* Rendering quality options */
 int pixelsize = 24;       /* 24 bits per pixel, 8 each RGB. */
@@ -75,7 +75,7 @@ int antialias = 0; /* 0=none, 1=filter, 2-3=adaptive */
 int maxsamples = 4;
 Flt antialias_threshold = 0.0004;
 
-long MaxBufferRAM = 2048L * 2048L; /* Maximum RAM (in Kbytes) used by S&Z buffers */
+int MaxBufferRAM = 2048L * 2048L; /* Maximum RAM (in Kbytes) used by S&Z buffers */
 
 int             Rendering_Method = RAY_TRACING;
 unsigned short  Global_Shade_Flag = UNSET_SFLAG;
@@ -126,11 +126,11 @@ int   nLights = 0;
 Light **light_array;
 
 /* Statistics variables */
-unsigned long totalShadows, totalShadowCaches;
-unsigned long maxQueueSize = 0;
-unsigned long totalQueues = 0;
-unsigned long totalQueueResets = 0;
-unsigned long nEnqueued = 0;
+unsigned int totalShadows, totalShadowCaches;
+unsigned int maxQueueSize = 0;
+unsigned int totalQueues = 0;
+unsigned int totalQueueResets = 0;
+unsigned int nEnqueued = 0;
 
 /* Bounding cluster size */
 int clustersize = 4;

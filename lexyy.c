@@ -17,7 +17,7 @@ int yyleng; extern char yytext[];
 int yymorfg;
 extern char *yysptr, yysbuf[];
 int yytchar;
-FILE *yyin = { stdin }, *yyout = { stdout };
+FILE *yyin = NULL, *yyout = NULL;
 extern int yylineno;
 struct yysvf { 
 	struct yywork *yystoff;
@@ -341,8 +341,8 @@ message("ReadSceneFile\n");
    SetInputFile(str);
    if (yyparse() == 1)
       error("Invalid input specification\n");
-   if (yyin != stdin)
-      fclose(yyin);
+//   if (yyin != stdin)
+//      fclose(yyin);
 }
 
 /* Skip over comments */

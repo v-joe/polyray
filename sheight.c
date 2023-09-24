@@ -401,7 +401,7 @@ phi_cusp(Vec P, Vec D, Vec c, double *t)
 }
 
 static double
-get_theta_t(int u, Vec P, Vec D, int theta_dir_flag,
+get_theta_t_double(int u, Vec P, Vec D, int theta_dir_flag,
             Vec *theta_norms, double t,
             double mindist, double maxdist)
 {
@@ -852,7 +852,7 @@ printf("P0: <%g,%g,%g>\nP1: <%g,%g,%g>\nPm: <%g,%g,%g>\n",
 
    /* Get the distance to the first points where the ray crosses a
       longitude and latitude line. */
-   next_theta_t = get_theta_t(u0, P, D, theta_dir_flag,
+   next_theta_t = get_theta_t_double(u0, P, D, theta_dir_flag,
                               theta_norms, t0, mindist, maxdist);
 
    if (v0 == v1)
@@ -869,9 +869,9 @@ printf("dtheta: %g, theta dir: %d, tflag: %d, dphi: %g, phi dir: %d, pflag: %d\n
        radtodeg(dphi), phi_dir_flag, phi_flip_flag);
 printf("next theta t: %g, next phi t: %g\n", next_theta_t, next_phi_t);
 printf("last theta t: %g, next theta t: %g\n",
-       get_theta_t(u0-1, P, D, theta_dir_flag,
+       get_theta_t_double(u0-1, P, D, theta_dir_flag,
                    theta_norms, 0.0, mindist, maxdist),
-       get_theta_t(u0+1, P, D, theta_dir_flag,
+       get_theta_t_double(u0+1, P, D, theta_dir_flag,
                    theta_norms, 0.0, mindist, maxdist));
 printf("last phi t: %g, next phi t: %g\n",
        get_phi_t(v0-1, a, b, phi_sin, 0.0, mindist, maxdist),
@@ -901,7 +901,7 @@ if (Shadow_Test) {
 printf("Bad shadow(%g): %d/%d from [%d,%d] %d - [%d,%d] %d\nt: %g, t/p: %g/%g, f: %d\n",
        hit->isect_t, u, v, u0, u1, theta_dir_flag, v0, v1, phi_dir_flag,
        t, next_theta_t, next_phi_t, phi_flip_flag);
-next_theta_t = get_theta_t(u0, P, D, theta_dir_flag,
+next_theta_t = get_theta_t_double(u0, P, D, theta_dir_flag,
                            theta_norms, 0.0, mindist, maxdist);
 next_phi_t = get_phi_t(v, a, b, phi_sin, tmid, mindist, maxdist);
 printf("Q0: <%g,%g,%g> @ %g\nQ1: <%g,%g,%g> @ %g\nQm: <%g,%g,%g> @ %g, nt: %g, np: %g\n",
@@ -924,7 +924,7 @@ printf("min: %g, max: %g\n", mindist, maxdist);
 printf("Bad u/v: %d/%d from [%d,%d] %d - [%d,%d] %d\nt: %g, t/p: %g/%g, f: %d\n",
        u, v, u0, u1, theta_dir_flag, v0, v1, phi_dir_flag,
        t, next_theta_t, next_phi_t, phi_flip_flag);
-next_theta_t = get_theta_t(u0, P, D, theta_dir_flag,
+next_theta_t = get_theta_t_double(u0, P, D, theta_dir_flag,
                            theta_norms, 0.0, mindist, maxdist);
 next_phi_t = get_phi_t(v, a, b, phi_sin, tmid, mindist, maxdist);
 printf("Q0: <%g,%g,%g> @ %g\nQ1: <%g,%g,%g> @ %g\nQm: <%g,%g,%g> @ %g, o1: %g, nt: %g, np: %g\n",
@@ -962,7 +962,7 @@ printf("Bad u/v\n");
             next_theta_t = MAX_SPH_DIST;
             }
          else
-            next_theta_t = get_theta_t(u, P, D, theta_dir_flag,
+            next_theta_t = get_theta_t_double(u, P, D, theta_dir_flag,
                                        theta_norms, t, mindist, maxdist);
          }
       else {
@@ -993,7 +993,7 @@ printf("New V boundaries: [%d, %d], vs: %d, dir: %d\n", v, v1, vstep, phi_dir_fl
 printf("Bad v value: %d/%d from [%d,%d] %d - [%d,%d] %d\nt: %g, t/p: %g/%g, f: %d\n",
        u, v, u0, u1, theta_dir_flag, v0, v1, phi_dir_flag,
        t, next_theta_t, next_phi_t, phi_flip_flag);
-next_theta_t = get_theta_t(u0, P, D, theta_dir_flag,
+next_theta_t = get_theta_t_double(u0, P, D, theta_dir_flag,
                            theta_norms, 0.0, mindist, maxdist);
 printf("Q0: <%g,%g,%g> @ %g\nQ1: <%g,%g,%g> @ %g\nQm: <%g,%g,%g> @ %g, nt: %g\n",
        radtodeg(q0[0]), radtodeg(q0[1]), q0[2], t0,
@@ -1025,7 +1025,7 @@ if (!Shadow_Test) {
 printf("Failed: %d/%d from [%d,%d] %d - [%d,%d] %d\nt: %g, t/p: %g/%g, f: %d\n",
        u, v, u0, u1, theta_dir_flag, v0, v1, phi_dir_flag,
        t, next_theta_t, next_phi_t, phi_flip_flag);
-next_theta_t = get_theta_t(u0, P, D, theta_dir_flag,
+next_theta_t = get_theta_t_double(u0, P, D, theta_dir_flag,
                            theta_norms, 0.0, mindist, maxdist);
 next_phi_t = get_phi_t(v, a, b, phi_sin, tmid, mindist, maxdist);
 printf("Q0: <%g,%g,%g> @ %g\nQ1: <%g,%g,%g> @ %g\nQm: <%g,%g,%g> @ %g, nt: %g, np: %g\n",

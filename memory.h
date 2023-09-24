@@ -37,8 +37,8 @@ void allocation_status(void);
 void free_all_memory(void);
 
 /* Memory monitoring variables */
-extern unsigned long nMalloc;
-extern unsigned long nFree;
+extern unsigned int nMalloc;
+extern unsigned int nFree;
 
 #endif /* __POLYRAY_MEMORY_DEFS */
 

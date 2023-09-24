@@ -408,7 +408,7 @@ Uniform_Subdivide(Viewpoint *eye, BinTree *Root, Object *obj)
    Vertex *vertex_row1, *vertex_row2, *temp_row;
    fVec *V, *N, *U;
    int i, j, displace_flag, internal_abort;
-   long n, k;
+   int n, k;
    int u_steps, v_steps, width, height;
    Flt u, v, u_low, u_high, v_low, v_high;
    Flt delta_u, delta_v;
@@ -447,7 +447,7 @@ Uniform_Subdivide(Viewpoint *eye, BinTree *Root, Object *obj)
          the triangle objects associated with the parent object */
       obj->o_vertices = (ObjectVertices *)
                         polyray_malloc(sizeof(ObjectVertices));
-      n = (long)(u_steps + 1) * (long)(v_steps + 1);
+      n = (int)(u_steps + 1) * (int)(v_steps + 1);
       V = (fVec *)polyray_malloc(n * sizeof(fVec));
       U = (fVec *)polyray_malloc(n * sizeof(fVec));
       if (V == NULL || U == NULL)
