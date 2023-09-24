@@ -8,3 +8,9 @@ Original Polyray 1.8 source code and examples from https://web.archive.org/web/2
 
 With pkg-config and X11 headers and libraries installed, running `make` is sufficient.<BR>
 For OSX, make sure [XQuartz](https://github.com/XQuartz) and Xcode are installed and run `make -f makefile.osx`.
+
+## Examples
+
+The included examples (from the original Polyray distribution) can be regenerated in the `examples` directory with `sh makeall.sh`. `convert` from [ImageMagick](https://github.com/ImageMagick/ImageMagick) is required for generating the animation examples.
+
+![image](https://raw.githubusercontent.com/v-joe/polyray/main/examples/animate/robarm/robarm.gif) &nbsp;&nbsp;&nbsp; ![image](https://raw.githubusercontent.com/v-joe/polyray/main/examples/animate/thresh/mvsph4.gif) &nbsp;&nbsp;&nbsp; ![image](https://raw.githubusercontent.com/v-joe/polyray/main/examples/animate/particle/part2.gif) &nbsp;&nbsp;&nbsp; ![image](https://raw.githubusercontent.com/v-joe/polyray/main/examples/animate/particle/part6.gif) &nbsp;&nbsp;&nbsp; ![image](https://raw.githubusercontent.com/v-joe/polyray/main/examples/animate/flying/flyplane.gif) &nbsp;&nbsp;&nbsp; ![image](https://raw.githubusercontent.com/v-joe/polyray/main/examples/animate/street/street.gif)
