@@ -7,4 +7,4 @@ Original Polyray 1.8 source code and examples from https://web.archive.org/web/2
 ## Build instructions
 
 With pkg-config and X11 headers and libraries installed, running `make` is sufficient.<BR>
-For OSX, make sure [XQuartz](https://github.com/XQuartz) is installed and run `make -f makefile.osx`
+For OSX, make sure [XQuartz](https://github.com/XQuartz) and Xcode are installed and run `make -f makefile.osx`.
