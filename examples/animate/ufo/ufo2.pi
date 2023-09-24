@@ -1,0 +1,51 @@
+start_frame 0
+end_frame 20
+total_frames 20
+
+define t0 0
+define t1 20
+define increment  (frame - t0) / (t1 - t0)
+
+define Cone_Offset <100 - increment * 650, 0, 0>
+
+// A single UFO
+include "../../colors.inc"
+include "ufo.inc"
+
+// Define the location and orientation of the UFO
+// Only change x and z for now to get the locations
+define UFO_Location1 <0, 20, 0>
+define UFO_Orientation1 <-30, 60, 0>
+
+// Change the orientations of the barrels for the ufo.
+define Gun_Orientation1_1 <90, 80, 0>
+define Gun_Orientation1_2 <90, 80, 0>
+
+// Now make a UFO with a gun assembly hanging off the top and bottom
+object {
+   (UFO_Body
+    + Gun_Barrels { rotate Gun_Orientation1_1 translate Gun_Assembly_Location1 }
+    + Gun_Barrels { rotate Gun_Orientation1_2 translate Gun_Assembly_Location2 }
+    ) & ~object { cone Cone_Offset, 0, Cone_Offset + <1000, 0, 0>, 100
+		 // rotate <0, 10, 70>
+		 }
+   rotate UFO_Orientation1
+   translate UFO_Location1
+   }
+
+// Put in some ground for reference
+object {
+   disc <0, -30, 0>, <0, 1, 0>, 500
+   Ground_Texture
+   }
+
+viewpoint {
+   from  <0, 20, -150.0>
+   at <0, 20, 0>
+   up <0, 1, 0>
+   angle 30
+   resolution 160, 120
+   aspect 4/3
+   }
+
+light 0.8*white, <-100, 200, -100>

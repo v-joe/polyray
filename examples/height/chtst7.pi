@@ -1,0 +1,75 @@
+viewpoint {
+   from <0,0,-15>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 256, 256
+   }
+
+background white
+light <-10,3, -20>
+
+define pi 3.14159265
+define two_pi 2 * pi
+
+define theta1 random * two_pi
+define theta2 random * two_pi
+define theta3 random * two_pi
+define theta4 random * two_pi
+define theta5 random * two_pi
+define theta6 random * two_pi
+define theta7 random * two_pi
+define theta8 0
+
+define y1 12 * random
+define y2 12 * random
+define y3 12 * random
+define y4 12 * random
+define y5 12 * random
+define y6 12 * random
+define y7 12 * random
+define y8 10
+
+define rlen 2
+
+define pt1 rlen * <cos(theta1), y1, sin(theta1)>
+define pt2 rlen * <cos(theta2), y2, sin(theta2)>
+define pt3 rlen * <cos(theta3), y3, sin(theta3)>
+define pt4 rlen * <cos(theta4), y4, sin(theta4)>
+define pt5 rlen * <cos(theta5), y5, sin(theta5)>
+define pt6 rlen * <cos(theta6), y6, sin(theta6)>
+define pt7 rlen * <cos(theta7), y7, sin(theta7)>
+define pt8 rlen * <cos(theta8), y8, sin(theta8)>
+
+define ripple_freq 6.0
+define ripple_phase 0
+
+define P1 <rlen*x, y*12, rlen*z>
+
+define exp1 exp(-|P1 - pt1|)
+define exp2 exp(-|P1 - pt2|)
+define exp3 exp(-|P1 - pt3|)
+define exp4 exp(-|P1 - pt4|)
+define exp5 exp(-|P1 - pt5|)
+define exp6 exp(-|P1 - pt6|)
+define exp7 exp(-|P1 - pt7|)
+define exp8 exp(-|P1 - pt8|)
+
+define ripple_fn
+   |ripple(P1, pt1, ripple_freq, ripple_phase) * exp1 +
+    ripple(P1, pt2, ripple_freq, ripple_phase) * exp2 +
+    ripple(P1, pt3, ripple_freq, ripple_phase) * exp3 +
+    ripple(P1, pt4, ripple_freq, ripple_phase) * exp4 +
+    ripple(P1, pt5, ripple_freq, ripple_phase) * exp5 +
+    ripple(P1, pt6, ripple_freq, ripple_phase) * exp6 +
+    ripple(P1, pt7, ripple_freq, ripple_phase) * exp7 +
+    ripple(P1, pt8, ripple_freq, ripple_phase) * exp8 |
+
+object {
+   smooth_cheight_fn 240, 240, ripple_fn, 1.0, rlen
+   translate <0,-0.5,0>
+   scale <1,12,1>
+   scale 0.5*white
+   rotate <0, 120, 0>
+   rotate <-20, 0, 0>
+   }

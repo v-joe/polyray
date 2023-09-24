@@ -1,0 +1,27 @@
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+background black
+light <-10,3, -20>
+
+define shiny_red
+texture {
+   surface {
+      ambient red, 0.2
+      diffuse red, 0.8
+      specular white, 0.7
+      microfacet Reitz 10
+      }
+   }
+
+// Define a sinusoidal surface
+object {
+   sheight_field "marbback.tga", 1/256, 1.5
+   shiny_red
+   rotate <30, -60, 0>
+   }

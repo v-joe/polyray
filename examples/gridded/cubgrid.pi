@@ -1,0 +1,54 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 4, -14>
+   at <-3,3,0>
+   up <0,1,0>
+   angle 45
+   resolution 320, 200
+   aspect 1.3333
+   }
+
+background midnight_blue
+haze 0.8, 3, midnight_blue
+
+// Note that when you use a directional light you should not use two
+// sided surfaces.  The reason is that there will be no shadow checks to
+// remove odd diffuse & specular lighting.
+directional_light <-10,10, -20>
+
+include "../colors.inc"
+
+define node
+object {
+     object { sphere <0.5, 0.5, 0.5>, 0.1 shiny_green }
+   + object { cylinder <0.0, 0.5, 0.5>, <1.0, 0.5, 0.5>, 0.05 shiny_red }
+   + object { cylinder <0.5, 0.0, 0.5>, <0.5, 1.0, 0.5>, 0.05 shiny_red }
+   + object { cylinder <0.5, 0.5, 0.0>, <0.5, 0.5, 1.0>, 0.05 shiny_red }
+   }
+
+define cubgrid
+   object {
+      gridded "allblk.tga", node
+      translate <-16, 0, -16>
+      shading_flags 0
+      }
+
+object {
+     cubgrid { translate <0, -3, 0> }
+   + cubgrid { translate <0, -2, 0> }
+   + cubgrid { translate <0, -1, 0> }
+   + cubgrid
+   + cubgrid { translate <0,  1, 0> }
+   + cubgrid { translate <0,  2, 0> }
+   + cubgrid { translate <0,  3, 0> }
+   + cubgrid { translate <0,  4, 0> }
+   + cubgrid { translate <0,  5, 0> }
+   + cubgrid { translate <0,  6, 0> }
+   + cubgrid { translate <0,  7, 0> }
+   + cubgrid { translate <0,  8, 0> }
+   + cubgrid { translate <0,  9, 0> }
+   + cubgrid { translate <0, 10, 0> }
+   }

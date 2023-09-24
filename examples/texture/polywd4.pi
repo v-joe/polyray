@@ -1,0 +1,105 @@
+//
+// Wood texture data file by Dan Farmer
+//
+
+include "../colors.inc"
+include "../texture.inc"
+
+viewpoint {
+   from <-20, 15, -20>
+   at <-2, 5, 0>
+   up <0, 1, 0>
+   aspect 4/3
+   angle 35
+   resolution 320, 200
+   }
+
+object {
+    sphere <0, 0, 0>, 950000
+    texture {
+        surface {
+            ambient gray, 1.0
+            diffuse gray, 0.65
+        }
+    }
+}
+
+light  <0.8, 0.8, 0.8>, <-15.0, 10.0, -13.0>
+light  <0.6, 0.6, 0.6>, <-10.0, 30.0, 20.0>
+
+
+define light_wood <0.52, 0.37, 0.26> * 1.5
+define median_wood <0.42, 0.26, 0.15> * 1.5
+define dark_wood <0.05, 0.01, 0.005>  * 1.5
+
+define wood_scale 2
+define xydist wood_scale * sqrt(x * x + y * y)
+
+define wood_turb 0.8
+define Octaves 3.0
+define wood_fn  (sawtooth(xydist + wood_turb * noise(P,Octaves)) + 1) / 2
+
+define wood_map
+   color_map(
+      [0.0,  0.10,  black,  black]
+      [0.10, 0.30,  black,  median_wood]
+      [0.30, 0.40,  median_wood,  dark_wood]
+      [0.40, 0.70,  dark_wood,  median_wood]
+      [0.70, 0.90,  median_wood,  median_wood]
+      [0.90, 1.00,  median_wood,  black]
+      )
+
+define wood_texture
+   texture {
+      special surface {
+         color wood_map[wood_fn]
+         specular white, 0.5 + 0.5 * wood_fn^4
+         microfacet Reitz 5 + 10 * (1 - wood_fn)
+         ambient 0.18
+         diffuse 0.8
+         }
+      scale <0.2, 0.2, 1>            // make 5 "rings" per unit
+      translate <0, -0.25, 15>       // cosmetic adjustments
+      scale <2.75, 2.75, 1>          // Enlarge the whole thing
+      rotate <0, 90, 0>              // Align along the x axis (almost)
+      rotate <0, -1, 0>              // Shift slightly askew of center
+   }
+
+define Abox object { box <-10, -5, -2>, <10, 5, 2> }
+
+define Angled_Plane
+   object {
+      disc <0, 0, 0>, <-1, 0, 0>, 20
+      rotate <0, 0, -45>
+      translate <-10, 0, 0>
+   }
+
+
+// root_solver Ferrari
+// root_solver Vieta
+// root_solver Sturm
+define rez 128
+define Hole object { cylinder <5, 0, 2.1>, <5, 0, -2.1>, 4
+   //u_steps rez
+   //v_steps 128
+}
+define Bevel1 object { torus 4.0, 0.75, <5, 0,  2>, <0, 0, 1>
+   root_solver Sturm
+   //u_steps 128
+   //v_steps 128
+}
+define Bevel2 object { torus 4.0, 0.75, <5, 0, -2>, <0, 0, 1>
+   root_solver Sturm
+   //u_steps 128
+   //v_steps 128
+}
+define Bevels object { (Bevel1 + Bevel2) }
+
+define Block
+   object {
+      (((Abox*Angled_Plane) -Bevels) -Hole)
+      bounding_box <-10, -5.5, -2>, <10, 5.5, 2>
+      translate <0, 5, 0>
+}
+
+Block { wood_texture }

@@ -1,0 +1,46 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 35
+   resolution 320, 320
+   }
+
+background <0, 0, 0>
+light <-10,3, -20>
+
+include "../colors.inc"
+include "maps.inc"
+
+define tex1 texture { special shiny { color tigers_eye_colors1[marble_fn] } }
+define tex2 texture { special shiny { color tigers_eye_colors2[marble_fn] } }
+define ltex texture {
+   special matte {
+      color line_layer1[sawtooth(x)]
+      transmission white, 1-line_layer1[sawtooth(x)][0], 1.0
+      }
+   }
+define tex3 texture {
+   layered ltex, tex1
+   }
+
+define noisy_x x + 1.5 * dnoise(P)[0]
+define noisy_y y + 1.5 * dnoise(P)[1]
+define noisy_z y + 1.5 * dnoise(P)[2]
+define noisy_x1 noisy_x - floor(noisy_x)
+define noisy_y1 noisy_y - floor(noisy_y)
+define noisy_z1 noisy_z - floor(noisy_z)
+define noisy_checker3_fn fmod((noisy_x1+noisy_y1+noisy_z1)/3, 1)
+define tex4 texture {
+   special shiny { color tigers_eye_colors2[noisy_checker3_fn] }
+   scale <0.5, 0.5, 0.5>
+   }
+
+object { sphere <-1, 1, 0>, 1 tex4 }
+object { sphere <-1,-1, 0>, 1 tex2 }
+object { sphere < 1, 1, 0>, 1 tex3 }
+object { sphere < 1,-1, 0>, 1 tex1 }

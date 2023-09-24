@@ -1,0 +1,8 @@
+// Single ripple
+define ripple_freq 20
+define ripple_phase 0
+
+define ripple_fn
+   0.2 * ripple(P, <0,0,0>, ripple_freq, ripple_phase)
+
+include "ripple.inc"

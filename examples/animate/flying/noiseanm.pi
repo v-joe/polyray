@@ -1,0 +1,42 @@
+// Flyover of a noise based height field - takes about a day at 240x180 on 
+// on a 486/33
+// Polyray input file: Alexander Enzmann
+start_frame 0
+end_frame 300
+
+// Set up the camera
+viewpoint {
+   from <0, 1.1, -4.5>
+   at <0, 0.5, 0>
+   up <0,1,0>
+   angle 25
+   resolution 240, 180
+   aspect 4/3
+   }
+
+// Set up background color & lights
+background 0.2*white
+haze 0.8, 4, 0.2*white
+
+light <10, 10, -10>
+
+include "../../colors.inc"
+
+define mountain_colors
+      color_map([-1.0, 0.0, blue,  blue]
+		[ 0.0, 0.4, green, green]
+		[ 0.4, 0.5, green, tan]
+		[ 0.5, 0.6, tan,   tan]
+		[ 0.6, 0.8, tan,   white]
+		[ 0.8, 1.0, white, white])
+
+define field_texture
+texture { special shiny { color mountain_colors[y] } }
+
+// Define a noise based height field
+define offset <0, 0, frame/4>
+define hfn (noise(P+offset) < 0.7 ? noise(P+offset,2) : noise(P+offset,5))
+object {
+   height_fn 200, 800, -4, 4, -4, 28, hfn
+   field_texture
+   }

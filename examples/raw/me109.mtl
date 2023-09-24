@@ -1,0 +1,94 @@
+# Wavefront material library
+# Wed Jun 23 11:10:52 1993
+# Created with the InterChange Wavefront Converter from Syndesis Corporation
+
+newmtl ICP36_light_gray_0
+  Kd 0.705882 0.705882 0.705882
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl ICP36_light_gray_1
+  Kd 0.627451 0.627451 0.627451
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl ICP36_dark_gray_2
+  Kd 0.294118 0.294118 0.294118
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl ICP36_white_3
+  Kd 1 1 1
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl ICP36_black_4
+  Kd 0.0784314 0.0784314 0.0784314
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl ICP36_very_light_gray_5
+  Kd 0.784314 0.784314 0.784314
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl ICP36_dark_gray_6
+  Kd 0.313725 0.313725 0.313725
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl ICP36_light_gray_7
+  Kd 0.588235 0.588235 0.588235
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl ICP36_very_dark_gray_8
+  Kd 0.196078 0.196078 0.196078
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl ICP36_light_gray_9
+  Kd 0.588235 0.588235 0.588235
+  Ks 1 1 1
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl LONE_SURFACE
+  Kd 0.941176 0.941176 0.941176
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl default
+  Kd 0.941176 0.941176 0.941176
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0
+
+newmtl LONE_SURFACE
+  Kd 0.941176 0.941176 0.941176
+  Ks 0 0 0
+  Tf 0 0 0
+  Ns 0  Ni 1.00
+  illum 0

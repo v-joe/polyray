@@ -1,0 +1,27 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 512, 512
+   }
+
+include "../colors.inc"
+
+// Set up background color & lights
+background black
+light <10, 10, -20>
+
+// Get the definition of a teapot
+include "teapot.inc"
+
+teapot { rotate <0, 20, 0> scale <0.4, 0.4, 0.4> reflective_green }
+
+object {
+   disc <0, 0, 0>, <0, 1, 0>, 20
+   texture { checker matte_white, matte_black }
+   }

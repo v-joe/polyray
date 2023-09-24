@@ -1,0 +1,26 @@
+// Toroidal blob test
+
+viewpoint {
+   from  <0, 8, -8>
+   up    <0, 1, 0>
+   at    <0, 0, 0>
+   angle 20
+   resolution 256, 128
+   aspect 2
+   }
+
+include "../colors.inc"
+light <-15, 10, -20>
+light < 15, 10, -20>
+background midnightblue
+
+object {
+      blob 0.5:
+         sphere <-2, 0, 0>, 1, 0.8,
+         sphere < 2, 0, 0>, 1, 0.8,
+         sphere < 0, 0,-2>, 1, 0.8,
+         sphere < 0, 0, 2>, 1, 0.8,
+         torus  < 0, 0, 0>, <0, 1, 0>, 1, 1, 0.8
+      shiny_red
+      uv_steps 64, 64, 64
+   }

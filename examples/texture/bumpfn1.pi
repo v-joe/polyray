@@ -1,0 +1,61 @@
+// Thanks to Dan Farmer for inspiring this interesting normal modification
+// function.  Looks sorta like tiles, but (at least in this implementation)
+// has some odd shading errors.
+viewpoint {
+   from <0, 6, -8>
+   at <0, 0, -1>
+   up <0, 1, 0>
+   angle 40
+   resolution 160, 160
+   }
+
+// Lights
+light white, <-20, 20,-20>
+
+define bmpy_fn_x (x - floor(x))
+define bmpy_fn_x1 1 - bmpy_fn_x
+define bmpy_fn_y (y - floor(y))
+define bmpy_fn_y1 1 - bmpy_fn_y
+define bmpy_fn_z (z - floor(z))
+define bmpy_fn_z1 1 - bmpy_fn_z
+
+define bmpy_sp_x bmpy_fn_x^3 + 3 * bmpy_fn_x * bmpy_fn_x1^2
+define bmpy_sp_y bmpy_fn_y^3 + 3 * bmpy_fn_y * bmpy_fn_y1^2
+define bmpy_sp_z bmpy_fn_z^3 + 3 * bmpy_fn_z * bmpy_fn_z1^2
+
+define bmpy_test_fn <bmpy_sp_x, bmpy_sp_y, bmpy_sp_z>
+
+define bmpy_test
+texture { 
+   special surface {
+      color white
+      normal N - 0.5 * bmpy_test_fn
+      specular 1
+      microfacet Cook 1
+      }
+   }
+
+object {
+   sphere <0, 0, 0>, 1
+   bmpy_test { scale <0.5, 0.5, 0.5> }
+   // rotate <0, 160, 0>
+   }
+
+object {
+   box <-1, -1, -1>, <1, 1, 1>
+   bmpy_test { scale <0.5, 0.5, 0.5> }
+   rotate <0, -20, 0>
+   translate <-2, 0, 3>
+   }
+
+object {
+   disc <0, -1, 0>, <0, 1, 0>, 100
+   bmpy_test { scale <3, 3, 3> }
+   }
+
+object {
+   object { cone <-2, -1, 0>, 0, <2, 0, 0>, 1 }
+   bmpy_test { scale <0.5, 0.5, 0.5> }
+   rotate <0, -20, 0>
+   translate <0, 0, -2>
+   }

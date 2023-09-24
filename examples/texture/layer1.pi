@@ -1,0 +1,45 @@
+// Sample Polyray file
+// A gradient texture with changing 'alpha' values
+//
+viewpoint {
+   from <0, 2, -10>
+   at <0,0,0>
+   up <0,1,0>
+   angle 35
+   resolution 160, 160
+   aspect 1
+   }
+
+include "../colors.inc"
+
+background midnightblue
+
+light <-10, 7, -5>
+
+object {
+   disc <0, -2.005, 0>, <0, 1, 0>, 10
+   texture { checker matte_white, matte_black }
+   }
+
+define mirror_veined_marble
+texture {
+   layered
+      texture {
+	 special surface {
+	    color color_map(
+		  [0.0, 0.4, white, 0,   white, 0]
+		  [0.4, 0.6, white, 0,   white, 0.2]
+		  [0.6, 1.0, white, 0.2, white, 1])[marble_fn]
+	    ambient 0.3
+	    diffuse 0.8
+	    specular 0.3
+	    microfacet Cook 5
+	    }
+	 },
+      mirror
+   }
+
+object {
+   sphere <0, 0, 0>, 2
+   mirror_veined_marble
+   }

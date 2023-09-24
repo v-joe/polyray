@@ -1,0 +1,51 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,15,-30>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   hither 1
+   resolution 512, 256
+   aspect 2
+   }
+
+background skyblue
+light <-10,10, -20>
+
+include "../colors.inc"
+
+define blue_ripple
+texture {
+   noise surface {
+      color <0.4, 0.4, 1.0>
+      ambient 0.3
+      diffuse 0.4
+      specular white, 0.7
+      reflection 0.5
+      microfacet Reitz 10
+      normal 2
+      frequency 30
+      bump_scale 2
+      }
+   scale <10, 1, 10>
+   }
+
+define unit_sphere object { sphere <0.5, 0.4, 0.5>, 0.4 }
+define pointy_cone object { cone <0.5, 0.0, 0.5>, 0.4, <0.5, 1, 0.5>, 0 }
+
+object {
+   gridded "grdimg0.tga",
+      unit_sphere { shiny_coral }
+      unit_sphere { shiny_red }
+      pointy_cone { shiny_green }
+   translate <-8, 0, -8>
+   rotate <0, 30, 0>
+   }
+
+object {
+   disc <0, 0, 0>, <0, 1, 0>, 500
+   blue_ripple
+   }

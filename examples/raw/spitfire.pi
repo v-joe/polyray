@@ -1,0 +1,22 @@
+background white
+light <-1000,300, -2000>
+include "../colors.inc"
+
+define spitfire
+object { raw "spitfire.obj", 30 }
+
+spitfire {
+   shiny_red
+   translate -(min("spitfire") + max("spitfire"))/2
+   rotate <0, 90, 0>
+   }
+
+// Set up the camera
+viewpoint {
+   from <0,0,-1000>
+   at <0, 0, 0>
+   up <0,1,0>
+   angle 20
+   resolution 160, 120
+   aspect 4/3
+   }

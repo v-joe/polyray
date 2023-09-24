@@ -1,0 +1,278 @@
+// Sample file demonstrating all (well almost all) of the primitives that
+// exist in Polyray.
+// Author - Alexander Enzmann
+
+viewpoint {
+   from <0,150,-200>
+   at <0,0,0>
+   up <0,1,0>
+   angle 8.5
+   resolution 720, 450
+   aspect 1.6
+   }
+
+background midnightblue
+
+light <0.5, 0.5, 0.5>, <0, 50, -10>
+spot_light white, < 20, 10, -20>, < 15,0,-15>, 5, 40, 42
+spot_light white, <-20, 10, -20>, <-15,0,-15>, 5, 40, 42
+
+include "../colors.inc"
+include "../texture.inc"
+
+// In alphabetical order even...
+
+// Start with some flags so we can turn the individual
+// objects on and off.  This is real useful during
+// testing.
+define bezier_flag     1
+define blob_flag       1
+define box_flag        1
+define cone_flag       1
+define cylinder_flag   1
+define disc_flag       1
+define function_flag   1
+define glyph_flag      1
+define height_flag     1
+define lathe_flag      1
+define nurb_flag       1
+define parabola_flag   1
+define polygon_flag    1
+define polynomial_flag 1
+define sweep_flag      1
+define sphere_flag     1
+define torus_flag      1
+
+// Get the definition of a teapot
+include "teapot.inc"
+if (bezier_flag == 1)
+   teapot {
+      rotate <0, 20, 0>
+      scale <1.5, 1.5, 1.5>
+      translate <22, 0, 2>
+      shiny_red
+      }
+
+if (blob_flag == 1)
+// Multipoint blob.  This blob is carved from white marble.
+object {
+   blob 0.5:
+      1.0, 1.0, <0.75, 0, 0>,
+      1.0, 1.0, <0.75*cos(radians(120)), 0.75*sin(radians(120)), 0>,
+      1.0, 1.0, <0.75*cos(radians(240)), 0.75*sin(radians(240)), 0>,
+      1.0, 1.0, <0.2, 1.2, 0.8>,
+      1.0, 1.0, <-0.2, 1.2, -0.8>,
+      1.0, 1.0, <0.3, -1, -0.7>,
+      1.0, 1.0, <0, 0, 0>,
+      1.0, 1.0, <-0.1, 0, 0.3>,
+      1.0, 1.0, <0,-2, -0.5>,
+      1.0, 1.0, <-0.5, -1, -1.4>
+   uv_steps 20, 20, 20
+   white_marble
+   translate <0, 2, 0>
+   scale <1.5, 1, 2>
+   rotate <0, 80, 0>
+   translate <-12, 0, -20>
+   }
+
+if (box_flag == 1)
+// Box primitive
+object {
+   box <-2, 0,-2>, <2, 2, 2>
+   rotate <40, 30, 0>
+   translate <-5, 3, 16>
+   matte_blue
+   }
+
+if (cone_flag == 1)
+// Cone primitive
+object {
+   cone <0, 0, 0>, 3, <0, 6, 0>, 0
+   translate <8, 0, 16>
+   reflective_gold
+   }
+
+if (cylinder_flag == 1)
+// A Cylinder that has an image wrapped around it
+object {
+   cylinder <0, 0, 0>, <0, 6, 0>, 3
+   texture {
+      special surface {
+         color cylindrical_imagemap(image("cylimg.gif"), P, 1)
+         ambient 0.5
+         diffuse 0.5
+         }
+      scale <1, 6, 1>
+      }
+   rotate <0,-90, 0>
+   translate <-20, 0, 0>
+   }
+
+if (disc_flag == 1)
+// Disc primitive.  These are so boring by themselves that
+// I've added some ripple to the surface just to make it
+// a little more interesting.
+object {
+   disc <0, 0, 0>, <0, 1, 0>, 4
+   blue_ripple
+   rotate <-20, -30, 0>
+   translate <-5, 3, -15>
+   }
+
+if (height_flag == 1)
+object {
+   height_fn 20, 20, -4, 4, -4, 4,
+      4 * cos(3 * sqrt(x^2 + z^2)) * exp(-0.5 * sqrt(x^2 + z^2))
+   shiny_green
+   translate <15, 2, -10>
+   }
+
+if (function_flag == 1)
+// Implicit function.  This surface is nice and wavy.
+// It is small in this image cause these things take
+// forever to render.
+object {
+   object {
+      function y - sin(3 * x * z)
+      uv_steps 40, 40, 40
+      bounding_box <-2, -1, -2>, <2, 1, 2>
+      }
+   & object { box <-2, -1, -2>, <2, 1, 2> }
+   shiny_yellow
+   scale <1.5, 1, 1.5>
+   rotate <0, -30, 0>
+   translate <-10, 2.2, 5>
+   }
+
+if (lathe_flag == 1)
+// Lathe primitive
+object {
+   lathe 2, <0, 1, 0>, 5,
+        <3, 0>, <0.5, 2>, <4, 3>, <3, 7>, <0, 9>
+   scale <0.8, 0.8, 0.8>
+   shiny_coral
+   translate <0, 0, 8>
+   }
+
+if (nurb_flag == 1)
+// Sample NURB surface
+object {
+   nurb 4, 6, 4, 5,
+        [0, 0, 0, 0, 1.5, 1.5, 3, 3, 3, 3], // Non-uniform knot vector
+        [0, 0, 0, 0, 1, 2, 2, 2, 2],        // Uniform open knot vector
+    [[< 0, 0, 0>, < 1, 0, 3>,    < 2, 0,-3>,      < 3, 0, 3>, < 4, 0, 0>],
+     [< 0, 1, 0>, < 1, 1, 0>,    < 2, 1, 0>,      < 3, 1, 0>, < 4, 1, 0>],
+     [< 0, 2, 0>, < 1, 2, 0, 2>, < 2, 2, 5, 0.5>, < 3, 2, 0>, < 4, 2, 0>],
+     [< 0, 3, 0>, < 1, 3, 0, 2>, < 2, 3, 5, 0.5>, < 3, 3, 0>, < 4, 3, 0>],
+     [< 0, 4, 0>, < 1, 4, 0>,    < 2, 4, 0, 20>,  < 3, 4, 0>, < 4, 4, 0>],
+     [< 0, 5, 0>, < 1, 5,-3>,    < 2, 5, 3>,      < 3, 5,-3>, < 4, 5, 0>]]
+   translate <-2, -2.5, 0>
+   rotate <-90, -30, 0>
+   uv_steps 32, 16
+   shiny_red
+   }
+
+if (parabola_flag == 1)
+// Parabola primitive.  Sort of like a salt shaker in this
+// orientation.
+object {
+   parabola <0, 6, 0>, <0, 0, 0>, 3
+   translate <16, 0, 16>
+   steely_blue
+   }
+
+if (polynomial_flag == 1)
+// Polynomial surface.  This is the devils curve, one of
+// my personal favorites.
+object {
+     object {
+	polynomial x^4 + 2*x^2*z^2 - 0.36*x^2 - y^4 + 0.25*y^2 + z^4
+	bounding_box <-2, -2, -0.5>, <2, 2, 0.5>
+	}
+   & object { box <-2, -2, -0.5>, <2, 2, 0.5> }
+   scale <2, 2, 2>
+   rotate <20, 10, 0>
+   shiny_red
+   translate <-15, 4, -10>
+   }
+
+if (sphere_flag == 1)
+// Create a sphere with a checker texture
+object {
+   sphere <0, 0, 0>, 3
+   texture {
+      checker shiny_red, shiny_blue
+      }
+   translate <-15, 3, 16>
+   }
+
+// Sweep surfaces - there are several so that the various
+// forms can be demonstrated.
+define r0 2
+define r1 4
+define dt (2.0 * 3.14159265) / 14
+
+if (glyph_flag == 1)
+// First sweep is made from connected line segments
+object {
+   glyph 1
+      contour 15,
+         <r0*cos( 1*dt), r0*sin( 1*dt)>, <r1*cos( 2*dt), r1*sin( 2*dt), 1>,
+         <r0*cos( 3*dt), r0*sin( 3*dt)>, <r1*cos( 4*dt), r1*sin( 4*dt), 1>,
+         <r0*cos( 5*dt), r0*sin( 5*dt)>, <r1*cos( 6*dt), r1*sin( 6*dt), 1>,
+         <r0*cos( 7*dt), r0*sin( 7*dt)>, <r1*cos( 8*dt), r1*sin( 8*dt), 1>,
+         <r0*cos( 9*dt), r0*sin( 9*dt)>, <r1*cos(10*dt), r1*sin(10*dt), 1>,
+         <r0*cos(11*dt), r0*sin(11*dt)>, <r1*cos(12*dt), r1*sin(12*dt), 1>,
+         <r0*cos(13*dt), r0*sin(13*dt)>, <r1*cos(14*dt), r1*sin(14*dt), 1>,
+         <r0*cos( 1*dt), r0*sin( 1*dt)>
+   rotate <-90, 0, 0>
+   translate <0, 0, -20>
+   matte_red
+   }
+
+if (sweep_flag == 1)
+// Second sweep is made from connected quadratic splines.
+object {
+   sweep 2, <0, 1, 0>, 16,
+      <0, 0, 1>, <0, 1, 1>, <-1, 1, 1>, <-1, -1, 1>, <2, -1, 1>, <2, 3, 1>,
+      <-4, 3, 1>, <-4, -4, 1>, <4, -4, 1>, <4, -11, 1>, <-2, -11, 1>,
+      <-2, -7, 1>, <2, -7, 1>, <2, -9, 1>, <0, -9, 1>, <0, -8, 1>
+   translate <0, 0, -4>
+   rotate <0,-45, 0>
+   translate <10, 0, -18>
+   shiny_yellow
+   }
+
+if (torus_flag == 1)
+// Torus primitive.  Just for grins lets make it out of wood.
+object {
+   torus sqrt(40), sqrt(12), <0, 0, 0>, <0, 1, 0>
+   // root_solver Sturm
+   wooden { scale <8, 8, 8> rotate <30, 20, 0> }
+   scale <0.3, 0.3, 0.3>
+   rotate <-40, 0, 0>
+   translate <10, 3, 0>
+   }
+
+// Make a hexagonal polygon with hexagonal texturing
+define rp 30                         // Radius of the polygon
+define ang -(2.0 * 3.14159265) / 6   // 60 degrees in radians
+if (polygon_flag == 1)
+object {
+   polygon 6,
+         <rp*cos( 1*ang), 0, rp*sin( 1*ang)>,
+         <rp*cos( 2*ang), 0, rp*sin( 2*ang)>,
+         <rp*cos( 3*ang), 0, rp*sin( 3*ang)>,
+         <rp*cos( 4*ang), 0, rp*sin( 4*ang)>,
+         <rp*cos( 5*ang), 0, rp*sin( 5*ang)>,
+         <rp*cos( 6*ang), 0, rp*sin( 6*ang)>
+   texture {
+      hexagon
+         xz_wheel_texture,
+         sapphire_agate,
+         whorl_texture
+      scale <6, 6, 6>
+      }
+   translate <0, -0.05, 0>
+   }
+

@@ -1,0 +1,29 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 160, 160
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background black
+light <10, 10, -20>
+
+// Quartic parabola - a 4th degree polynomial (has two bumps at the bottom)
+// that has been swept around the z axis.
+object {
+     object { polynomial 0.1*(x^2 + z^2)^2 - (x^2 + z^2) + 0.9 - y
+              scale <0.5, 0.5, 0.5> }
+   & object { box <-2, -2, -0.7>, <2, 0.7, 2> }
+   bounding_box <-2, -2, -0.7>, <2, 0.7, 2>
+   rotate <0, -20, 0>
+   shiny_red
+   }

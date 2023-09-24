@@ -1,0 +1,52 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 6, -8>
+   at <0,0,-1.3>
+   up <0,1,0>
+   angle 45
+   hither 1
+   resolution 256, 256
+   aperture 0.6
+   focal_distance 10
+   }
+
+background <0, 0, 0>
+light <-10, 20, 0>
+
+include "../colors.inc"
+
+object { sphere <-4,  0, -2>, 0.5 shiny_yellow }
+object { sphere <-4,  0,  0>, 0.5 shiny_yellow }
+object { sphere <-4,  0,  2>, 0.5 shiny_yellow }
+object { sphere <-2,  0, -2>, 0.5 shiny_green }
+object { sphere <-2,  0,  0>, 0.5 shiny_red }
+object { sphere <-2,  0,  2>, 0.5 shiny_blue }
+object { sphere < 0,  0, -2>, 0.5 shiny_green }
+object { sphere < 0,  0,  0>, 0.5 shiny_red }
+object { sphere < 0,  0,  2>, 0.5 shiny_blue }
+object { sphere < 2,  0, -2>, 0.5 shiny_green }
+object { sphere < 2,  0,  0>, 0.5 shiny_red }
+object { sphere < 2,  0,  2>, 0.5 shiny_blue }
+object { sphere < 4,  0, -2>, 0.5 shiny_coral }
+object { sphere < 4,  0,  0>, 0.5 shiny_coral }
+object { sphere < 4,  0,  2>, 0.5 shiny_coral }
+
+object { sphere <-4,  0, -4>, 0.5 shiny_orange }
+object { sphere <-2,  0, -4>, 0.5 shiny_orange }
+object { sphere < 0,  0, -4>, 0.5 shiny_orange }
+object { sphere < 2,  0, -4>, 0.5 shiny_orange }
+object { sphere < 4,  0, -4>, 0.5 shiny_orange }
+
+object { sphere <-4,  0,  4>, 0.5 shiny_cyan }
+object { sphere <-2,  0,  4>, 0.5 shiny_cyan }
+object { sphere < 0,  0,  4>, 0.5 shiny_cyan }
+object { sphere < 2,  0,  4>, 0.5 shiny_cyan }
+object { sphere < 4,  0,  4>, 0.5 shiny_cyan }
+
+object {
+   disc <0, -0.5, 0>, <0, 1, 0>, 20
+   texture { checker matte_white, matte_grey }
+   }

@@ -1,0 +1,34 @@
+// Simple demonstration file of a functional texture
+// Polyray input file - Alexander Enzmann
+
+viewpoint {
+   from <0,0,-12>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 160, 160
+   }
+
+background SkyBlue
+light <-10,10,-10>
+light < 10,10,-10>
+
+define sin_color_offset (sin(3.14 * fmod(x*y*z, 1)) + 1) / 2
+define sin_color <sin_color_offset, 0, 1 - sin_color_offset>
+
+define xyz_sin_texture
+texture {
+   special surface {
+      color sin_color
+      ambient 0.2
+      diffuse 0.7
+      specular white, 0.2
+      microfacet Reitz radians(10)
+      }
+   }
+
+// Create a sphere with a special texture
+object {
+   sphere <0, 0, 0>, 2
+   xyz_sin_texture
+   }

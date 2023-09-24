@@ -1,0 +1,106 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 0, -16>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+background skyblue
+light 0.7*white, <-10, 3, -20>
+light 0.7*white, < 10, 3, -20>
+
+define test_map
+   color_map(
+      [0,   0.3, red,     orange]
+      [0.1, 0.3, orange,  blue]
+      [0.3, 0.5, blue,    skyblue]
+      [0.5, 0.7, skyblue, orange]
+      [0.7, 0.9, orange,  magenta]
+      [0.9, 1.0, magenta, red],
+      <1, 1, 1>)
+
+// Simple color map texture
+define noise_texture0
+texture {
+   special surface {
+      color test_map[noise(P)]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   scale <0.6, 0.6, 0.6>
+   }
+
+define marble_turb 1
+define marble_fn  (sawtooth(P[0] + marble_turb * noise(P,4)) + 1) / 2
+
+define white_marble_map
+   color_map(
+      [0.0, 0.8, <0.9, 0.9, 0.9>, <0.5, 0.5, 0.5>]
+      [0.8, 1.0, <0.5, 0.5, 0.5>, <0.2, 0.2, 0.2>])
+
+define red_marble_map
+   color_map(
+      [0.0, 0.8, <0.8, 0.8, 0.6>, <0.8, 0.4, 0.4>]
+      [0.8, 1.0, <0.8, 0.4, 0.4>, <0.8, 0.2, 0.2>])
+
+// Simple marble textures
+define white_marble_texture
+texture {
+   special surface {
+      color white_marble_map[marble_fn]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   }
+
+define red_marble_texture
+texture {
+   special surface {
+      color red_marble_map[marble_fn]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   }
+
+define wood_scale 2
+define light_wood <0.3, 0.12, 0.03>
+define dark_wood <0.05, 0.01, 0.005>
+define xydist wood_scale * sqrt(x * x + y * y)
+
+define wood_turb 1
+define wood_fn  (sawtooth(xydist + wood_turb * noise(P,4)) + 1) / 2
+
+define wood_map
+   color_map(
+      [0.0, 0.9, light_wood, light_wood]
+      [0.9, 1.0, light_wood, dark_wood])
+
+define wood_texture
+texture {
+   special surface {
+      color wood_map[wood_fn]
+      ambient 0.2
+      diffuse 0.8
+      specular white, (0.4 + |wood_map[wood_fn]|)
+      microfacet Reitz 10
+      }
+   scale <0.3, 0.3, 0.3>
+   }
+
+define two_sphere object { sphere <0, 0, 0>, 2 }
+
+two_sphere { translate <-2.5, -2.5, 0> white_marble_texture }
+two_sphere { translate <-2.5,  2.5, 0> wood_texture }
+two_sphere { translate < 2.5, -2.5, 0> red_marble_texture }
+two_sphere { translate < 2.5,  2.5, 0> noise_texture0 }

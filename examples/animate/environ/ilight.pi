@@ -1,0 +1,45 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+start_frame 0
+end_frame 119
+
+// Set up the camera
+viewpoint {
+   from <-9, 2.5, -9>
+   at <0,2.5,0>
+   up <0,1,0>
+   angle 90
+   resolution 200, 200
+   }
+
+background Midnight_Blue
+
+include "../../colors.inc"
+
+light <0.3, 0.3, 0.3>, <0, 4.9, 0>
+define block_environ
+environment("one.tga", "two.tga", "three.tga",
+            "four.tga", "five.tga", "six.tga")
+textured_light {
+   color environment_map(P, block_environ)
+   rotate <frame*6, frame*3, 0>
+   translate <0, 2, 0>
+   }
+
+object {
+   sphere <0, 2, 0>, 1
+   // Force the shading flags all the way on, except for the one that
+   // allows the object to cast a shadow.  We want the light from the
+   // textured light to shine through
+   shading_flags 32 + 16 + 8 + 4 + 2 + 1
+   }
+
+// This is the room we are in
+object { box <-10, 0, -10>, <10, 5, 10> matte_brown }
+
+// These are boxes in the room
+object { box <-6, 0, -6>, <-4, 1, -4> shiny_green rotate <0, 45, 0> }
+object { box <-6, 0,  4>, <-4, 1,  6> shiny_green rotate <0, 45, 0> }
+object { box < 4, 0, -6>, < 6, 1, -4> shiny_green rotate <0, 45, 0> }
+object { box < 4, 0,  4>, < 6, 1,  6> shiny_green rotate <0, 45, 0> }

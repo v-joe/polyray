@@ -1,0 +1,43 @@
+// Textured ridge bumps up from a sphere
+
+// Set up the camera
+viewpoint {
+   from <0,2,-6>
+   at <0,0,0>
+   up <0,1,0>
+   angle 20
+   resolution 256, 256
+   }
+
+background midnight_blue
+light <-10, 8, -10>
+light < 10, 8, -10>
+
+include "../colors.inc"
+
+define ridge_map1 color_map(
+   [0.000, 0.500, <0.000, 0.000, 0.000>, 1.000, <0.451, 0.000, 0.333>, 0.502]
+   [0.500, 0.983, <0.451, 0.000, 0.333>, 0.502, <1.000, 0.141, 0.141>, 0.000]
+   [0.983, 1.000, <1.000, 0.141, 0.141>, 0.000, <0.000, 0.000, 0.000>, 1.000])
+
+define noisy_x1 x + 5 * dnoise(P)[0]
+define noisy_y1 y + 5 * dnoise(P)[1]
+define noisy_z1 z + 5 * dnoise(P)[2]
+define noisy_x2 noisy_x1 - floor(noisy_x1)
+define noisy_y2 noisy_y1 - floor(noisy_y1)
+define noisy_z2 noisy_z1 - floor(noisy_z1)
+define noisy_checker3_fn1 fmod((noisy_x1+noisy_y1+noisy_z1)/3, 1)
+
+define ridge_swirl_fn1 fmod(noisy_x1+noisy_y1+noisy_z1, 1)
+define ridge_swirl_fn fmod((P + 5 * dnoise(P)) . <1,1,1>, 1)
+
+define Ridge_Swirl
+texture { special shiny {
+   color ridge_map1[ridge_swirl_fn]
+   normal N + (ridge_swirl_fn > 0.5 ? 2 * (dnoise(20*P) - white/2) : black)
+   } }
+
+object {
+   sphere <0, 0, 0>, 1
+   texture { layered Ridge_Swirl, matte_white scale <0.5,0.5,0.5> }
+   }

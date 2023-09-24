@@ -1,0 +1,18 @@
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 25
+   resolution 256, 256
+   }
+
+background <0, 0, 0>
+light <-10, 10, -20>
+light < 10, 10, -20>
+
+include "../colors.inc"
+
+object {
+   raw "temp.inc", 60
+   shiny_red
+   }

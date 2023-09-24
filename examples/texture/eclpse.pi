@@ -1,0 +1,296 @@
+//
+// Experiment in layered textures:  A portion of a planet is being
+// eclipsed by its moon.  All effects will be simulated with solid
+// texturing.  The final form of the planet has a series of textures
+// going from the umbra/penumbra of the eclipse, down to the oceans.
+//
+// Polyray input file: Alexander Enzmann
+
+include "../colors.inc"
+background black
+
+//
+//  Place the sun, at the same time figure out what direction it is at
+//  so that we can align the planet and moon with it.
+//
+define sun_position <-40, 0, -200>
+light sun_position
+
+define sun_vector sun_position/|sun_position|
+
+//
+// The moon will be a white bumpy sphere.
+//
+define cratered_bump_scale 1.25
+define cratered
+texture {
+   special surface {
+      // color white
+      color (0.3 + 0.7 * noise(2*P, 4)) * white
+      normal N + cratered_bump_scale * (dnoise(20*P, 4) - <0.5, 0.5, 0.5>)
+      ambient 0.05
+      diffuse 0.8
+      specular white, 0.01
+      microfacet Cook 5
+      }
+   }
+
+define moon_position sun_vector * 7
+object {
+   sphere moon_position, 0.3
+   cratered
+   shading_flags 1
+   }
+
+//
+// Set up the camera, we want to point it somewhere between the planet
+// and the moon so that we get a good frame of the two.  The 2/3 point
+// worked out pretty well
+//
+viewpoint {
+   from <0,0,-10>
+   at 2*moon_position / 3
+   up <0,1,0>
+   angle 30
+   resolution 640, 480
+   aspect 4/3
+   }
+
+//
+// Build an eclipse texture.  This is similar in many respects to
+// a wood texture.  The central core of the eclipse is black, and
+// as we move farther from the core, we move into less and less
+// shadowed regions.  After a certain distance there is no more
+// shadow and the eclipse texture becomes clear.
+//
+// Note that the eclipse calculations are done with "W".  The use of
+// world coordinates is quite deliberate - we dont want the eclipse to
+// move if the planet turns.  The only problem is that the eclipse has to
+// be on something at the origin (but then the earth is at the center of
+// the universe).
+//
+define eclipse_point W / |W|
+define eclipse_dot (W[0] * sun_vector[0] +
+                    W[1] * sun_vector[1] +
+                    W[2] * sun_vector[2]) / |W|
+define eclipse_dist sqrt(1 - eclipse_dot)
+//
+// Define the coloring for the eclipse
+//
+// "eclipse_colors" was just for testing on an otherwise uncolored sphere
+// we don't want any color at all in the final layered texture.
+//
+define eclipse_colors
+color_map([0,    0.02, black, black]  // Umbra
+          [0.02, 0.22, black, white]  // Penunmbra
+          [0.22, 4.0,  white, white]) // No shadow
+//
+// The function for the alpha is what gives us the black core for values
+// less than 0.2, a soft shadow for values between 0.02 and 0.22, and no
+// shadow above that.
+
+define eclipse_alpha (eclipse_dist < 0.02 ? 0
+                        : (eclipse_dist < 0.22
+                             ? 5 * (eclipse_dist - 0.02)
+                             : 1))
+define eclipse
+texture {
+   special surface {
+      color black
+      ambient 0.1
+      diffuse 0.9
+      specular 0
+      transmission white, eclipse_alpha, 1.0
+      }
+   }
+
+//
+// Swirling clouds texture
+//
+// This texture is an attempt to add a sort of simulation of the
+// Coriolis effect to the clouds over a planet.  Not real, but
+// I think the look is better than a simple noise function.
+//
+// The clouds are swirled by a modulated helix - as we move up
+// and down the y axis, we twist back and forth according to
+// the value of "y_fn".  Using this alone produces very even
+// looking clouds that twist back and forth.  By then adding some
+// displacement to this helix, using the dnoise function, we can
+// do some local bubbling of the clouds.
+//
+// The multipliers used in the definition of "sky_fn" were found by
+// playing around.  For a different look, turn off the transmission
+// component of the texture and start changing the values.  When you
+// find one you like, turn on the transmisson again to add in the
+// rest of the planet.
+//
+define y_fn cos(6*y)
+define helical_pos <x*cos(y_fn) + z*sin(y_fn), y, -x*sin(y_fn) + z*cos(y_fn)>
+define sky_fn sawtooth(3*noise(2*helical_pos+3*(dnoise(P, 2)-<0.5,0.5,0.5>), 4))
+define sky_color
+color_map([0,   0.2, white,     white]
+          [0.2, 0.4, white,     0.7*white]
+          [0.4, 0.5, 0.7*white, black]
+          [0.5, 1,   black,     black])
+//
+// The transparency is chosen to coincide with the black portions of
+// the color map used in "sky_color".  Below 0.4 we are in the white
+// part of the clouds, between 0.4 and 0.5 we are in transition from
+// white to clear, and above 0.5 there are no clouds.
+//
+define sky_alpha (sky_fn < 0.4 ? 0
+                    : (sky_fn < 0.5 ? 10 * (sky_fn - 0.4) : 1))
+//
+// Finally put together the cloud texture.
+//
+define swirling_clouds
+texture {
+   special surface {
+      color sky_color[sky_fn]
+      ambient 0.2
+      diffuse 0.6
+      specular 0
+      transmission sky_alpha, 1.0
+      }
+   }
+
+//
+// What would a planet be without polar ice caps?  This is a very
+// simple white/clear texture, however note the offset in the color
+// map from what would be expected for a 2 unit sphere that we
+// wrap this onto.  This offset is to compensate for the extra
+// turbulence we added.
+//
+define ice_cap_map
+   color_map([-5.0,-0.9, white, 0, white, 0]
+	     [-0.9, 2.1, white, 1, white, 1]
+	     [ 2.1, 5.0, white, 0, white, 0])
+define ice_cap_fn y + 1.2 * noise(P, 4)
+define ice_caps
+texture {
+   special surface {
+      color ice_cap_map[ice_cap_fn]
+      ambient  0.1
+      diffuse  0.7
+      }
+   }
+
+//
+// The land mass of the planet is a standard noise function applied
+// to a sphere.  Since we are using a sawtooth lookup function, we
+// know that all the noise values will be between 0 and 1.  The
+// color map is designed to simulate the following features of a
+// planet: white -> mountain tops; a medium tan for areas near the
+// mountains, a Desert color for arid land, a green color for the
+// livable areas, and a clear color for where we are going to put
+// the ocean.  The ocean is separated from this texture because it
+// will be rippled to simulate waves and applying ripple to the
+// land would not look good.
+//
+define Desert (Wheat + Tan) / 2
+define land_fn fnoise(0.6*P, 5) // sawtooth(fnoise(P, 6))
+define desert_land_color_map
+      color_map(
+         [0,    0.05, white, white]
+         [0.05, 0.10, 0.8*Tan, 0.8*Tan]
+         [0.10, 0.20, 0.8*Tan, Desert]
+         [0.20, 0.50, Desert,   Desert]
+         [0.50, 0.60, Desert,   MediumForestGreen]
+         [0.60, 0.70, MediumForestGreen, MediumForestGreen]
+         [0.70, 0.80, MediumForestGreen, 0, white, 1]
+         [0.80, 1.00, white, 1, white, 1])
+define land_color_map
+      color_map(
+         [0,    0.01, white, white]
+         [0.01, 0.03, 0.8*Tan, 0.8*Tan]
+         [0.03, 0.05, 0.8*Tan, Desert]
+         [0.05, 0.10, Desert,   Desert]
+         [0.10, 0.25, Desert,   MediumForestGreen]
+         [0.25, 0.30, MediumForestGreen, MediumForestGreen]
+         [0.30, 0.35, MediumForestGreen, 0, white, 1]
+         [0.35, 1.00, white, 1, white, 1])
+define land
+texture {
+   special surface {
+      color land_color_map[land_fn]
+      ambient 0.1
+      diffuse 0.9
+      specular 0
+      }
+   }
+
+//
+// The bottom most layer is the ocean.  This is a blue color with
+// a ripple applied to the normal.  Clearly the ocean isn't going
+// to have waves this big, but it looks nice.
+//
+define ocean
+texture {
+   noise surface {
+      color <0.4, 0.4, 1.0>
+      normal 2
+      frequency 500
+      bump_scale 2
+      ambient 0.2
+      diffuse 0.5
+      specular white, 0.5
+      microfacet Cook 5
+      }
+   scale <10, 1, 10>
+   }
+
+define atmosphere_color (4*blue+2*green+red)/7
+define atmosphere_map color_map([0.0, 0.35, white, 1.0, atmosphere_color, 0.3]
+				[0.35, 0.4, atmosphere_color, 0.3, white, 1.0]
+				[0.4, 1.0, white, 1.0, white, 1.0])
+define atmosphere
+texture {
+   special surface {
+      color atmosphere_map[|N . I|]
+      ambient opacity * 0.5
+      diffuse 0
+      specular 0
+      }
+   }
+
+// Atmospheric haze at the edge of the planet
+object { sphere <0, 0, 0>, 2.1 atmosphere shading_flags 4 }
+// The planet itself
+object {
+   sphere <0, 0, 0>, 2
+   texture { layered eclipse, swirling_clouds, ice_caps, land, ocean }
+   // texture { layered land, matte_white }
+   // rotate <0, 20, 0>
+   }
+
+//
+// Functions to make stars using correlated noise.  The function single_star
+// determines the brightness of the star - a value from 0.4 to 0.9.  The
+// function stars_color determines if there is a star, or if that part of
+// space is clear.
+//
+define single_star (0.2 + 0.4 * noise(-5000*P))*white + 0.05 * dnoise(-5000*P)
+define stars_color
+(noise(10*P, 3) < 0.5
+   ? (noise(5000*P, 3) > 0.65 ? single_star : black)
+   : (noise(5000*P, 3) > 0.75 ? single_star : black))
+
+// Background starfield
+if (1 == 1)
+object {
+   disc <0, 0, 0>, <0, 0, -1>, 10000
+   texture {
+      special surface {
+	 color stars_color
+	 ambient (stars_color == black ? 0 : 1)
+	 diffuse 0
+	 transmission white, (stars_color == black ? 1 : 0), 1
+	 }
+      }
+   // Here's where we adjust the placement and angle of the disc.  Using a
+   // big sphere would probably have been easier...
+   translate <-0.5, -0.5, 0>
+   scale 0.6*<4000, 3000, 1>
+   rotate <degrees(atan(250/1400)), 0, 0>
+   translate <0, -250, 1400>
+   }

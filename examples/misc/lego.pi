@@ -1,0 +1,23 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from < 6, 8, -8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+background <0, 0, 0>
+light <-50, 50, -50>
+include "../colors.inc"
+
+include "lego.inc"
+
+lego_2_2 { shiny_cyan }
+lego_3_2 { translate <0, 0, 2> shiny_magenta }
+lego_4_2 { translate <-2, 0,-2> shiny_coral }
+
+object { disc <0, 0, 0>, <0, 1, 0>, 10 }

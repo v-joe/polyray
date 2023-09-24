@@ -1,0 +1,66 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 0, -8>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 45
+   hither 1
+   resolution 256, 256
+   }
+
+include "../colors.inc"
+background <0, 0, 0>
+light <-20, 5, -20>
+light < 20, 5, -20>
+
+define bumpy_red
+texture {
+   noise surface {
+      color <1.0, 0.3, 0.3>
+      normal 1
+      frequency 2
+      bump_scale 2
+      ambient 0.1
+      diffuse 0.5
+      specular white, 0.7
+      microfacet Reitz 10
+      }
+   scale <0.3, 0.3, 0.3>
+   }
+
+define rippled_red
+texture {
+   noise surface {
+      color <1.0, 0.3, 0.3>
+      normal 2
+      frequency 20
+      bump_scale 2
+      ambient 0.1
+      diffuse 0.5
+      specular white, 0.7
+      microfacet Reitz 10
+      }
+   translate <-4, 0, 0>
+   }
+
+define dented_red
+texture {
+   noise surface {
+      color <1.0, 0.3, 0.3>
+      normal 3
+      octaves 2
+      turbulence 3
+      ambient 0.1
+      diffuse 0.5
+      specular white, 0.7
+      microfacet Reitz 10
+      }
+   }
+
+object {
+   sphere <0, 0, 0>, 2
+   rippled_red
+   }

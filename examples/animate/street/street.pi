@@ -1,0 +1,118 @@
+start_frame 0
+end_frame 39
+
+define t0 0
+define t1 40
+define increment frame / (t1 - t0)
+
+define offset 20 * increment
+
+// Set up the camera
+define vpos <0, 2, -15 + offset>
+define vat  vpos + <0, -1, 10>
+viewpoint {
+   from vpos
+   at   vat
+   up <0,1,0>
+   angle 22
+   hither 1
+   resolution 320, 160
+   aspect 2
+   }
+
+background 0.5 * midnight_blue
+include "../../colors.inc"
+
+define density 0.5
+define freq 10
+define wire_exper (|fmod(0.3 * P[2], 1)| <       density &&
+                   |fmod(      P[0], 1)| < 0.2 * density ? 1 : 0.2)
+define street_bumpiness
+      N + (wire_exper == 1 ? black : (dnoise(40 * P, 2) - <0.5, 0.5, 0.5>))
+define street_striping
+texture {
+   special surface {
+      normal street_bumpiness
+      ambient wire_exper * white, 0.2
+      diffuse wire_exper * white, 0.8
+      specular white, 0.2
+      microfacet Cook 5
+      }
+   }
+
+define street
+object { box <-1, 0, -100>, <1, 1, 250> street_striping }
+
+define curbs
+object {
+     object { box <-1.05, 0, -100>, <-1, 1.1, 250> matte_white }
+   + object { box < 1, 0, -100>, < 1.05, 1.1, 250> matte_white }
+   }
+
+define sidewalk_shade
+texture {
+   surface {
+      ambient 0.9 * white, 0.2
+      diffuse 0.9 * white, 0.8
+      }
+   }
+
+define sidewalks
+object {
+     object { box <-1.5,  0, -100>, <-1.06, 1.1, 250> sidewalk_shade }
+   + object { box < 1.06, 0, -100>, < 1.5,  1.1, 250> sidewalk_shade }
+   }
+
+sidewalks
+curbs
+street
+
+define left_light_pole
+object {
+     object { cylinder <0, 0, 0>, <0, 2.5, 0>, 0.05 }
+   + object { sphere <0, 2.5, 0>, 0.1 }
+   + object { cylinder <0, 2.5, 0>, < 0.8, 2.5, 0>, 0.05 }
+   + object { cone < 0.8, 2.5, 0>, 0.1, < 0.8, 2.3, 0>, 0.29 }
+   shiny_coral
+   }
+
+define right_light_pole
+object {
+     object { cylinder <0, 0, 0>, <0, 2.5, 0>, 0.05 }
+   + object { sphere <0, 2.5, 0>, 0.1 }
+   + object { cylinder <0, 2.5, 0>, <-0.8, 2.5, 0>, 0.05 }
+   + object { cone <-0.8, 2.5, 0>, 0.1, <-0.8, 2.3, 0>, 0.29 }
+   shiny_coral
+   }
+
+left_light_pole  { translate <-2.2, 0, -20> }
+right_light_pole { translate < 2.2, 0, -10> }
+left_light_pole  { translate <-2.2, 0,   0> }
+right_light_pole { translate < 2.2, 0,  10> }
+left_light_pole  { translate <-2.2, 0,  20> }
+right_light_pole { translate < 2.2, 0,  30> }
+left_light_pole  { translate <-2.2, 0,  40> }
+right_light_pole { translate < 2.2, 0,  50> }
+left_light_pole  { translate <-2.2, 0,  60> }
+right_light_pole { translate < 2.2, 0,  70> }
+
+light 0.3*white, <0, 1000, -1000>
+
+define spotwhite 0.6 * white
+
+spot_light spotwhite, <-1.4, 2.5,-20>, <-1.4, 0,-20>, 2, 40, 90
+spot_light spotwhite, < 1.4, 2.5,-10>, < 1.4, 0,-10>, 2, 40, 90
+spot_light spotwhite, <-1.4, 2.5,  0>, <-1.4, 0,  0>, 2, 40, 90
+spot_light spotwhite, < 1.4, 2.5, 10>, < 1.4, 0, 10>, 2, 40, 90
+spot_light spotwhite, <-1.4, 2.5, 20>, <-1.4, 0, 20>, 2, 40, 90
+spot_light spotwhite, < 1.4, 2.5, 30>, < 1.4, 0, 30>, 2, 40, 90
+spot_light spotwhite, <-1.4, 2.5, 40>, <-1.4, 0, 40>, 2, 40, 90
+spot_light spotwhite, < 1.4, 2.5, 50>, < 1.4, 0, 50>, 2, 40, 90
+spot_light spotwhite, <-1.4, 2.5, 60>, <-1.4, 0, 60>, 2, 40, 90
+spot_light spotwhite, < 1.4, 2.5, 70>, < 1.4, 0, 70>, 2, 40, 90
+spot_light spotwhite, <-1.4, 2.5, 80>, <-1.4, 0, 80>, 2, 40, 90
+spot_light spotwhite, < 1.4, 2.5, 90>, < 1.4, 0, 90>, 2, 40, 90
+spot_light spotwhite, <-1.4, 2.5,100>, <-1.4, 0,100>, 2, 40, 90
+spot_light spotwhite, < 1.4, 2.5,110>, < 1.4, 0,110>, 2, 40, 90
+spot_light spotwhite, <-1.4, 2.5,120>, <-1.4, 0,120>, 2, 40, 90
+spot_light spotwhite, < 1.4, 2.5,130>, < 1.4, 0,130>, 2, 40, 90

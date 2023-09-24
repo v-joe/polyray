@@ -1,0 +1,12 @@
+viewpoint { resolution 181, 91 }
+
+define linear_ramp_map color_map([0, 1, white, black])
+
+define pi 3.14159
+define phi pi * (v - 0.5)
+define theta 2 * pi * u
+define radius 2 // 5
+
+define pos radius*<cos(theta)*cos(phi),sin(theta)*cos(phi),sin(phi)>
+
+background linear_ramp_map[bias(fnoise(pos, 5), 0.8)]

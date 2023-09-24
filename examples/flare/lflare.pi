@@ -1,0 +1,75 @@
+/* Rays around a light plus octagonal flares */
+
+viewpoint {
+   from < 0, 0,-15>
+   at <3,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 640, 480
+   aspect 4/3
+   }
+
+background 0.5*thistle
+
+include "../colors.inc"
+include "../texture.inc"
+
+// Here is the function that makes a 6 rays emanating from the light
+
+// Turn the angle v (which starts as 0 -> 2 pi) into the range 0->1.
+// By multiplyin by 4 we have it repeat 8 times around the circle
+define normangle fmod(4 * (1 + v / 3.1416), 1.0)
+define angval4 ((1 - u) * 4 * (0.25 + (normangle - 0.5)^2))^2
+
+// Make a color that goes from half to fully transparent
+define color1 <1, 1, 1, 0.5 * (2 - angval4)>
+
+// Here is the function that builds octagonal flare shapes
+define p0 2*<u*cos(v), u*sin(v), 0>
+define v0 <1, 0, 0>
+define v1 rotate(v0, <0, 0, 1>, 45)
+define v2 rotate(v0, <0, 0, 1>, 90)
+define v3 rotate(v0, <0, 0, 1>, 135)
+define v4 rotate(v0, <0, 0, 1>, 180)
+define v5 rotate(v0, <0, 0, 1>, 225)
+define v6 rotate(v0, <0, 0, 1>, 270)
+define v7 rotate(v0, <0, 0, 1>, 315)
+define oct_fn max(max(max(p0 . v0, max(p0 . v1, p0 . v2)),
+		      max(p0 . v3, max(p0 . v4, p0 . v5))),
+		  max(p0 . v6, p0 . v7))
+define oct_lookup_fn |fmod(oct_fn, 1)|
+
+// Add colors here for something more interesting than
+// white flares
+define oct_color
+   color_map([0.0, 0.6, white, 1, white, 1]
+             [0.6, 1.0, white, 1, white, 0]
+             [1.0, 1.1, white, 0, white, 1]
+	     [1.1, 100, white, 1, white, 1])[oct_fn]
+
+// Here's the light definition that puts it all together
+textured_light {
+   color white
+   translate <-10, 20, 50>
+   flare {
+      // When w == 0 we are coloring the halo around the light, when
+      // it's above 0 we are coloring a flare ring
+      color (w == 0 ? color1 : oct_color)
+
+      seed 12
+      // seed 42
+      size 0.01, 0.1
+      count 15
+      sphere 0.2
+      concave 1 // Force u to go from center out
+      }
+   }
+
+light 0.5*white, <1000, 1000, -1000>
+include "lflare.inc"
+
+object {
+   flare_text { bumpy_silver }
+   + object { light 0.5*white, <3000, 0, -10000> }
+   translate <-0.9, -0.7, 1> rotate <0, -15, 40> scale <5, 5, 5>
+   }

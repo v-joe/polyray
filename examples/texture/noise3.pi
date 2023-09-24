@@ -1,0 +1,65 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 0, -8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+background <0, 0, 0>
+light <-10, 3, -20>
+
+define turb_value (fmod(frame, 8) +1) * 0.5
+define octv_value (frame / 8) + 1
+
+include "../colors.inc"
+include "../texture.inc"
+
+// Simple color map texture
+define noise_texture0
+texture {
+   noise surface {
+      color white
+      position_fn position_plain
+      lookup_fn lookup_plain
+      octaves 6
+      turbulence 1
+      ambient 0.2
+      diffuse 0.8
+      specular 0.5
+      microfacet Reitz 10
+      color_map(
+         [0,   0.2, red,     orange]
+         [0.1, 0.3, orange,  blue]
+         [0.3, 0.5, blue,    skyblue]
+         [0.5, 0.7, skyblue, orange]
+         [0.7, 0.9, orange,  magenta]
+         [0.9, 1.0, magenta, red],
+         <1, 1, 1>)
+      }
+   scale <0.3, 0.3, 0.3>
+   }
+
+define white_marble_texture
+texture {
+   noise surface {
+      color white
+      position_fn position_objectx
+      lookup_fn lookup_sawtooth
+      octaves octv_value
+      turbulence turb_value
+      ambient 0.2
+      diffuse 0.8
+      specular 0.3
+      microfacet Reitz 5
+      color_map(
+         [0.0, 0.8, <1, 1, 1>, <0.6, 0.6, 0.6>]
+         [0.8, 1.0, <0.6, 0.6, 0.6>, <0.1, 0.1, 0.1>])
+      }
+   }
+
+object { sphere <0, 0, 0>, 2 noise_texture0 }

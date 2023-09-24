@@ -1,0 +1,88 @@
+// Move a plane along a spline path - we calculate pitch and yaw according
+// to the path as well.
+start_frame 0
+end_frame   250
+
+define t frame / end_frame
+
+background <170/255,170/255,170/255>
+light <20, 30,-30>
+
+include "../../colors.inc"
+
+/* Make a floor similar to the hf's coming out of fly... */
+object {
+   polygon 4, <-1, 0, -1>, <-1, 0, 1>, <1, 0, 1>, <1, 0, -1>
+   texture { checker matte_white, matte_black scale <0.2, 1, 0.2> }
+   scale <15, 5, 15>
+   }
+
+// Define the spline path
+define path1 [
+<0.794872,0.237705,0.137349>,
+<0.785548,0.352459,0.168675>,
+<0.759907,0.401639,0.183133>,
+<0.74359,0.360656,0.212048>,
+<0.699301,0.352459,0.214458>,
+<0.67366,0.311475,0.274699>,
+<0.724942,0.303279,0.380723>,
+<0.680653,0.762295,0.453012>,
+<0.606061,0.737705,0.513253>,
+<0.566434,0.278689,0.472289>,
+<0.547786,0.204918,0.39759>,
+<0.501166,0.180328,0.387952>,
+<0.48951,0.172131,0.433735>,
+<0.526807,0.254098,0.501205>,
+<0.475524,0.393443,0.563855>,
+<0.435897,0.5,0.563855>,
+<0.403263,0.385246,0.561446>,
+<0.363636,0.237705,0.573494>,
+<0.319347,0.147541,0.590361>,
+<0.307692,0.229508,0.648193>,
+<0.312354,0.221311,0.715663>,
+<0.358974,0.147541,0.749398>,
+<0.370629,0.131148,0.809639>,
+<0.400932,0.172131,0.886747>,
+<0.501166,0.188525,0.86988>,
+<0.613054,0.204918,0.857831>,
+<0.615385,0.245902,0.785542>,
+<0.564103,0.377049,0.718072>,
+<0.561772,0.47541,0.679518>,
+<0.561772,0.418033,0.640964>,
+<0.531469,0.237705,0.590361>]
+
+// Note the reversal of direction and scaling of the spline to match
+// the orientation used by fly (the <15,5,-15> in the formula below)
+define plane_pos <15,5,-15>^(2*(spline(t,path1)-<0.5,0,0.5>))
+
+if (t < 1) {
+   define next_plane_pos <15,5,-15>^(2*(spline(t+0.001,path1)-<0.5,0,0.5>))
+   define plane_dir (next_plane_pos - plane_pos)
+   }
+else {
+   define last_plane_pos <15,5,-15>^(2*(spline(t-0.001,path1)-<0.5,0,0.5>))
+   define plane_dir (plane_pos - last_plane_pos)
+   }
+
+define theta degrees(atan2(plane_dir[2], plane_dir[0]))
+define phi degrees(atan2(plane_dir[1],
+		   sqrt(plane_dir[0]*plane_dir[0]+plane_dir[2]*plane_dir[2])))
+
+// Create a plane and orient it
+include "plane.inc"
+fighter_plane {
+   rotate <0, 0, phi/2>  // Chop pitch in half
+   rotate <0, -theta, 0> // Since we scaled the z component of plane_pos,
+			 // we need to use a negative angle
+   translate plane_pos   // Put the plane where it belongs
+   }
+
+// We point the camera at the position of the plane
+viewpoint {
+  from <6, 20, -30>
+  at plane_pos // <0, 0, 0>
+  up <0,1,0>
+  angle 20 // 45
+  resolution 160, 120
+  aspect 1.333
+  }

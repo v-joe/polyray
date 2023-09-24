@@ -1,0 +1,45 @@
+viewpoint {
+   from <0,0,-15>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 128, 128
+   }
+
+include "../colors.inc"
+
+background black
+light <-10,3, -20>
+
+define pi 3.14159265
+define two_pi 2 * pi
+
+define theta u * two_pi
+define phi   (v - 0.5) * pi
+
+if (0 == 0)
+   object {
+      sheight_fn 30, 30,
+                 legendre(2, 1, v),
+                 1.0, 3.0
+      shiny_red
+      rotate <30, 0, 0>
+      }
+else
+object {
+   object {
+      sheight_fn 60, 30,
+                 sin(theta)^2 * cos(2*phi),
+                 1.0, 1.0
+      shiny_red
+      }
+
+   + object {
+      sheight_fn 60, 30,
+                 sin(theta)^2 * sin(2*phi),
+                 1.0, 1.0
+      rotate <60, 30, 0>
+      shiny_blue
+      }
+   rotate <0, 45, 0>
+   }

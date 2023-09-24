@@ -1,0 +1,27 @@
+// Shows how the alpha/opacity bit affects image mapping
+viewpoint {
+   from <0,5,-10>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 256, 256
+   }
+
+include "../colors.inc"
+background white
+light <-10, 30, -20>
+
+define sphimg image("m22u.tga")
+
+define sphmap_tex
+texture {
+   special surface {
+      color planar_imagemap(sphimg, <4*u, 0, 2*v>, 1)
+      ambient 0.1
+      diffuse 0.7
+      specular white, 0.5
+      microfacet Cook 5
+      }
+   }
+
+object { sphere <0, 0, 0>, 2 sphmap_tex }

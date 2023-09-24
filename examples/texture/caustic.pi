@@ -1,0 +1,41 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,5,-9>
+   at <2,1.5,0>
+   up <0,1,0>
+   angle 30
+   resolution 256, 128
+   aspect 2
+   }
+
+include "../colors.inc"
+include "../texture.inc"
+
+background skyblue
+light <-50, 30, -5>
+
+define caustic_glass
+texture {
+   special surface {
+      color white
+      ambient 0.01
+      diffuse 0.1
+      specular white, 0.1
+      transmission white, 0.9*|N . I|, 1.5
+      microfacet Cook 5
+      }
+   }
+
+object {
+   sphere <0, 2, 0>, 1.5
+   caustic_glass
+   }
+object {
+   disc <0, 0, 0>, <0, 1, 0>, 50
+   texture {
+      checker matte_white, matte_black
+      }
+   }

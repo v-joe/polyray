@@ -1,0 +1,37 @@
+start_frame 0
+end_frame 35
+define t frame / end_frame
+
+viewpoint {
+   from <0,-5,-20>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   max_trace_depth 20
+   resolution 256, 256
+   }
+light orange, <-10, 30, -20>
+light turquoise, < 10,-30, -20>
+
+define pi 3.14159265358979
+
+define phase_offset 2*pi*t
+
+define screw_x u * cos(v)
+define screw_y v * cos(u+phase_offset)
+define screw_z u * sin(v)
+background 0.05*green
+object {
+   parametric <screw_x, screw_y, screw_z>
+   uv_bounds -2*pi, 2*pi, -pi, 2*pi
+   uv_steps 64, 64
+   texture {
+      surface {
+	 color white
+	 ambient 0.02
+	 diffuse 0.3
+	 transmission 0.7, 1
+	 }
+      }
+   shading_flags 4
+   }

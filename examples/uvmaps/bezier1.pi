@@ -1,0 +1,37 @@
+// Bezier patch
+viewpoint {
+   from <0,0,-15>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+background <0, 0, 0>
+light <-10,10, -5>
+
+define two_sided_image
+texture {
+   special surface {
+      color (N . I < 0
+	       ? planar_imagemap(image("fract005.jpg"), <u, 0, v>)
+	       : blue)
+      ambient 0.1
+      diffuse 0.7
+      specular white, 0.7
+      microfacet Cook 5
+      }
+   }
+
+object {
+   bezier 0, 0.05, 5, 5,
+      < 0.0, 0.0, 2.0>, < 1.0, 2.0, 0.0>, < 2.0, 2.0, 0.0>, < 3.0, 0.0,-2.0>,
+      < 0.0, 1.0, 0.0>, < 1.0, 1.0, 0.0>, < 2.0, 1.0, 0.0>, < 3.0, 1.0, 0.0>,
+      < 0.0, 2.0, 0.0>, < 1.0, 2.0, 0.0>, < 2.0, 2.0, 0.0>, < 3.0, 2.0, 0.0>,
+      < 0.0, 3.0, 2.0>, < 1.0, 5.0, 0.0>, < 2.0, 5.0, 0.0>, < 3.0, 3.0,-2.0>
+   translate <-1.5, -1.5, 0>
+   scale <2, 2, 2>
+   rotate <40, -60, 0>
+   two_sided_image
+   uv_steps 8, 8
+   }

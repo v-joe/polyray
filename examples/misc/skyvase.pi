@@ -1,0 +1,126 @@
+// Persistence Of Vision raytracer version 2.0 sample file.
+
+// By Dan Farmer
+//    Minneapolis, mn
+
+//   skyvase.pov
+//   Vase made with Hyperboloid and sphere {, sitting on a hexagonal
+//   marble column.  Take note of the color and surface characteristics
+//   of the gold band around the vase.  It seems to be a successful
+//   combination for gold or brass.
+//
+// Contains a Disk_Y object which may have changed in shapes.dat
+
+define DMF_Hyperboloid
+object { polynomial x^2 - y^2 + z^2 - 0.5 }
+
+viewpoint {
+   from <0, 28, -200>
+   at <0, -12, 0>
+   up  <0, 1, 0>
+   /* Had:
+      direction <0.0, 0.0, 2.0>
+      up  <0.0, 1.0, 0.0>
+   */
+   angle 2*degrees(atan(0.5 / 2.0)) // 28.07249
+   aspect 4/3
+   resolution 640, 480
+   }
+
+/* Light behind viewer postion (pseudo-ambient light) */
+light white, <100, 500, -500>
+
+
+define bright_blue_sky_map
+   color_map([0.0, 0.5, <0.5, 0.5, 1>, <0.5, 0.5, 1>]
+	     [0.5, 0.6, <0.5, 0.5, 1>, <1, 1, 1>]
+	     [0.6, 1.0, <1, 1, 1>, <0.5, 0.5, 0.5>])
+define BrightBlueSky
+texture {
+   special surface {
+      color bright_blue_sky_map[noise(P)]
+      position P + 0.3 * dnoise(P)
+      ambient 0.1
+      diffuse 0.75
+      specular 1
+      microfacet Phong 2
+      reflection white, 0.35
+      }
+   scale <4, 2, 2>
+   rotate <0, 0, 15>
+   }
+
+define OldGold <0.81, 0.71, 0.23>
+define OldGoldMetal
+texture {
+   surface {
+      color OldGold
+      ambient 0.2
+      diffuse 0.7
+      brilliance 6
+      reflection 0.25
+      specular OldGold, 0.75
+      microfacet Phong 5
+      }
+   }
+
+// Make vase
+object {
+   object {
+      (object { disc <0, 0.7, 0>, <0, 1, 0>, 1 }
+       * (DMF_Hyperboloid { scale <0.75, 1.25, 0.75> }
+          - DMF_Hyperboloid { scale <0.70, 1.25, 0.70> })
+       * object { disc <0,-1, 0>, <0,-1, 0>, 1 })
+      + object { sphere <0,0,0>, 1 scale <1.6,0.75,1.6> translate <0,-1.15,0> }
+      scale <20,25,20>
+      }
+   + object { sphere <0, 0, 0>, 1 scale <1.6,0.75,1.6> translate <0,-7,0>
+	      scale <20.5,4,20.5> OldGoldMetal }
+   BrightBlueSky
+   bounding_box <-34,-100,-34>, <34, 100, 34> // Half this?
+   }
+
+/* Stand for the vase */
+define blue_agate_map
+      color_map([0.0, 0.3, <0, 0, 0.9>, <0, 0, 0.8>]
+	        [0.3, 1,   <0, 0, 0.8>, <0, 0, 0.4>])
+define agate_fn ((sin(6.2832*(1.1*z+2.6*fnoise(P,<2.8,0.5,4>)))+1)/2)^0.77
+define sapphire_agate
+texture {
+   special surface {
+      color blue_agate_map[agate_fn]
+      ambient 0.2
+      diffuse 0.75
+      reflection white, 0.85
+      }
+   }
+define pi 3.14159265358979
+define hex_dt (2.0 * pi) / 6
+define hex_r cos(radians(30)) + 0.5 * tan(radians(30))
+object {
+   glyph 1 contour 6,
+      <1, 0>, <cos(hex_dt), sin(hex_dt)>,
+      <cos(2*hex_dt),sin(2*hex_dt)>, <cos(3*hex_dt),sin(3*hex_dt)>,
+      <cos(4*hex_dt),sin(4*hex_dt)>, <cos(5*hex_dt),sin(5*hex_dt)>
+   scale <hex_r, hex_r, 1>
+   rotate <-90, 0, 0>
+   translate <0, -0.5, 0>
+   scale <1, 2, 1>
+   rotate <0, -45, 0>
+   scale <40, 25, 40>
+   translate <0,-70,0>
+   sapphire_agate { scale white/4 }
+   }
+
+object {
+   object { disc <0, 0, 50>, <0, 0,-1>, 1000 rotate <0, -45, 0> }
+   + object { disc <0, 0, 50>, <0, 0,-1>, 1000 rotate <0,  45, 0> }
+   texture {
+      surface {
+	 color white/3
+	 ambient 0.2
+	 diffuse 0.75
+	 reflection white, 0.5
+	 }
+      }
+   }

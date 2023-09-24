@@ -1,0 +1,29 @@
+// Generic Polyray input File
+// Demonstrates a bumpy sphere by applying "dnoise" to the normal
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+background <0, 0, 0>
+light 0.6*white, <-10, 8, -20>
+light 0.6*white, < 10, 8, -20>
+
+define shiny_red
+texture {
+   special surface {
+      normal N + 2 * (dnoise(3*P) - <0.5, 0.5, 0.5>)
+      ambient red, 0.2
+      diffuse red, 0.3
+      specular white, 0.7
+      microfacet Reitz 10
+      }
+   }
+
+object { sphere <0, 0, 0>, 2 shiny_red }

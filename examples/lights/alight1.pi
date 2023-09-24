@@ -1,0 +1,45 @@
+// Sample file demonstrating the difference between the two area light
+// types and a standard point light.
+start_frame 0
+end_frame 2
+outfile aligh
+
+viewpoint {
+   from <0,10,-12>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 320, 160
+   aspect 2
+   }
+
+background SkyBlue
+
+if (frame == 0)
+textured_light {
+   color white
+   sphere <0, 0, 0>, 1
+   translate <10,8,0>
+   }
+else if (frame == 1)
+textured_light {
+   color white
+   polygon 4, 4, 2, 0.1
+   translate <-0.5, 0, -0.5>
+   rotate <0, 0, 90>
+   translate <10,8,0>
+   }
+else
+   light white, <10, 8, 0>
+
+include "../colors.inc"
+
+// Create a sphere with a checker texture
+object {
+   cone <3, -2, 0>, 2, <3, 4, 0>, 0
+   shiny_coral
+   }
+
+object {
+   polygon 4, <-15, -2, -15>, <-15, -2, 15>, <15, -2, 15>, <15, -2, -15>
+   }

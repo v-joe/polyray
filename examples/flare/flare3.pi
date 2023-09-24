@@ -1,0 +1,102 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+start_frame 0
+total_frames 120
+end_frame total_frames
+
+define t frame / total_frames
+
+define light0_loc <-10, 10,-10>
+define light1_loc < 10, 12, 20>
+define key_points [light0_loc, <0, 0, 0>, light1_loc]
+define at_loc spline(2, t, key_points)
+
+// Set up the camera
+viewpoint {
+   from < 5, 3,-15>
+   at at_loc // <0, 1, 10> // <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 120
+   aspect 4/3
+   }
+
+background black // midnight_blue
+include "../colors.inc"
+
+define flare_color01 (gold + white) / 2
+define flare_color02 (yellow + white) / 2
+define flare_color03 (red + white) / 2
+static define flare_map0
+   color_map([0.00, 0.20, flare_color01, 0.4, flare_color02, 0.4]
+             [0.20, 0.40, flare_color02, 0.4, flare_color03, 0.8]
+             [0.40, 1.00, flare_color03, 0.8, black,        1.0])
+static define flare_map1
+   color_map([0.00, 0.10, black,         1.0, flare_color01, 0.4]
+             [0.10, 0.20, flare_color01, 0.4, flare_color02, 0.4]
+             [0.20, 0.40, flare_color02, 0.4, flare_color03, 0.8]
+             [0.40, 1.00, flare_color03, 0.8, black,        1.0])
+textured_light {
+   color 0.8*white
+   translate light0_loc
+   flare {
+      color (x > 0 ? flare_map0[u] : flare_map1[u]) // red
+      size 0.003, 0.1
+      count 15
+      seed 2020
+      }
+   }
+object { sphere light0_loc, 0.3 shading_flags 0
+         texture { surface { color white ambient 1 diffuse 0 } } }
+
+define flare_color1 (<0.2, 1, 0.3> + white) / 2
+define flare_color2 (<1, 0.5, 0.2> + white) / 2
+define flare_color3 (<1, 0.5, 1.0> + white) / 2
+static define flare_map2
+   color_map(// [0.00, 0.05, black,        1.0, flare_color1, 0.4]
+             [0.00, 0.20, flare_color1, 0.4, flare_color2, 0.4]
+             [0.20, 0.40, flare_color2, 0.4, flare_color3, 0.8]
+             [0.40, 1.00, flare_color3, 0.8, black,        1.0])
+static define flare_map3
+   color_map([0.00, 0.10, black,        1.0, flare_color1, 0.4]
+             [0.10, 0.20, flare_color1, 0.4, flare_color2, 0.4]
+             [0.20, 0.40, flare_color2, 0.4, flare_color3, 0.8]
+             [0.40, 1.00, flare_color3, 0.8, black,        1.0])
+
+textured_light {
+   color 0.8*white
+   translate light1_loc
+   flare {
+      color (x > 0 ? flare_map2[u] : flare_map3[u]) // green
+      seed 37 // 22
+      size 0.003, 0.05
+      count 20
+      }
+   }
+
+object { sphere light1_loc, 0.3 shading_flags 0
+         texture { surface { color white ambient 1 diffuse 0 } } }
+
+define sphere_tex
+texture { special shiny {
+   color white_marble_map[sawtooth(x + 3*noise(P, 5))] } }
+
+define block_tex
+texture { special shiny {
+   color wood_map1[sin(x^2+z^2 + 0.2*noise(P, 2))] }
+   scale white/3 }
+
+if (1 == 1) {
+
+
+// Make some objects around the center sphere
+object {
+     object { disc <0, -2, 0>, <0, 1, 0>, 10
+              texture { checker matte_white, matte_grey } }
+   + object { sphere <0, 0, 0>, 2 sphere_tex }
+   + object { box <-5, -2, -5>, <-4, 1, -4> block_tex }
+   + object { box <-5, -2,  5>, <-4, 1,  4> block_tex }
+   + object { box < 5, -2, -5>, < 4, 1, -4> block_tex }
+   + object { box < 5, -2,  5>, < 4, 1,  4> block_tex }
+   }
+}

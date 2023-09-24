@@ -1,0 +1,34 @@
+viewpoint {
+   from <0,15,-5>
+   at <0,0,0>
+   up <0,1,0>
+   angle 40
+   resolution 320, 240
+   aspect 4/3
+   }
+
+background <0, 0, 0>
+light <0, 10, 0>
+light <20, 5, -30>
+
+include "../colors.inc"
+
+define basic_cone
+object { cone <4, 0, 0>, 1, <6, 0, 0>, 0 shiny_red }
+
+define basic_parab
+object { parabola <2, 0, 0>, <4, 0, 0>, 1 shiny_red }
+
+define test_object
+object {
+     basic_parab
+   + basic_cone
+   }
+
+test_object
+test_object { rotate <0, 60, 0> }
+test_object { rotate <0,120, 0> }
+test_object { rotate <0,180, 0> }
+test_object { rotate <0,240, 0> }
+test_object { rotate <0,300, 0> }
+object { sphere <0, 0, 0>, 2.0 scale <1, 0.3, 1> shiny_green }

@@ -1,0 +1,80 @@
+background white
+light <-1000, 3000, -2000>
+
+include "../colors.inc"
+include "../texture.inc"
+
+define txt001 shiny_blue
+
+include "me109.inc"
+define me109 object { raw "me109.obj", 30 }
+
+define me109_ll min("me109")
+define me109_ur max("me109")
+define me109_sizes max("me109") - min("me109")
+define me109_center (min("me109") + max("me109")) / 2
+define me109_max_size max(me109_sizes[0],
+                          max(me109_sizes[1], me109_sizes[2]))
+define me109_scale 100 / me109_max_size
+
+define scaled_me109
+me109 {
+   translate -me109_center
+   scale me109_scale * <1, 1, 1>
+   }
+
+scaled_me109 {
+   rotate <0, 0, 25>
+   rotate <-60, 0, 0>
+   rotate <0, -40, 0>
+   translate <0, 50, 0>
+   }
+
+scaled_me109 {
+   rotate <0, 0, -10>
+   rotate <-15, 0, 0>
+   rotate <0, 20, 0>
+   translate <-50, 20, 10>
+   }
+
+// Set up the camera
+viewpoint {
+   from <0, 2, -200>
+   at <0, 30, 0>
+   up <0, 1, 0>
+   angle 45
+   resolution 320, 240
+   aspect 4/3
+   }
+
+// Adjust the bias of the cloud function so that the sky gets
+// cloudier as we look farther away.  Directly up is clear
+define cloud_rate 0.7
+define cloud_bias min(0.5 + bias(|I[1]|, cloud_rate), 1)
+
+if (1 == 1) {
+object {
+   sphere <0, 0, 0>, 20000
+   scale <1, 0.01, 1>
+   texture {
+      special surface {
+         color cloudy_sky_map[bias(fnoise(P, 5), cloud_bias)]
+         ambient 0.9
+         diffuse 0
+         specular 0
+         }
+      scale <500, 100, 300>
+      }
+   shading_flags 0
+   }
+object {
+   disc <0, 0, 0>, <0, 1, 0>, 20000
+   shading_flags 63
+   texture {
+      special shiny {
+         color green normal N + 0.2 * (dnoise(3*W) - <0.5, 0.5, 0.5>)
+         }
+      scale <1, 1, 1>
+      }
+   }
+}

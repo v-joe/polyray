@@ -1,0 +1,42 @@
+// Flickering flame animation
+start_frame 0
+end_frame 300
+
+viewpoint {
+   from <0,3,-14>
+   at <0,4,0>
+   up <0,1,0>
+   angle 45
+   resolution 80, 160
+   aspect 0.5
+   }
+
+background midnight_blue
+light < 5, 10, -20>
+
+define flame_fn (sqrt(1.5 * x^2 + y^2) +
+                       2 * noise(P + <0, -frame/3, frame/6>, 1))
+define flame_tex
+texture {
+   special surface {
+      ambient 1
+      diffuse 0
+      specular 0
+      transmission (flame_fn < 5 ? black
+		     : (flame_fn > 8 ? white
+		 	: white * (flame_fn - 5) / 3)), 1, 1
+      color color_map([-50, 1, blue, blue]
+                      [1, 2, blue, yellow]
+                      [2, 3, yellow, yellow]
+                      [3, 4, yellow, orange]
+                      [4, 5, orange, red]
+                      [5, 8, red, black]
+                      [8, 20, black, black], blue)[flame_fn]
+      }
+   }
+
+object {
+   sphere <0, 4.5, 0>, 5
+   scale <2/5, 1, 1/100>
+   flame_tex { translate <0, 0.5, 0> }
+   }

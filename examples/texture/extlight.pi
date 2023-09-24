@@ -1,0 +1,119 @@
+//
+// Implementing extended lights via special surfaces
+//
+// Polyray input file: Alexander Enzmann
+
+//
+// Define the location and size of the extended light source
+//
+define light_position <-20, 12, 20>
+define light_color <1, 1, 1>
+define light_radius 3
+
+// Put the light source in place
+light light_color, light_position
+
+// Set up the camera
+viewpoint {
+   from <0, 5,-7>
+   at   <0, 0, 0>
+   up   <0, 1, 0>
+   angle 35
+   resolution 256, 128
+   aspect 2
+   }
+
+include "../colors.inc"
+//
+// Here is where we build the jitter rays that are fired from a point
+// on a surface towards the extended light source.  The rays are built
+// from two vectors that are perpendicular to the direction of the ray
+// that extends from the point on the surface to the center of the
+// extended light source.  A random deflection of each ray is made that
+// has a magnitude equal to the radius of the light source.  The sum
+// of the visibilities is averaged to get the intensity within the shadow.
+//
+define light_vector (light_position - W)
+define light_distance |light_vector|
+define light_norm_vector light_vector / light_distance
+define light_vec1 light_vector * <0, 0, 1>
+define light_t (light_vec1 / |light_vec1|)
+define light_v light_t * light_norm_vector
+define light_u light_v * light_norm_vector
+
+//
+// The scale of the jitter is based on the size of the light
+define jitter_scale1 light_radius * <0.7, 0.7, 0.7>
+
+//
+// Each sample ray is directed towards the center of the light, and is
+// deflected by a random displacement.
+//
+define sampled_light_point
+   (light_position + brownian(light_u, jitter_scale1)
+		   + brownian(light_v, jitter_scale1))
+
+//
+// Different resolutions of shading are achieved by performing more
+// and more samples.
+//
+define sampled_shade4
+   (visible(W, sampled_light_point) +
+    visible(W, sampled_light_point) +
+    visible(W, sampled_light_point) +
+    visible(W, sampled_light_point)) / 4
+
+define sampled_shade8
+   (sampled_shade4 + sampled_shade4) / 2
+                  
+define sampled_shade16
+   (sampled_shade8 + sampled_shade8) / 2
+
+define sampled_shade32
+   (sampled_shade16 + sampled_shade16) / 2
+
+define sampled_shade64
+   (sampled_shade32 + sampled_shade32) / 2
+
+//
+// Define the sampled coloring for the floor
+//
+define soft_shadowed
+texture {
+   special surface {
+      color black
+      transmission white, sampled_shade64, 1
+      ambient  0
+      diffuse  0
+      specular 0
+      }
+   }
+
+define floor_color
+texture {
+   layered
+      soft_shadowed,
+      texture { hexagon matte_red, matte_white, matte_blue scale <2, 2, 2> }
+   }
+
+define diffuse_white
+texture {
+   special surface {
+      color white
+      ambient  0.2
+      diffuse  0.8
+      specular 0
+      }
+   }
+
+object {
+   sphere <-2, 0, 3>, 1
+   mirror
+   // cone <-2, -1, 3>, 2, <-2, 1, 3>, 0
+   }
+
+object {
+   disc <0, -1, 0>, <0, 1, 0>, 30
+   floor_color
+   shading_flags 62
+   }

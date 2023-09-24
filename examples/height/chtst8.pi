@@ -1,0 +1,26 @@
+viewpoint {
+   from <0,0,-15>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 256, 256
+   }
+
+background white
+light <-10,3, -20>
+
+define pi 3.14159265
+define two_pi 2 * pi
+
+define theta u * two_pi
+define phi   (v - 0.5) * pi
+
+define fn1 0.5 * cos(6 * (phi + 2 * theta))
+define fn 0.5 * cos(12 * phi + 3 * theta)
+
+object {
+   smooth_cheight_fn 120, 120, fn, 1.0, 2.0
+   translate <0,-0.5,0>
+   scale <1,6,1>
+   rotate <-20, 0, 0>
+   }

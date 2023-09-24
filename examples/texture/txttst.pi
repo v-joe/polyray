@@ -1,0 +1,67 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+//
+// Example of building a texture using object coordinates (P) versus
+// using world coordinates (W)
+//
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 160, 80
+   aspect 2
+   }
+
+background black
+light <10, 10, -20>
+
+define test_map
+   color_map(
+      [0,   0.3, <0, 0, 1>, <1, 0, 0>]
+      [0.3, 0.4, <1, 0, 0>, <0, 1, 0>]
+      [0.6, 1.0, <0, 1, 0>, <0, 0, 1>],
+      <1, 1, 1>)
+
+// This texture moves with the object
+define test_map_texture0
+texture {
+   special surface {
+      color test_map[fmod(fabs(P[0]), 1.0)]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   }
+
+// This texture stays in place
+define test_map_texture1
+texture {
+   special surface {
+      color test_map[fmod(fabs(W[0]), 1.0)]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   }
+
+object {
+   sphere <0, 0, 0>, 1
+   test_map_texture0
+   translate <-2.5, 0, 0>
+   }
+
+object {
+   sphere <0, 0, 0>, 1
+   test_map_texture0
+   }
+
+object {
+   sphere <0, 0, 0>, 1
+   test_map_texture1 { translate <2.5, 0, 0> }
+   translate <2.5, 0, 0>
+   }

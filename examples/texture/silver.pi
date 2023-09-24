@@ -1,0 +1,29 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <2,4,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+background <0, 0, 0>
+light <-10, 20, -20>
+light < -40, 40, 80>
+
+include "../colors.inc"
+include "../texture.inc"
+
+object {
+   sphere <0, 0, 0>, 1
+   dark_wooden { scale <0.5,0.5,0.5> }
+   translate <0, 1, 0>
+   }
+
+object {
+   box <-3, -0.5, -3>, <3, 0, 3>
+   bumpy_silver
+   }

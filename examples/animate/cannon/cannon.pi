@@ -1,0 +1,163 @@
+// Cannon fires several balls
+//
+// Demonstrates static variables, and parabolic paths with bounces
+//
+// Polyray input file - Alexander Enzmann
+
+// Define the range of the animation
+start_frame  0
+end_frame    350
+total_frames 350
+outfile can
+
+// Set up the camera
+viewpoint {
+   from <0,10,-20>
+   at <0,0,2>
+   up <0, 1, 0>
+   angle 45
+   resolution 256, 128
+   aspect 2
+   }
+
+// Set up background color & lights
+background midnightblue
+light 0.7*white, <-10,20,-10>
+light 0.7*white, < 10,20,-10>
+
+include "../../colors.inc"
+
+define copper <0.72, 0.45, 0.20>
+define brass <0.71, 0.65, 0.26>
+
+define Silver texture { shiny { color 0.7*white } }
+define Copper texture { shiny { color copper } }
+define Brass texture { shiny { color brass } }
+
+if (frame == start_frame)
+   include "cannon.inc"
+
+// Cannon alignment
+if (frame < 10)
+   // Align the cannon with the direction of the first shot
+   define CTx transform { rotate <0, 0, 6*frame> rotate <0, -6*frame, 0> }
+else if (frame < 40)
+   define CTx transform { rotate <0, 0, 60> rotate <0, -60, 0> }
+else if (frame < 50)
+   // Realign the cannon for the second shot
+   define CTx transform { rotate <0, 0, 60> rotate <0, -60+3*(frame-40), 0> }
+else if (frame < 80)
+   define CTx transform { rotate <0, 0, 60> rotate <0, -30, 0> }
+else if (frame < 90)
+   // Realign the cannon for the third shot
+   define CTx transform { rotate <0, 0, 60-1.5*(frame-80)>
+			  rotate <0, -30-1.5*(frame-80)> }
+else if (frame < 120)
+   define CTx transform { rotate <0, 0, 45> rotate <0, -45, 0> }
+else if (frame < 130)
+   // Realign the cannon for the fourth shot
+   define CTx transform { rotate <0, 0, 45-1.5*(frame-120)>
+			  rotate <0, -45-3*(frame-120)> }
+else if (frame < 160)
+   define CTx transform { rotate <0, 0, 30> rotate <0, -75, 0> }
+else if (frame < 170)
+   // Realign the cannon for the fifth shot
+   define CTx transform { rotate <0, 0, 30+1.5*(frame-160)>
+			  rotate <0, -75+6*(frame-160)> }
+else if (frame < 200)
+   define CTx transform { rotate <0, 0, 45> rotate <0, -15, 0> }
+else if (frame < 210)
+   // Realign the cannon for the sixth shot
+   define CTx transform { rotate <0, 0, 45-1.5*(frame-200)>
+			  rotate <0, -15-3*(frame-200), 0> }
+else
+   // Final orientation
+   define CTx transform { rotate <0, 0, 30> rotate <0,-45, 0> }
+
+// Build the cannon, orient it, and position it
+Cannon { CTx translate CPos }
+
+// Projectiles
+if (frame == 11)
+   static define Ball1_Pos CPos+4*Ball1_Vel
+else if (frame > 11) {
+   static define Ball1_Pos Ball1_Pos + Ball1_Vel
+   static define Ball1_Vel Ball1_Vel + Gravity
+   if (Ball1_Pos[1] < -1) {
+      static define Ball1_Pos <Ball1_Pos[0], -2 - Ball1_Pos[1], Ball1_Pos[2]>
+      static define Ball1_Vel <Ball1_Vel[0], -0.7*Ball1_Vel[1], Ball1_Vel[2]>
+      }
+   }
+Projectile { translate Ball1_Pos }
+
+if (frame == 51)
+   static define Ball2_Pos CPos+4*Ball2_Vel
+else if (frame > 51) {
+   static define Ball2_Pos Ball2_Pos + Ball2_Vel
+   static define Ball2_Vel Ball2_Vel + Gravity
+   if (Ball2_Pos[1] < -1) {
+      static define Ball2_Pos <Ball2_Pos[0], -2 - Ball2_Pos[1], Ball2_Pos[2]>
+      static define Ball2_Vel <Ball2_Vel[0], -0.7*Ball2_Vel[1], Ball2_Vel[2]>
+      }
+   }
+Projectile { translate Ball2_Pos }
+
+if (frame == 91)
+   static define Ball3_Pos CPos+4*Ball3_Vel
+else if (frame > 91) {
+   static define Ball3_Pos Ball3_Pos + Ball3_Vel
+   static define Ball3_Vel Ball3_Vel + Gravity
+   if (Ball3_Pos[1] < -1) {
+      static define Ball3_Pos <Ball3_Pos[0], -2 - Ball3_Pos[1], Ball3_Pos[2]>
+      static define Ball3_Vel <Ball3_Vel[0], -0.7*Ball3_Vel[1], Ball3_Vel[2]>
+      }
+   }
+Projectile { translate Ball3_Pos }
+
+if (frame == 131)
+   static define Ball4_Pos CPos+4*Ball4_Vel
+else if (frame > 131) {
+   static define Ball4_Pos Ball4_Pos + Ball4_Vel
+   static define Ball4_Vel Ball4_Vel + Gravity
+   if (Ball4_Pos[1] < -1) {
+      static define Ball4_Pos <Ball4_Pos[0], -2 - Ball4_Pos[1], Ball4_Pos[2]>
+      static define Ball4_Vel <Ball4_Vel[0], -0.7*Ball4_Vel[1], Ball4_Vel[2]>
+      }
+   }
+Projectile { translate Ball4_Pos }
+
+if (frame == 171)
+   static define Ball5_Pos CPos+4*Ball5_Vel
+else if (frame > 171) {
+   static define Ball5_Pos Ball5_Pos + Ball5_Vel
+   static define Ball5_Vel Ball5_Vel + Gravity
+   if (Ball5_Pos[1] < -1) {
+      static define Ball5_Pos <Ball5_Pos[0], -2 - Ball5_Pos[1], Ball5_Pos[2]>
+      static define Ball5_Vel <Ball5_Vel[0], -0.7*Ball5_Vel[1], Ball5_Vel[2]>
+      }
+   }
+Projectile { translate Ball5_Pos }
+
+if (frame == 211)
+   static define Ball6_Pos CPos+4*Ball6_Vel
+else if (frame > 211) {
+   static define Ball6_Pos Ball6_Pos + Ball6_Vel
+   static define Ball6_Vel Ball6_Vel + Gravity
+   if (Ball6_Pos[1] < -1) {
+      static define Ball6_Pos <Ball6_Pos[0], -2 - Ball6_Pos[1], Ball6_Pos[2]>
+      static define Ball6_Vel <Ball6_Vel[0], -0.7*Ball6_Vel[1], Ball6_Vel[2]>
+      }
+   }
+Projectile { translate Ball6_Pos }
+
+// Floor
+define tx_P rotate(P, <1, 1, 0>, 27)
+object {
+   disc <0,-2, 0>, <0, 1, 0>, 200
+   texture {
+      special matte {
+	 color tan
+	 normal N + (dnoise(tx_P/5) - white/2)
+	 }
+      }
+   }

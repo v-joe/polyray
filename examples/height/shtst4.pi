@@ -1,0 +1,70 @@
+viewpoint {
+   from <0,0.0001,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+background black
+light <-10,3, -20>
+
+define pi 3.14159
+define phi pi * (v - 0.5)
+define theta 2 * pi * u
+define radius 2
+define posx radius*cos(theta)*cos(phi)
+define posy radius*sin(phi)
+define posz radius*sin(theta)*cos(phi)
+define pos <posx,posy,posz>
+define ice_cap_fn posy + 1.2 * noise(pos, 4)
+define land_fn fnoise(1.2*pos, 5)
+define land_and_ice_fn
+   // (ice_cap_fn < -0.9 || ice_cap_fn > 2.1 ? min(0.1,land_fn) : land_fn)
+   (ice_cap_fn < -0.9 || ice_cap_fn > 2.1 ? 0 : land_fn)
+
+define land_altitude_map
+   color_map([0.0, 0.3, white, black]  // From mountains down to sea
+             [0.3, 1.0, black, black]) // Ocean floor is flat...
+
+define Desert (Wheat + Tan) / 2
+define land_color_map1
+      color_map(
+         [0,    0.04, white, white]
+         [0.04, 0.06, 0.8*Tan, 0.8*Tan]
+         [0.06, 0.10, 0.8*Tan, Desert]
+         [0.10, 0.15, Desert,   Desert]
+         [0.15, 0.25, Desert,   MediumForestGreen]
+         [0.25, 0.30, MediumForestGreen, MediumForestGreen]
+         [0.30, 0.35, MediumForestGreen, 0, white, 1]
+         [0.35, 1.00, white, 1, white, 1])
+define land
+texture {
+   special surface {
+      color land_color_map1[land_and_ice_fn]
+      ambient 0.1
+      diffuse 0.9
+      specular 0
+      }
+   }
+   
+define ocean
+texture {
+   noise surface {
+      color <0.4, 0.4, 1.0>
+      normal 2
+      frequency 500
+      bump_scale 2
+      ambient 0.2
+      diffuse 0.5
+      specular white, 0.5
+      microfacet Cook 5
+      }
+   scale <10, 1, 10>
+   }
+
+object {
+   sheight_field "sphland.tga", 1/1024, 2
+   texture { layered land, ocean }
+   rotate <0, 180, 0>
+   }

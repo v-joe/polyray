@@ -1,0 +1,27 @@
+define xres 512
+define yres 256
+
+define phi_width_adjust yres / (yres - 1)
+define theta_width_adjust xres / (xres - 1)
+
+viewpoint { resolution xres, yres }
+
+define pi 3.14159
+define phi pi * (phi_width_adjust * v - 0.5)
+define theta 2 * pi * theta_width_adjust * u
+define radius 2
+define posx radius*cos(theta)*cos(phi)
+define posy radius*sin(phi)
+define posz radius*sin(theta)*cos(phi)
+define pos <posx,posy,posz>
+define ice_cap_fn posy + 1.2 * noise(pos, 4)
+define land_fn fnoise(1.2*pos, 5)
+define land_and_ice_fn
+   // (ice_cap_fn < -0.9 || ice_cap_fn > 2.1 ? min(0.1,land_fn) : land_fn)
+   (ice_cap_fn < -0.9 || ice_cap_fn > 2.1 ? 0 : land_fn)
+
+define land_altitude_map
+   color_map([0.0, 0.3, white, black]  // From mountains down to sea
+             [0.3, 1.0, black, black]) // Ocean floor is flat...
+
+background land_altitude_map[land_and_ice_fn]

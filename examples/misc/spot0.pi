@@ -1,0 +1,35 @@
+// Sample file demonstrating a spotlight.  A red/blue checkered sphere lies on 
+// a black/white checkered plane, a spotlight shines down.
+// Polyray input file - Alexander Enzmann
+
+viewpoint {
+   from <0,0,-12>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 320, 160
+   aspect 2
+   }
+
+background SkyBlue
+
+spot_light white, <10,10,0>, <3,0,0>, 3, 5, 20
+
+include "../colors.inc"
+
+// Create a sphere with a checker texture
+object {
+   sphere <0, 0, 0>, 2
+   texture {
+      checker matte_red, matte_blue
+      }
+   }
+
+// Create a ground plane
+object {
+   polygon 4, <-20,-2, -20>, <-20,-2, 20>, <20,-2, 20>, <20,-2, -20>
+   texture {
+      checker matte_white, matte_black
+      translate <0, 0.1, 0>
+      }
+   }

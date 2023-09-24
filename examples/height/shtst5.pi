@@ -1,0 +1,23 @@
+total_frames 45
+start_frame 0
+end_frame total_frames-1
+
+define ang 360 * frame / total_frames
+
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 35
+   resolution 256, 256
+   }
+
+background black
+light <-10,3, -20>
+
+// Make a planet out of a spherical height field
+object {
+   sheight_field "sphland1.tga", 1/1024, 2
+   texture { surface { color red ambient 0.2 diffuse 0.8 } }
+   rotate <0, ang, 0>
+   }

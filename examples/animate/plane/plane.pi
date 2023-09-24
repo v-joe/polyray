@@ -1,0 +1,101 @@
+// Simple aircraft - The animation rolls it about one axis, then another.
+//
+// If scan conversion is used, there is a noticable problem with shading
+// due to the distinction between the top and bottom of polygons.
+//
+
+start_frame 0
+total_frames 119
+outfile "plane"
+
+viewpoint {
+   from <0, 0, -100>
+   up    <0, 1, 0>
+   at    <0, 0, 0>
+   resolution 160, 100
+   aspect 1.6
+   angle 25
+   }
+
+include "../../colors.inc"
+
+background midnight_blue
+light < 100, 30, -200>
+
+define rect
+object {
+   polygon 4, < 0.5, 0.01, -0.5>, < 0.5, 0.01,  0.5>,
+              <-0.5, 0.01,  0.5>, <-0.5, 0.01, -0.5>
+   }
+
+define missile
+object {
+     object { cylinder <0, 0, 0>, <11, 0, 0>, 1 }
+   + object { cone <11, 0, 0>, 1, <13, 0, 0>, 0 }
+   + object { polygon 3, <0,  1,  0>, <0,  3,  0>, < 2,  1,  0> }
+   + object { polygon 3, <0, -1,  0>, <0, -3,  0>, < 2, -1,  0> }
+   + object { polygon 3, <0,  0,  1>, <0,  0,  3>, < 2,  0,  1> }
+   + object { polygon 3, <0,  0, -1>, <0,  0, -3>, < 2,  0, -1> }
+   + object { polygon 3, <9,  1,  0>, <9,  3,  0>, <11,  1,  0> }
+   + object { polygon 3, <9, -1,  0>, <9, -3,  0>, <11, -1,  0> }
+   + object { polygon 3, <9,  0,  1>, <9,  0,  3>, <11,  0,  1> }
+   + object { polygon 3, <9,  0, -1>, <9,  0, -3>, <11,  0, -1> }
+   }
+
+define left_wing
+object {
+     object { polygon 4, <10, 0, 0>, <30, 0,  0>, <18, 0, 20>, <10, 0, 20> }
+   + object { polygon 3, <30, 0, 0>, <27, 0,  5>, <58, 0, 0> }
+   }
+
+define right_wing
+object {
+     object { polygon 4, <10, 0, 0>, <30, 0,  0>, <18, 0,-20>, <10, 0,-20> }
+   + object { polygon 3, <30, 0, 0>, <27, 0, -5>, <58, 0, 0> }
+   }
+
+define left_stab
+object { polygon 4, <1, 0, 0>, <6, 0, 0>, <3, 0, 8>, <-2, 0, 8> }
+
+define right_stab
+object { polygon 4, <1, 0, 0>, <6, 0, 0>, <3, 0,-8>, <-2, 0,-8> }
+
+define engine
+object {
+     object { cylinder <0, 0, 0>, <30, 0, 0>, 2 }
+   + object { cone <25, 0, 0>, 0, <30, 0, 0>, 2 }
+   + object { cone <0, 0, 0>, 2, <-2, 0, 0>, 3 }
+   }
+
+define fuselage
+object {
+     object { cylinder <0, 0, 0>, <80, 0, 0>, 3 }
+   + object { cone <80, 0, 0>, 3, <100, 0, 0>, 0 }
+   scale <1, 1.5, 1>
+   }
+
+// Define the orientation of the aircraft
+if (frame < 60) {
+   define orient <-10, -6*frame-50, 0>
+   }
+else {
+   define orient <-10+6*(frame-60), -50, 0>
+   }
+
+// Put together an aircraft
+object {
+     fuselage { shiny_red }
+   + engine { translate <0,-2, 3> shiny_yellow }
+   + engine { translate <0,-2,-3> shiny_yellow }
+   + left_wing  { translate <5, 1, 2> matte_blue }
+   + right_wing { translate <5, 1,-2> matte_blue }
+   + missile { translate <15, 1, 23> shiny_green }
+   + missile { translate <15, 1,-23> shiny_green }
+   + left_stab  { translate <0, 0, 3> matte_white }
+   + right_stab { translate <0, 0,-3> matte_white }
+   + left_stab  { rotate <-60, 0, 0> translate <0, 2, 2> matte_white }
+   + right_stab { rotate < 60, 0, 0> translate <0, 2,-2> matte_white }
+   translate <-50, 0, 0>
+   scale <0.6, 0.6, 0.6>
+   rotate orient
+   }

@@ -1,0 +1,202 @@
+//
+// Demonstration of creating polyhedrons from vertex/face information
+//
+viewpoint {
+   from  <0,0,-12>
+   at    <0,0,0>
+   up    <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+background midnight_blue
+light < 20,30,-20>
+
+include "../colors.inc"
+
+define tetrahedron_faces
+     [<0, 1, 2>, <0, 2, 3>, <0, 3, 1>, <1, 3, 2>]
+
+define tetrahedron_vertices
+     [<0, 0, sqrt(3)>,
+      <0, (2*sqrt(2)*sqrt(3))/3, -sqrt(3)/3>, 
+      <-sqrt(2), -(sqrt(2)*sqrt(3))/3, -sqrt(3)/3>, 
+      <sqrt(2), -(sqrt(2)*sqrt(3))/3, -sqrt(3)/3>]
+
+define cube_faces
+     [[0, 1, 2, 3], [0, 3, 5, 6], [0, 6, 7, 1],
+      [1, 7, 4, 2], [4, 7, 6, 5], [2, 4, 5, 3]]
+
+define cube_vertices
+     [<1, 1, 1>, <-1, 1, 1>, <-1, -1, 1>, <1, -1, 1>,
+      <-1, -1, -1>, <1, -1, -1>, <1, 1, -1>, <-1, 1, -1>]
+
+define octahedron_faces
+     [<0, 1, 2>, <0, 2, 4>, <0, 4, 5>, <0, 5, 1>,
+      <1, 5, 3>, <1, 3, 2>, <3, 5, 4>, <2, 3, 4>]
+
+define octahedron_vertices
+     [<0, 0, 1>, <1, 0, 0>, <0, 1, 0>,
+      <0, 0, -1>, <-1, 0, 0>, <0, -1, 0>]
+
+define dodecahedron_faces
+     [[2, 0, 1, 4, 5], [11, 10, 4, 1, 6], [16, 12, 5, 4, 10], 
+      [13, 8, 2, 5, 12], [9, 3, 0, 2, 8], [7, 6, 1, 0, 3], 
+      [3, 9, 15, 14, 7], [8, 13, 18, 15, 9], [12, 16, 19, 18, 13], 
+      [10, 11, 17, 19, 16], [6, 7, 14, 17, 11], [17, 14, 15, 18, 19]]
+
+define dodecahedron_vertices
+  [<0.1171133902139618, -1.000511576276664, -0.3621589273242113>, 
+   <-0.2984036824225265, -0.5817988070943417, -0.847563231579627>, 
+   <0.7957196239318588, -0.6599726122576239, -0.2777850442631916>, 
+   <-0.2354424399154574, -0.995440477478119, 0.3155362956874772>, 
+   <0.1233988775001608, 0.01751887980296279, -1.063185706833948>, 
+   <0.7996042687105845, -0.03079518881785797, -0.7110434210240867>, 
+   <-0.907763186347153, -0.3179489854175332, -0.4698643668832807>, 
+   <-0.868850998503861, -0.5735935968779865, 0.2489706732667203>, 
+   <0.862565511217654, -0.4444368592016375, 0.4520561062430151>, 
+   <0.2252723078505214, -0.6517674020412752, 0.81874886058316>, 
+   <-0.2252723078505258, 0.6517674020412736, -0.818748860583157>, 
+   <-0.862565511217653, 0.4444368592016384, -0.4520561062430158>, 
+   <0.868850998503857, 0.5735935968779876, -0.2489706732667215>, 
+   <0.907763186347152, 0.317948985417531, 0.469864366883284>, 
+   <-0.7996042687105915, 0.03079518881786086, 0.7110434210240858>, 
+   <-0.1233988775001686, -0.01751887980296174, 1.063185706833949>, 
+   <0.2354424399154601, 0.99544047747812, -0.315536295687476>, 
+   <-0.7957196239318574, 0.6599726122576284, 0.2777850442631883>, 
+   <0.2984036824225249, 0.5817988070943394, 0.847563231579629>, 
+   <-0.1171133902139571, 1.000511576276665, 0.3621589273242109>]
+
+define icosahedron_faces
+ [ <0, 5, 1>, <0, 1, 2>, <0, 2, 3>, <0, 3, 4>, <0, 4, 5>, <1, 10, 2>, 
+   <1, 5, 9>, <1, 9, 10>, <2, 11, 3>, <2, 10, 11>, <3, 7, 4>, 
+   <3, 11, 7>, <4, 8, 5>, <4, 7, 8>, <5, 8, 9>, <6, 8, 7>, <6, 9, 8>, 
+   <6, 10, 9>, <6, 11, 10>, <6, 7, 11> ]
+
+define icosahedron_vertices
+ [ <0.4249358858193742, -0.6234212590752522, -0.901521749427252>, 
+   <-0.5999406907417391, 0.05914133178387721, -1.009227188986324>, 
+   <0.4980672603913731, 0.6101449500603583, -0.872707378430782>, 
+   <1.170388006823068, -0.06734654200022822, -0.0873067158600265>, 
+   <0.4878971283264427, -1.037062929459035, 0.2615777778398508>, 
+   <-0.606226178027942, -0.958889124295748, -0.3082004094765843>, 
+   <-0.4249358858193759, 0.6234212590752533, 0.90152174942725>, 
+   <0.5999406907417364, -0.05914133178387813, 1.009227188986327>, 
+   <-0.4980672603913764, -0.6101449500603557, 0.87270737843078>, 
+   <-1.170388006823072, 0.0673465420002311, 0.0873067158600247>, 
+   <-0.4878971283264417, 1.037062929459036, -0.2615777778398516>, 
+   <0.606226178027942, 0.958889124295747, 0.3082004094765856> ]
+
+define tcf tetrahedron_faces
+define tcv tetrahedron_vertices
+define tct shiny_red
+define tetrahedron
+object {
+   object { polygon 3, tcv[tcf[ 0][0]], tcv[tcf[ 0][1]], tcv[tcf[ 0][2]] } +
+   object { polygon 3, tcv[tcf[ 1][0]], tcv[tcf[ 1][1]], tcv[tcf[ 1][2]] } +
+   object { polygon 3, tcv[tcf[ 2][0]], tcv[tcf[ 2][1]], tcv[tcf[ 2][2]] } +
+   object { polygon 3, tcv[tcf[ 3][0]], tcv[tcf[ 3][1]], tcv[tcf[ 3][2]] }
+   tct
+   }
+
+define ccf cube_faces
+define ccv cube_vertices
+define cct shiny_red
+define cube
+object {
+   object { polygon 4, ccv[ccf[ 0][0]], ccv[ccf[ 0][1]], ccv[ccf[ 0][2]],
+                       ccv[ccf[ 0][3]] } +
+   object { polygon 4, ccv[ccf[ 1][0]], ccv[ccf[ 1][1]], ccv[ccf[ 1][2]],
+                       ccv[ccf[ 1][3]] } +
+   object { polygon 4, ccv[ccf[ 2][0]], ccv[ccf[ 2][1]], ccv[ccf[ 2][2]],
+                       ccv[ccf[ 2][3]] } +
+   object { polygon 4, ccv[ccf[ 3][0]], ccv[ccf[ 3][1]], ccv[ccf[ 3][2]],
+                       ccv[ccf[ 3][3]] } +
+   object { polygon 4, ccv[ccf[ 4][0]], ccv[ccf[ 4][1]], ccv[ccf[ 4][2]],
+                       ccv[ccf[ 4][3]] } +
+   object { polygon 4, ccv[ccf[ 5][0]], ccv[ccf[ 5][1]], ccv[ccf[ 5][2]],
+                       ccv[ccf[ 5][3]] }
+   cct
+   }
+
+define ocf octahedron_faces
+define ocv octahedron_vertices
+define oct shiny_red
+define octahedron
+object {
+   object { polygon 3, ocv[ocf[ 0][0]], ocv[ocf[ 0][1]], ocv[ocf[ 0][2]] } +
+   object { polygon 3, ocv[ocf[ 1][0]], ocv[ocf[ 1][1]], ocv[ocf[ 1][2]] } +
+   object { polygon 3, ocv[ocf[ 2][0]], ocv[ocf[ 2][1]], ocv[ocf[ 2][2]] } +
+   object { polygon 3, ocv[ocf[ 3][0]], ocv[ocf[ 3][1]], ocv[ocf[ 3][2]] } +
+   object { polygon 3, ocv[ocf[ 4][0]], ocv[ocf[ 4][1]], ocv[ocf[ 4][2]] } +
+   object { polygon 3, ocv[ocf[ 5][0]], ocv[ocf[ 5][1]], ocv[ocf[ 5][2]] } +
+   object { polygon 3, ocv[ocf[ 6][0]], ocv[ocf[ 6][1]], ocv[ocf[ 6][2]] } +
+   object { polygon 3, ocv[ocf[ 7][0]], ocv[ocf[ 7][1]], ocv[ocf[ 7][2]] }
+   oct
+   }
+
+define dcv dodecahedron_vertices
+define dcf dodecahedron_faces
+define dct shiny_red
+define dodecahedron
+object {
+   object { polygon 5, dcv[dcf[ 0][0]], dcv[dcf[ 0][1]], dcv[dcf[ 0][2]],
+                       dcv[dcf[ 0][3]], dcv[dcf[ 0][4]] } +
+   object { polygon 5, dcv[dcf[ 1][0]], dcv[dcf[ 1][1]], dcv[dcf[ 1][2]],
+                       dcv[dcf[ 1][3]], dcv[dcf[ 1][4]] } +
+   object { polygon 5, dcv[dcf[ 2][0]], dcv[dcf[ 2][1]], dcv[dcf[ 2][2]],
+                       dcv[dcf[ 2][3]], dcv[dcf[ 2][4]] } +
+   object { polygon 5, dcv[dcf[ 3][0]], dcv[dcf[ 3][1]], dcv[dcf[ 3][2]],
+                       dcv[dcf[ 3][3]], dcv[dcf[ 3][4]] } +
+   object { polygon 5, dcv[dcf[ 4][0]], dcv[dcf[ 4][1]], dcv[dcf[ 4][2]],
+                       dcv[dcf[ 4][3]], dcv[dcf[ 4][4]] } +
+   object { polygon 5, dcv[dcf[ 5][0]], dcv[dcf[ 5][1]], dcv[dcf[ 5][2]],
+                       dcv[dcf[ 5][3]], dcv[dcf[ 5][4]] } +
+   object { polygon 5, dcv[dcf[ 6][0]], dcv[dcf[ 6][1]], dcv[dcf[ 6][2]],
+                       dcv[dcf[ 6][3]], dcv[dcf[ 6][4]] } +
+   object { polygon 5, dcv[dcf[ 7][0]], dcv[dcf[ 7][1]], dcv[dcf[ 7][2]],
+                       dcv[dcf[ 7][3]], dcv[dcf[ 7][4]] } +
+   object { polygon 5, dcv[dcf[ 8][0]], dcv[dcf[ 8][1]], dcv[dcf[ 8][2]],
+                       dcv[dcf[ 8][3]], dcv[dcf[ 8][4]] } +
+   object { polygon 5, dcv[dcf[ 9][0]], dcv[dcf[ 9][1]], dcv[dcf[ 9][2]],
+                       dcv[dcf[ 9][3]], dcv[dcf[ 9][4]] } +
+   object { polygon 5, dcv[dcf[10][0]], dcv[dcf[10][1]], dcv[dcf[10][2]],
+                       dcv[dcf[10][3]], dcv[dcf[10][4]] } +
+   object { polygon 5, dcv[dcf[11][0]], dcv[dcf[11][1]], dcv[dcf[11][2]],
+                       dcv[dcf[11][3]], dcv[dcf[11][4]] }
+   dct
+   }
+
+define icf icosahedron_faces
+define icv icosahedron_vertices
+define ict shiny_red
+define icosahedron
+object {
+   object { polygon 3, icv[icf[ 0][0]], icv[icf[ 0][1]], icv[icf[ 0][2]] } +
+   object { polygon 3, icv[icf[ 1][0]], icv[icf[ 1][1]], icv[icf[ 1][2]] } +
+   object { polygon 3, icv[icf[ 2][0]], icv[icf[ 2][1]], icv[icf[ 2][2]] } +
+   object { polygon 3, icv[icf[ 3][0]], icv[icf[ 3][1]], icv[icf[ 3][2]] } +
+   object { polygon 3, icv[icf[ 4][0]], icv[icf[ 4][1]], icv[icf[ 4][2]] } +
+   object { polygon 3, icv[icf[ 5][0]], icv[icf[ 5][1]], icv[icf[ 5][2]] } +
+   object { polygon 3, icv[icf[ 6][0]], icv[icf[ 6][1]], icv[icf[ 6][2]] } +
+   object { polygon 3, icv[icf[ 7][0]], icv[icf[ 7][1]], icv[icf[ 7][2]] } +
+   object { polygon 3, icv[icf[ 8][0]], icv[icf[ 8][1]], icv[icf[ 8][2]] } +
+   object { polygon 3, icv[icf[ 9][0]], icv[icf[ 9][1]], icv[icf[ 9][2]] } +
+   object { polygon 3, icv[icf[10][0]], icv[icf[10][1]], icv[icf[10][2]] } +
+   object { polygon 3, icv[icf[11][0]], icv[icf[11][1]], icv[icf[11][2]] } +
+   object { polygon 3, icv[icf[12][0]], icv[icf[12][1]], icv[icf[12][2]] } +
+   object { polygon 3, icv[icf[13][0]], icv[icf[13][1]], icv[icf[13][2]] } +
+   object { polygon 3, icv[icf[14][0]], icv[icf[14][1]], icv[icf[14][2]] } +
+   object { polygon 3, icv[icf[15][0]], icv[icf[15][1]], icv[icf[15][2]] } +
+   object { polygon 3, icv[icf[16][0]], icv[icf[16][1]], icv[icf[16][2]] } +
+   object { polygon 3, icv[icf[17][0]], icv[icf[17][1]], icv[icf[17][2]] } +
+   object { polygon 3, icv[icf[18][0]], icv[icf[18][1]], icv[icf[18][2]] } +
+   object { polygon 3, icv[icf[19][0]], icv[icf[19][1]], icv[icf[19][2]] }
+   ict
+   }
+
+tetrahedron { translate <2.5, 0, 0> }
+cube { translate <2.5, 0, 0> rotate <0, 0, 72> }
+octahedron { translate <2.5, 0, 0> rotate <0, 0, 144> }
+dodecahedron { translate <2.5, 0, 0> rotate <0, 0, -144> }
+icosahedron { translate <2.5, 0, 0> rotate <0, 0, -72> }

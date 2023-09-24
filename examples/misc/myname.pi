@@ -1,0 +1,46 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from < 5.678, 2.142, -13.709 >
+   at < 5.678, 0, 0>
+   up < 0, 1, 0 >
+   angle 45
+   hither 1
+   resolution 320, 200
+   aspect 1.333
+   }
+
+
+background <0, 0, 0>
+light <-10,20,-20>
+
+// Get the default textures
+include "../colors.inc"
+
+// Define a texture for my name
+define mtex
+texture {
+   noise surface {
+      position_fn 1
+      lookup_fn 1
+      octaves 4
+      turbulence 3
+      ambient 0.2
+      diffuse 0.6
+      specular 0.7
+      microfacet Reitz 10
+      color_map(
+         [0.0, 0.8, <1, 1, 1>, <0.6, 0.6, 0.6>]
+         [0.8, 1.0, <0.6, 0.6, 0.6>, <0.1, 0.1, 0.1>])
+      }
+   scale <0.5, 0.5, 0.5>
+   }
+
+include "myname.inc"
+
+object {
+   polygon 4, <-40,-0.1, -40>, <-40,-0.1, 40>, <40,-0.1, 40>, <40,-0.1, -40>
+   texture { checker mirror, reflective_coral scale <2, 1, 2> }
+   }

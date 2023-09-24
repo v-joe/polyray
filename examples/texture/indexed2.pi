@@ -1,0 +1,31 @@
+// Sample Polyray file
+// A gradient texture with changing 'alpha' values
+//
+viewpoint {
+   from <0, 5, -10>
+   at <0,0,0>
+   up <0,1,0>
+   angle 35
+   resolution 256, 256
+   aspect 1
+   }
+
+include "../colors.inc"
+
+background midnightblue
+
+light 0.8*white, <-10, 7, -5>
+light 0.8*white, < 10, 7, -5>
+
+define index_tex_map
+texture_map([0, 1, matte_white, shiny_coral])
+
+object {
+   sphere <0, 0, 0>, 2
+   texture { indexed noise(3*P, 1), index_tex_map }
+   }
+
+object {
+   disc <0, -2, 0>, <0, 1, 0>, 30
+   texture { special matte { color red_marble_map[granite_fn] } }
+   }

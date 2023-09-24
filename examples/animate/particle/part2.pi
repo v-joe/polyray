@@ -1,0 +1,56 @@
+// Simple particle system
+// Polyray input file: Alexander Enzmann
+
+frame_time 0.1
+start_frame 0
+end_frame 92
+total_frames 93
+
+// Set up the camera
+viewpoint {
+   from <0,8,-10>
+   at <0,2,0>
+   up <0,1,0>
+   angle 55
+   resolution 320, 160
+   aspect 2
+   }
+
+background <0, 0, 0>
+light <-10, 30, -20>
+
+include "../../colors.inc"
+
+define asphere object { sphere <0, 0, 0>, 0.2 shiny_red }
+define bsphere object { sphere <0, 0, 0>, 0.2 shiny_blue }
+
+// The force of gravity
+define gravity <0, -1, 0>
+
+// Secondary burst on the ground
+if (frame == start_frame)
+static define part2
+particle {
+   death ((I[1] < 0 && y < 0.1) ? 1 : 0)
+   position P
+   velocity <0, 1.5, 0> + brownian(<0, 0, 0>, <1, 0.5, 1>)
+   acceleration gravity
+   object "asphere"
+   count 20
+   }
+
+// Star burst
+if (frame == start_frame)
+particle {
+   death (y < 0.2 ? "part2" : 0)
+   position <0, 5, 0>
+   velocity 2*brownian(<0, 0, 0>, <1, 1, 1>)
+   acceleration gravity
+   object "bsphere"
+   count 50
+   }
+
+object {
+   box <-10, -0.1, -10>, <10, 0, 10>
+   matte_yellow
+   }

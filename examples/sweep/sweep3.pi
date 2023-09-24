@@ -1,0 +1,45 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,4,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 128, 128
+   }
+
+include "../colors.inc"
+
+background <0, 0, 0>
+light <-10, 10, -20>
+
+define r0 1
+define r1 2
+define dt (2.0 * 3.14159265) / 14
+
+define star_column
+object {
+   sweep 1, <0, 0, 1>, 14,
+         <r0*cos( 1*dt), r0*sin( 1*dt)>, <r1*cos( 2*dt), r1*sin( 2*dt)>,
+         <r0*cos( 3*dt), r0*sin( 3*dt)>, <r1*cos( 4*dt), r1*sin( 4*dt)>,
+         <r0*cos( 5*dt), r0*sin( 5*dt)>, <r1*cos( 6*dt), r1*sin( 6*dt)>,
+         <r0*cos( 7*dt), r0*sin( 7*dt)>, <r1*cos( 8*dt), r1*sin( 8*dt)>,
+         <r0*cos( 9*dt), r0*sin( 9*dt)>, <r1*cos(10*dt), r1*sin(10*dt)>,
+         <r0*cos(11*dt), r0*sin(11*dt)>, <r1*cos(12*dt), r1*sin(12*dt)>,
+         <r0*cos(13*dt), r0*sin(13*dt)>, <r1*cos(14*dt), r1*sin(14*dt)>
+   rotate <-90, 0, 0>
+   shiny_red
+   }
+
+star_column
+
+// Create a ground plane
+object {
+   polygon 4, <-20,-2, -20>, <-20,-2, 20>, <20,-2, 20>, <20,-2, -20>
+   texture {
+      checker matte_white, matte_black
+      translate <0, 0.1, 0>
+      }
+   }

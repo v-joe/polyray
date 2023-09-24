@@ -1,0 +1,37 @@
+include "../../colors.inc"
+
+viewpoint {
+   from <0,0,-12>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 160, 160
+   }
+
+light <-10,10,-10>
+light < 10,10,-10>
+
+start_frame 0
+end_frame 100
+total_frames 101
+
+define increment frame / total_frames
+define ang_inc radians(720 * increment)
+
+define ang00 ang_inc
+define ang01 ang_inc
+define ang10 ang_inc
+define ang11 ang_inc + 2
+define ang20 ang_inc
+define ang21 ang_inc + 1
+
+define pos00 <cos(ang00), 0, sin(ang00)>
+define pos01 rotate(pos00, <1, 0, 0>, degrees(ang01))
+define pos10 <cos(ang10), 0, sin(ang10)>
+define pos11 rotate(pos10, <0, 0, 1>, 2 * degrees(ang11))
+define pos20 <cos(ang20), 0, sin(ang20)>
+define pos21 rotate(pos20, <1, 0, 1>, 1.5 * degrees(ang21))
+
+object { sphere pos01, 0.2 shiny_red }
+object { sphere pos11, 0.2 shiny_green }
+object { sphere pos21, 0.2 shiny_blue }

@@ -1,0 +1,57 @@
+//
+// Sample file that builds a room with two people
+//
+// Based on the amazing person data file Created by Will Wagner
+//
+
+viewpoint {
+   from <0, 20, -25>
+   at <0, 7, 0>
+   angle 45
+   up <0,1,0>
+   resolution 640, 480
+   aspect 4/3
+   }
+
+include "../colors.inc"
+include "roomtex.inc"
+
+light <20, 30, -30>
+
+// Floor
+object {
+   disc <0, 0, 0>, <0, 1, 0>, 500
+   texture {
+      checker waxed_white, green_marble
+      scale <10, 10, 10>
+      translate <0, -0.001, 0>
+      }
+   }
+
+// Side wall
+object {
+   disc <-20, 0, 0>, <1, 0, 0>, 500
+   orange_agate
+   }
+
+// Back wall
+object {
+   // Big wall with a hole cut out of it
+   ( object { box <-50, -2, 30>, <50, 30, 30.1> sapphire_agate } -
+     object { box <-10, 0, 29>, <0, 15, 31> } ) +
+   object { box <0, 0, 0>, <1, 17, 1> translate <-10.5, 0, 29.5> reddish_wood}+
+   object { box <0, 0, 0>, <1, 17, 1> translate <-0.5, 0, 29.5> reddish_wood } +
+   object { box <0, 0, 0>, <11, 2, 1> translate <-10.5, 15, 29.5> reddish_wood }
+   }
+
+include "woodchai.inc"
+wooden_chair { scale <1.5, 1.5, 1.5> rotate <0, 70, 0> }
+
+include "joints1.inc"
+include "body.inc"
+person { shiny_coral rotate <0, -60, 0> translate <5, 0, 20> }
+
+include "joints2.inc"
+include "body.inc"
+person { shiny_coral rotate <0, 0, 0> translate <-5, 0, 0> }
+

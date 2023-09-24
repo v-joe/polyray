@@ -1,0 +1,5 @@
+viewpoint { resolution 181, 91 }
+define white_marble_map
+   color_map([0, 0.8, white, 0.5*white]
+	     [0.8, 1, 0.5*white, 0.2*white])
+background white_marble_map[sawtooth(x + 3 * fnoise(P, 5))]

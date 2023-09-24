@@ -1,0 +1,16 @@
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 128, 128
+   }
+
+background black
+light <-10,3, -20>
+
+object {
+   sheight_fn 60, 30,   // 60 around equator, 30 from south to north
+              0.0,      // completly spherical
+              1.0, 2.0  // No scaling, base radius of 2.0
+   }

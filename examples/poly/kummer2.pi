@@ -1,0 +1,21 @@
+viewpoint {
+   from <10, 4, 10>
+   at <0, 0, 0>
+   up <0, 1, 0>
+   angle 30
+   resolution 256, 256
+   }
+
+include "../colors.inc"
+light <110, 0, 110>
+
+define a -2
+define b 1
+define c 1
+object {
+   polynomial x^4 + y^4 + z^4 +
+              a * (x^2 + y^2 + z^2) +
+              b * (x^2*y^2 + x^2*z^2 + y^2*z^2) +
+	      c * x*y*z - 1
+   shiny_red
+   }

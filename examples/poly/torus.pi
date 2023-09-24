@@ -1,0 +1,29 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 160, 160
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background black
+light <10, 10, -20>
+
+// Torus - basic doughnut shape.  The distance from the origin to the center
+// of the ring is "r0", the distance from the center of the ring to the surface
+// is "r1".
+define r0 0.5
+define r1 0.2
+object {
+   torus r0, r1, <0, 0, 0>, <0, 0, 1>
+   shiny_red
+   rotate <70, 20, 0>
+   }

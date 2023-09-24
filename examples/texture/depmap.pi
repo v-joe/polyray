@@ -1,0 +1,31 @@
+// Render a scene using a depth map for shadows - depends on the depth file
+// being rendered first from "deplgt.pi"
+//
+// Polyray input file: Alexander Enzmann
+
+viewpoint {
+   from <0,4,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 128, 128
+   }
+
+background <0, 0, 0>
+
+//
+// Here is where we define the light source.  At the low grazing angle of
+// this light we are forced to use a large value for hither (0.7).  If it
+// is less that this we start to see self-shadowing of the floor (try 0.2).
+//
+depthmapped_light {
+   depth "dep1.tga"
+   from <-10, 5, -20>
+   at <0, 0, 0>
+   up <0, 1, 0>
+   hither 0.7
+   angle 20
+   }
+
+// This file holds the actual scene objects
+include "depmap.inc"

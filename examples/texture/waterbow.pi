@@ -1,0 +1,119 @@
+// Derived from a Persistence Of Vision raytracer version 2.0 sample file.
+
+// By Various and Sundry
+//
+// Revision Note:
+// Reworked both the declared wood texture (turb and colormap) and
+// the application of it on the floor plane.
+// Note that wood doesn't really look like much until you get around
+// 640x480.  Anti-aliasing helps even more to bring out the detail.  -dmf
+
+include "../colors.inc"
+include "../texture.inc"
+
+/* Define a random color between <0, 0, 0> and <1, 1, 1>, then
+   scale by the amount desired */
+define noeval crand_015 0.015 * brownian(<0.5, 0.5, 0.5>, <0.5, 0.5, 0.5>)
+
+// a light tan wood with brown rings
+define New_Tan_Wood_Map
+      color_map([0.0, 0.4, <0.6, 0.45, 0.25>, <0.65, 0.45, 0.25>]
+	        [0.4, 1.0, <0.6, 0.40, 0.20>, <0.25, 0.15, 0.05>])
+define New_Tan_Wood
+texture {
+   special surface {
+      color New_Tan_Wood_Map[wood_fn] + crand_015
+      position P + 0.2 * dnoise(P, 3)
+      ambient 0.15
+      diffuse 0.75
+      reflection 0.1
+      }
+   }
+
+viewpoint {
+   from <0, 0, -56>
+   at <0, 0, 0>
+   up <0, 1, 0>
+   angle degrees(2*atan(0.5)) // 56
+   aspect 1.3333
+   resolution 320, 240
+   }
+
+// A bowl
+object {
+     object { sphere <0.0, 0.0, 0.0>, 1.0 }
+   * object { sphere <0.0, 0.0, 0.0>, 0.9 }
+   * object { disc <0, 0.5, 0>, <0, 1, 0>, 1.01 }
+   scale <20, 20, 20>
+
+   texture { matte { color red reflection 0.1 } }
+   }
+
+// Water
+object {
+     object { sphere <0.0, 0.0, 0.0>, 1.0 }
+   * object { disc <0, 0.49, 0>, <0, 1, 0>, 1.01 }
+   scale <19.5, 19.5, 19.5>
+
+   texture {
+      noise surface {
+	 color white
+	 ambient 0
+	 diffuse 0
+	 specular 0
+	 reflection 0.6
+	 transmission 0.6, 1.2
+	 normal ripple_normal
+	 bump_scale 0.5
+	 frequency 150
+	 }
+      }
+   }
+
+
+// Wood floor
+object {
+   disc <0, -20, 0>, <0, 1, 0>, 1000
+   New_Tan_Wood {             // Think of a log, facing you...
+      scale <2, 2, 1>         // z is infinite, so 1 is ok...
+      rotate <0, 90, 0>       // turn the "log" to the x axis
+      rotate <0.0, 0.0, 10.0> // tilt the log just a little bit
+      translate <0, -4, 0>    // lift it to where the rings are larger
+      rotate <5, 0, 0>        // tip it again, this time on x axis
+      }
+   }
+
+
+// Back wall
+define red_marb_map
+   color_map([0.0, 0.8, <0.8, 0.8, 0.6>, <0.8, 0.4, 0.4>]
+	     [0.8, 1.0, <0.8, 0.4, 0.4>, <0.8, 0.2, 0.2>])
+
+object {
+   disc <0, 0, 100>, <0, 0, -1>, 10000
+   texture {
+      special surface {
+	 color red_marb_map[sawtooth(x + 2 * fnoise(P, 5))]
+	 ambient 0.1
+	 diffuse 0.7
+	 reflection 0.1
+	 }
+      scale <100, 100, 100>
+      }
+   }
+
+// A sky to reflect in the water
+object {
+   polynomial y - 150
+   bounding_box <-10000, 149.99, -10000>, <10000, 150.01, 10000>
+   texture {
+      surface {
+	 color <0.5, 0.5, 1.0>
+	 ambient 0.15
+	 diffuse 0.8
+	 }
+      }
+   }
+
+// Light source
+light white, <100.0, 120.0, -130.0>

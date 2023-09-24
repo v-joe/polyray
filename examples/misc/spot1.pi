@@ -1,0 +1,72 @@
+viewpoint {
+   from <0, 5, -40>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+background <0, 0.2, 0.3>
+
+include "../colors.inc"
+
+// Make a spotlight with a visible outer surface
+define throw_length 20
+define throw_radius 10
+define throw_offset <0, 15, 0>
+define throw_orientation <0, 0, -90>
+
+// Now from the definitions of the throw lamp, calculate
+// the data needed to build the object
+define spot_point  <throw_length, 0, 0>
+define throw_dist |P|
+define throw_angle atan(throw_radius / throw_length)
+
+// Fudge for now - the rotation function is not yet defined.
+// define throw_point  rotate(spot_point, throw_orientation) + throw_offset
+define throw_point <0, -5, 0>
+
+// Build the texture for a spotlight with a fading exterior - the exterior
+// shading is sensitive to visibility of the light source as well.
+define fading_white
+texture {
+   special surface {
+      color white
+      ambient (visible(W, throw_offset) == 0
+               ? 0
+               : (P[0] < 1 ? 1
+                 : (P[0] > throw_length ? 0
+                    : (throw_length - P[0]) / throw_length)))
+      transmission (visible(W, throw_offset) == 1
+                    ? (P[0] < 1 ? 0
+                       : (P[0] > throw_length ? 1
+                          : P[0] / throw_length))
+                    : 1), 1
+      }
+   }
+// The next two things are coupled together - the light source
+// and the cone around it to make a visible border.
+spot_light white, throw_offset, throw_point, 3,
+           degrees(throw_angle), degrees(throw_angle)
+object {
+   cone <0, 0, 0>, 0.1, spot_point, throw_radius
+   fading_white
+   rotate throw_orientation
+   translate throw_offset
+   }
+
+// Add a couple of other things to complete the scene
+object {
+   box <-7, 1, -5>, <7, 2, 5>
+   rotate <0, 70, 0>
+   shiny_red
+   }
+object {
+   sphere <0, 5, 0>, 2
+   reflective_gold
+   }
+object {
+   polygon 4, <-20, -5.05, -20>, <-20, -5.05, 40>,
+	      < 20, -5.05,  40>, < 20, -5.05,-20>
+   texture { checker matte_white, matte_black scale <3, 1, 3> }
+   }

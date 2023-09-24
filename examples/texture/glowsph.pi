@@ -1,0 +1,40 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,5,-25>
+   at <0,0,0>
+   up <0,1,0>
+   angle 20
+   resolution 256, 128
+   aspect 2
+   }
+
+background black
+light <-50, 30, -5>
+
+define glow_color_map
+   color_map([0, 1, red, 0, black, 1])
+define glow_fn (1 - |N . I|)^0.15
+define red_glow_tex
+texture {
+   special surface {
+      color glow_color_map[glow_fn]
+      ambient 1
+      diffuse 0
+      specular 0
+      transmission white, 1
+      }
+   }
+
+object {
+   sphere <0, 2, 0>, 1.5
+   red_glow_tex
+   scale <4, 1, 1>
+   }
+
+object {
+   cylinder <-6,-2, 0>, <6, -2, 0>, 1.5
+   red_glow_tex
+   }

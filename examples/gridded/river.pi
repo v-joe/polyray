@@ -1,0 +1,145 @@
+// Polyray input file: Alexander Enzmann
+//
+// This is a view of a river winding through a forest, three trees in various
+// orientations are instantiated using a color mapped targa for placement. The
+// riverbed was created using a draw program, followed by color separation,
+// followed by removal of green and blue channels, then a gaussian blue was
+// applied to the remaining (red) channel to make the smooth banks on the river.
+// The trees were generated with a variant of the SPD tree program, with
+// textured spheres used to represent the leaves.
+//
+// This data file will require at least 4 meg of memory. Depending on which
+// memory manager you use, you may need more.  (HIMEM.SYS works on my machine,
+// 386MAX runs out of space.)
+//
+// Render at high resolution in order to see the detail in the trees.  You can
+// comment out the trees & use spheres if you want to see how things will be
+// laid out without needing huge amounts of memory.
+//
+viewpoint {
+   from <0, 0.9, -7>
+   at <0.5, 0, -3.5>
+   up <0,1,0>
+   angle 45
+   resolution 800, 600
+   aspect 4/3
+   }
+
+// Set up background color & lights
+background white
+light <-20, 100,-5>
+include "../colors.inc"
+
+define position_objectx  1
+define ripple_normal     2
+
+define bumpy_green
+texture {
+   special surface {
+      normal N + dnoise(3*W)
+      ambient green, 0.2
+      diffuse green, 0.3
+      specular white, 0.7
+      microfacet Reitz 10
+      }
+   scale <0.02, 0.02, 0.02>
+   }
+
+define river_colors
+texture {
+   noise surface {
+      ambient 0.2
+      diffuse 0.8
+      specular 0.1
+      position_fn position_objectx
+      normal 3
+      frequency 1
+      bump_scale 1
+      color_map(
+         [-130, -127, blue,  blue]
+	 [-127, -125, blue,  tan]
+	 [-125, -64,  tan,   tan]
+	 [-64,  -32,  tan,   green]
+	 [-32,  130,  green, green])
+      }
+   rotate <0, 0, 90>
+   }
+
+define cloudy_sky
+texture {
+   special surface {
+      ambient 0.9
+      diffuse 0
+      specular 0
+      color color_map(
+	 [0.0, 0.6, <0.4, 0.4, 0.4>, <1, 1, 1>]
+	 [0.6, 0.8, <1, 1, 1>, <0.196078, 0.6, 0.8>]
+	 [0.8, 1.0, <0.196078, 0.6, 0.8>, <0.196078, 0.6, 0.8>])[noise(3*P, 3)]
+      }
+   }
+
+define blue_ripple
+texture {
+   noise surface {
+      color <0.4, 0.4, 1.0>
+      normal ripple_normal
+      frequency 35
+      bump_scale 1
+      ambient 0.3
+      diffuse 0.4
+      specular white, 0.6
+      reflection white, 0.6
+      microfacet Reitz 10
+      }
+   translate <3, 0, -3>
+   }
+
+object {
+     object {
+        smooth_height_field "rivermap.tga"
+        scale <12, 0.001, 12>
+        translate <-6, 0, -6>
+        river_colors
+        }
+   + object {
+       polygon 4, <-7, -0.1, -7>, <-7, -0.1, 7>, <7, -0.1, 7>, <7, -0.1, -7>
+       blue_ripple
+       }
+   rotate <0, 10, 0>
+   }
+
+include "btree1.inc"
+include "btree2.inc"
+include "btree3.inc"
+object {
+   gridded "rivtrees.tga",
+      //object { sphere <0.5, 0.3, 0.5>, 0.3 shiny_red }
+      //object { sphere <0.5, 0.3, 0.5>, 0.3 shiny_green }
+      //object { sphere <0.5, 0.3, 0.5>, 0.3 shiny_blue }
+      //object { sphere <0.5, 0.3, 0.5>, 0.3 shiny_cyan }
+      //object { sphere <0.5, 0.3, 0.5>, 0.3 shiny_yellow }
+      //object { sphere <0.5, 0.3, 0.5>, 0.3 shiny_magenta }
+      //object { sphere <0.5, 0.3, 0.5>, 0.3 shiny_coral }
+      //object { sphere <0.5, 0.3, 0.5>, 0.3 matte_white }
+      //object { sphere <0.5, 0.3, 0.5>, 0.3 matte_grey }
+      tree1
+      tree2
+      tree3
+      tree1 { translate <-0.5,0,-0.5> rotate <0,120,0> translate <0.5,0,0.5>}
+      tree2 { translate <-0.5,0,-0.5> rotate <0,120,0> translate <0.5,0,0.5>}
+      tree3 { translate <-0.5,0,-0.5> rotate <0,120,0> translate <0.5,0,0.5>}
+      tree1 { translate <-0.5,0,-0.5> rotate <0,240,0> translate <0.5,0,0.5>}
+      tree2 { translate <-0.5,0,-0.5> rotate <0,240,0> translate <0.5,0,0.5>}
+      tree3 { translate <-0.5,0,-0.5> rotate <0,240,0> translate <0.5,0,0.5>}
+   scale <6/32, 6/32, 6/32>
+   translate <-6, 0, -6>
+   rotate <0, 10, 0>
+   }
+
+object {
+   sphere <0, 0, 0>, 1000
+   scale <1, 0.01, 1>
+   cloudy_sky { scale <50, 50, 50> }
+   shading_flags 0
+   rotate <5, 0, 0>
+   }

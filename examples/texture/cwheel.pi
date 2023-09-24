@@ -1,0 +1,114 @@
+// Demonstration of a number of the texturing capabilities of Polyray.
+// Polyray input file: Alexander Enzmann
+
+define otheta 0
+
+viewpoint {
+   from <0, 5, -12>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 160
+   aspect 1.6
+   }
+
+background SkyBlue
+light <-10,10,-10>
+light < 10,10,-10>
+
+// Ripple the x and y components of the surface normal
+
+define x_mirror_curve (cos(3.14 * x) + 1) / 2
+define y_mirror_curve (cos(3.14 * y) + 1) / 2
+define rippled_xy_mirror
+texture {
+   special surface {
+      color white
+      normal <N[0] + 0.2 * (cos(7 * x) + 1 + otheta) / 2,
+              N[1] + 0.5 * sin(y_mirror_curve + otheta),
+              N[2]>
+      ambient 0.1
+      diffuse 0.2
+      reflection 0.7 * y_mirror_curve
+      }
+   }
+
+// Create a solid texture based on sin functions
+
+define sin_color_offset (sin(3.14 * fmod(x*y*z, 1) + otheta) + 1) / 2
+define sin_color <sin_color_offset, 0, 1 - sin_color_offset>
+define xyz_sin_texture
+texture {
+   special surface {
+      color sin_color
+      ambient 0.2
+      diffuse 0.7
+      specular white, 0.2
+      microfacet Reitz 10
+      }
+   }
+
+// Create a solid texture based on cos functions
+
+define cos_color_offset (cos(3.14 * fmod(x*y, 1) + otheta) + 1) / 2
+define cos_color <cos_color_offset, 1 - cos_color_offset, 0>
+define xyz_cos_texture
+texture {
+   special surface {
+      color cos_color
+      ambient 0.2
+      diffuse 0.7
+      specular white, 0.2
+      microfacet Reitz 10
+      }
+   }
+
+// Define a texture based on moving the z component of the normal
+define z_ripple_normal
+texture {
+   special surface {
+      normal <N[0], N[1], N[2]+sin(10*x+otheta)*sin(10*z+otheta)/2>
+      color coral
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.2
+      microfacet Reitz 10
+      }
+   }
+
+// Define a texture using a color wheel
+define xz_wheel_texture
+texture {
+   special surface {
+      color color_wheel(x, y, z)
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.2
+      microfacet Reitz 10
+      }
+   }
+
+// Create spheres with special textures
+object {
+   sphere <-4, 1, 1>, 2
+   xyz_sin_texture { translate <-4, 1, 1> }
+   }
+object {
+   sphere <4, 1, 1>, 2
+   xyz_cos_texture { translate < 4, 1, 1> }
+   }
+object {
+   sphere <0, 1, 0>, 2
+   rippled_xy_mirror
+   }
+
+// Define a ground plane with run-time textures
+object {
+   disc <0, -3.001, 0>, <0, 1, 0>, 0, 1000
+   texture {
+      checker
+         z_ripple_normal,
+         xz_wheel_texture { translate <0.5, 0, 0.5>}
+      scale <10, 10, 10>
+      }
+   }

@@ -1,0 +1,29 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   hither 1
+   resolution 256, 256
+   }
+
+background <0, 0, 0>
+light <-10, 30, -5>
+
+include "../colors.inc"
+
+define unit_sphere object { sphere <0, 0, 0>, 1 }
+
+// A bunch of spheres floating around
+unit_sphere { dither 0.5 translate <-1, 0.5, 2> shiny_orange }
+unit_sphere { dither 0.5 translate < 1, 0.8, 2> shiny_red }
+unit_sphere { translate <-3, 1, 4> shiny_yellow }
+unit_sphere { dither 0.7 translate < 3, -0.75, 3> shiny_blue }
+unit_sphere { dither 0.75 matte_white }
+
+// Ground plane
+object { disc <0, -1.5, 0>, <0, 1, 0>, 0, 1000 matte_white }

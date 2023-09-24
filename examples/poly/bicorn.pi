@@ -1,0 +1,30 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 160, 160
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background black
+light <10, 10, -10>
+
+// Bicorn
+// This curve looks like the top part of a paraboloid, bounded
+// from below by another paraboloid.  The basic equation is:
+define a 1.0
+object {
+    object { polynomial  y^2*(a^2 - (x^2 + z^2)) - (x^2 + z^2 + 2*a*y - a^2)^2 }
+  & object { box <-0.3, -3, -3>, <0.3, 3, 3> }
+  bounding_box <-0.3, -3, -3>, <0.3, 3, 3>
+  rotate <20, 70, 0>
+  shiny_red
+  }

@@ -1,0 +1,135 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,10,-25>
+   at <0,1,0>
+   up <0,1,0>
+   angle 35
+   resolution 256, 128
+   aspect 2
+   }
+
+background <0, 0, 0>
+light 0.7*white, < 10, 20, -10>
+light 0.7*white, <-10, 20, -10>
+include "../colors.inc"
+
+define copper <0.72, 0.45, 0.20>
+define brass <0.71, 0.65, 0.26>
+
+define Silver texture { metallic { color 0.7*white } }
+define Copper texture { metallic { color copper } }
+define Brass texture { metallic { color brass } }
+define Gold texture { metallic { color gold } }
+
+define bradius 1/sin(pi/2)
+define b0 <bradius, 0, 0>
+define b1 rotate(b0, <0, 1, 0>, 180)
+
+define two_sph
+object {
+     object { sphere b0, 1 }
+   + object { sphere b1, 1 }
+   }
+
+define tradius 1/sin(pi/3)
+define t0 <tradius, 0, 0>
+define t1 rotate(t0, <0, 1, 0>, 120)
+define t2 rotate(t0, <0, 1, 0>, 240)
+
+define three_sph
+object {
+     object { sphere t0, 1 }
+   + object { sphere t1, 1 }
+   + object { sphere t2, 1 }
+   }
+
+define cradius 1/sin(pi/4)
+define c0 <cradius, 0, 0>
+define c1 rotate(c0, <0, 1, 0>, 90)
+define c2 rotate(c0, <0, 1, 0>, 180)
+define c3 rotate(c0, <0, 1, 0>, 270)
+
+define four_sph
+object {
+     object { sphere c0, 1 }
+   + object { sphere c1, 1 }
+   + object { sphere c2, 1 }
+   + object { sphere c3, 1 }
+   }
+
+define pradius 1/sin(pi/5)
+define p0 <pradius, 0, 0>
+define p1 rotate(p0, <0, 1, 0>, 72)
+define p2 rotate(p0, <0, 1, 0>, 144)
+define p3 rotate(p0, <0, 1, 0>, 216)
+define p4 rotate(p0, <0, 1, 0>, 288)
+
+define five_sph
+object {
+     object { sphere p0, 1 }
+   + object { sphere p1, 1 }
+   + object { sphere p2, 1 }
+   + object { sphere p3, 1 }
+   + object { sphere p3, 1 }
+   }
+
+define sq2 <0, sqrt(2), 0>
+
+object {
+     two_sph
+   + two_sph { rotate <0, 90, 0> translate sq2 }
+   + two_sph { translate 2*sq2 }
+   + two_sph { rotate <0, 90, 0> translate 3*sq2 }
+   + two_sph { translate 4*sq2 }
+   + two_sph { rotate <0, 90, 0> translate 5*sq2 }
+   Copper
+   translate <-9, 0, 0>
+   }
+
+object {
+     three_sph
+   + three_sph { rotate <0, 60, 0> translate sq2 }
+   + three_sph { translate 2*sq2 }
+   + three_sph { rotate <0, 60, 0> translate 3*sq2 }
+   + three_sph { translate 4*sq2 }
+   + three_sph { rotate <0, 60, 0> translate 5*sq2 }
+   Brass
+   translate <-3, 0, 0>
+   }
+
+object {
+     four_sph
+   + four_sph { rotate <0, 45, 0> translate sq2 }
+   + four_sph { translate 2*sq2 }
+   + four_sph { rotate <0, 45, 0> translate 3*sq2 }
+   + four_sph { translate 4*sq2 }
+   + four_sph { rotate <0, 45, 0> translate 5*sq2 }
+   Silver
+   translate < 3, 0, 0>
+   }
+
+object {
+     five_sph
+   + five_sph { rotate <0, 36, 0> translate sq2 }
+   + five_sph { translate 2*sq2 }
+   + five_sph { rotate <0, 36, 0> translate 3*sq2 }
+   + five_sph { translate 4*sq2 }
+   + five_sph { rotate <0, 36, 0> translate 5*sq2 }
+   Gold
+   translate < 9, 0, 0>
+   }
+
+define v0 <1, 0, 0>
+define v1 rotate(v0, <0, 1, 0>, 120)
+define v2 rotate(v0, <0, 1, 0>, -120)
+define tri_fn max(P . v0, max(P . v1, P . v2))
+define tri_lookup_fn sawtooth(tri_fn/3)
+
+object {
+   disc <0, 0, 0>, <0, 1, 0>, 20
+   texture { special shiny { color white_marble_map[tri_lookup_fn]
+			     position P + 2*dnoise(P, 3) } }
+   }

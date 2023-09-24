@@ -1,0 +1,32 @@
+// File demonstrating height field function
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -8>
+   at <0, 0, 0>
+   up <0,1,0>
+   angle 40
+   resolution 256, 256
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background midnightblue
+light <10,10,-10>
+
+// Define constants for the sombrero function
+define a_const 1.0
+define b_const 1.0
+define c_const 3.0
+define two_pi_a 2.0 * 3.14159265358 * a_const
+
+// Define a diminishing cosine surface (sombrero)
+object {
+   height_fn 80, 80, -4, 4, -4, 4,
+      c_const * cos(two_pi_a * sqrt(x^2 + z^2)) *
+                exp(-b_const * sqrt(x^2 + z^2))
+   shiny_red
+   }

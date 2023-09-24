@@ -1,0 +1,9 @@
+// Single ripple that diminishes over distance
+define ripple_freq 20
+define ripple_phase 0
+
+define ripple_fn
+   0.2 * ripple(P, <0,0,0>, ripple_freq, ripple_phase) *
+   exp(-|P|)
+
+include "ripple.inc"

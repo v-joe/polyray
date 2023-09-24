@@ -1,0 +1,240 @@
+// File demonstrating refraction, CSG, etc.
+// Polyray input file: Alexander Enzmann
+
+// Define the position of the eye based on the frame number
+define eye_x_pos 0
+define eye_height 4
+define eye_dist 10
+
+viewpoint {
+   from <eye_x_pos,eye_height,-eye_dist>
+   at <0,0,0>
+   up <0,1,0>
+   angle 35
+   resolution 512, 512
+   }
+
+background <0.196078, 0.6, 0.8>
+light <-10,10,-10>
+include "../colors.inc"
+
+// Make a convex lens by intersecting two spheres
+define convex_lens
+object {
+     object { sphere <0,0,-0.5>, 1 }
+   * object { sphere <0,0, 0.5>, 1 }
+   glass
+   }
+
+// Put two lenses in line - with two lenses the magnified image
+// will end up right-side-up.
+convex_lens {
+   rotate <degrees(atan(eye_height/eye_dist)),0,0>
+   translate <0,eye_height/8,-eye_dist/8>
+   }
+convex_lens {
+   rotate <degrees(atan(eye_height/eye_dist)),0,0>
+   translate <0,eye_height/2,-eye_dist/2>
+   }
+
+// Create a ground plane
+object {
+   polygon 4, <-30, -1.1, -10>, <-30, -1.1, 30>, 
+	      < 30, -1.1,  30>, < 30, -1.1, -10>
+   texture { checker matte_white, matte_black }
+   translate <0,-1.1,0>
+   }
+
+// Make a 13x13 grid of balls of variously colored balls
+
+// How big are the balls?
+define ball_size 0.15
+
+// Make a bunch of little colored balls on the ground
+define little_ball
+   object { sphere <0, -0.9, 0>, ball_size }
+
+// Parameters on objects would be really great here - all
+// I want to change between each line of balls is their
+// color and their position
+little_ball { matte_red     translate <-3.0, 0,-3.0> }
+little_ball { matte_blue    translate <-3.0, 0,-2.5> }
+little_ball { matte_green   translate <-3.0, 0,-2.0> }
+little_ball { matte_cyan    translate <-3.0, 0,-1.5> }
+little_ball { matte_yellow  translate <-3.0, 0,-1.0> }
+little_ball { matte_magenta translate <-3.0, 0,-0.5> }
+little_ball { matte_red     translate <-3.0, 0, 0.0> }
+little_ball { matte_blue    translate <-3.0, 0, 0.5> }
+little_ball { matte_green   translate <-3.0, 0, 1.0> }
+little_ball { matte_cyan    translate <-3.0, 0, 1.5> }
+little_ball { matte_yellow  translate <-3.0, 0, 2.0> }
+little_ball { matte_magenta translate <-3.0, 0, 2.5> }
+little_ball { matte_white   translate <-3.0, 0, 3.0> }
+
+little_ball { matte_blue    translate <-2.5, 0,-3.0> }
+little_ball { matte_green   translate <-2.5, 0,-2.5> }
+little_ball { matte_cyan    translate <-2.5, 0,-2.0> }
+little_ball { matte_yellow  translate <-2.5, 0,-1.5> }
+little_ball { matte_magenta translate <-2.5, 0,-1.0> }
+little_ball { matte_red     translate <-2.5, 0,-0.5> }
+little_ball { matte_blue    translate <-2.5, 0, 0.0> }
+little_ball { matte_green   translate <-2.5, 0, 0.5> }
+little_ball { matte_cyan    translate <-2.5, 0, 1.0> }
+little_ball { matte_yellow  translate <-2.5, 0, 1.5> }
+little_ball { matte_magenta translate <-2.5, 0, 2.0> }
+little_ball { matte_white   translate <-2.5, 0, 2.5> }
+little_ball { matte_red     translate <-2.5, 0, 3.0> }
+
+little_ball { matte_green   translate <-2.0, 0,-3.0> }
+little_ball { matte_cyan    translate <-2.0, 0,-2.5> }
+little_ball { matte_yellow  translate <-2.0, 0,-2.0> }
+little_ball { matte_magenta translate <-2.0, 0,-1.5> }
+little_ball { matte_red     translate <-2.0, 0,-1.0> }
+little_ball { matte_blue    translate <-2.0, 0,-0.5> }
+little_ball { matte_green   translate <-2.0, 0, 0.0> }
+little_ball { matte_cyan    translate <-2.0, 0, 0.5> }
+little_ball { matte_yellow  translate <-2.0, 0, 1.0> }
+little_ball { matte_magenta translate <-2.0, 0, 1.5> }
+little_ball { matte_white   translate <-2.0, 0, 2.0> }
+little_ball { matte_red     translate <-2.0, 0, 2.5> }
+little_ball { matte_blue    translate <-2.0, 0, 3.0> }
+
+little_ball { matte_cyan    translate <-1.5, 0,-3.0> }
+little_ball { matte_yellow  translate <-1.5, 0,-2.5> }
+little_ball { matte_magenta translate <-1.5, 0,-2.0> }
+little_ball { matte_red     translate <-1.5, 0,-1.5> }
+little_ball { matte_blue    translate <-1.5, 0,-1.0> }
+little_ball { matte_green   translate <-1.5, 0,-0.5> }
+little_ball { matte_cyan    translate <-1.5, 0, 0.0> }
+little_ball { matte_yellow  translate <-1.5, 0, 0.5> }
+little_ball { matte_magenta translate <-1.5, 0, 1.0> }
+little_ball { matte_white   translate <-1.5, 0, 1.5> }
+little_ball { matte_red     translate <-1.5, 0, 2.0> }
+little_ball { matte_blue    translate <-1.5, 0, 2.5> }
+little_ball { matte_green   translate <-1.5, 0, 3.0> }
+
+little_ball { matte_yellow  translate <-1.0, 0,-3.0> }
+little_ball { matte_magenta translate <-1.0, 0,-2.5> }
+little_ball { matte_red     translate <-1.0, 0,-2.0> }
+little_ball { matte_blue    translate <-1.0, 0,-1.5> }
+little_ball { matte_green   translate <-1.0, 0,-1.0> }
+little_ball { matte_cyan    translate <-1.0, 0,-0.5> }
+little_ball { matte_yellow  translate <-1.0, 0, 0.0> }
+little_ball { matte_magenta translate <-1.0, 0, 0.5> }
+little_ball { matte_white   translate <-1.0, 0, 1.0> }
+little_ball { matte_red     translate <-1.0, 0, 1.5> }
+little_ball { matte_blue    translate <-1.0, 0, 2.0> }
+little_ball { matte_green   translate <-1.0, 0, 2.5> }
+little_ball { matte_cyan    translate <-1.0, 0, 3.0> }
+
+little_ball { matte_magenta translate <-0.5, 0,-3.0> }
+little_ball { matte_red     translate <-0.5, 0,-2.5> }
+little_ball { matte_blue    translate <-0.5, 0,-2.0> }
+little_ball { matte_green   translate <-0.5, 0,-1.5> }
+little_ball { matte_cyan    translate <-0.5, 0,-1.0> }
+little_ball { matte_yellow  translate <-0.5, 0,-0.5> }
+little_ball { matte_magenta translate <-0.5, 0, 0.0> }
+little_ball { matte_white   translate <-0.5, 0, 0.5> }
+little_ball { matte_red     translate <-0.5, 0, 1.0> }
+little_ball { matte_blue    translate <-0.5, 0, 1.5> }
+little_ball { matte_green   translate <-0.5, 0, 2.0> }
+little_ball { matte_cyan    translate <-0.5, 0, 2.5> }
+little_ball { matte_yellow  translate <-0.5, 0, 3.0> }
+
+little_ball { matte_red     translate < 0.0, 0,-3.0> }
+little_ball { matte_blue    translate < 0.0, 0,-2.5> }
+little_ball { matte_green   translate < 0.0, 0,-2.0> }
+little_ball { matte_cyan    translate < 0.0, 0,-1.5> }
+little_ball { matte_yellow  translate < 0.0, 0,-1.0> }
+little_ball { matte_magenta translate < 0.0, 0,-0.5> }
+little_ball { matte_white   translate < 0.0, 0, 0.0> }
+little_ball { matte_red     translate < 0.0, 0, 0.5> }
+little_ball { matte_blue    translate < 0.0, 0, 1.0> }
+little_ball { matte_green   translate < 0.0, 0, 1.5> }
+little_ball { matte_cyan    translate < 0.0, 0, 2.0> }
+little_ball { matte_yellow  translate < 0.0, 0, 2.5> }
+little_ball { matte_magenta translate < 0.0, 0, 3.0> }
+
+little_ball { matte_blue    translate < 0.5, 0,-3.0> }
+little_ball { matte_green   translate < 0.5, 0,-2.5> }
+little_ball { matte_cyan    translate < 0.5, 0,-2.0> }
+little_ball { matte_yellow  translate < 0.5, 0,-1.5> }
+little_ball { matte_magenta translate < 0.5, 0,-1.0> }
+little_ball { matte_white   translate < 0.5, 0,-0.5> }
+little_ball { matte_red     translate < 0.5, 0, 0.0> }
+little_ball { matte_blue    translate < 0.5, 0, 0.5> }
+little_ball { matte_green   translate < 0.5, 0, 1.0> }
+little_ball { matte_cyan    translate < 0.5, 0, 1.5> }
+little_ball { matte_yellow  translate < 0.5, 0, 2.0> }
+little_ball { matte_magenta translate < 0.5, 0, 2.5> }
+little_ball { matte_red     translate < 0.5, 0, 3.0> }
+
+little_ball { matte_green   translate < 1.0, 0,-3.0> }
+little_ball { matte_cyan    translate < 1.0, 0,-2.5> }
+little_ball { matte_yellow  translate < 1.0, 0,-2.0> }
+little_ball { matte_magenta translate < 1.0, 0,-1.5> }
+little_ball { matte_white   translate < 1.0, 0,-1.0> }
+little_ball { matte_red     translate < 1.0, 0,-0.5> }
+little_ball { matte_blue    translate < 1.0, 0, 0.0> }
+little_ball { matte_green   translate < 1.0, 0, 0.5> }
+little_ball { matte_cyan    translate < 1.0, 0, 1.0> }
+little_ball { matte_yellow  translate < 1.0, 0, 1.5> }
+little_ball { matte_magenta translate < 1.0, 0, 2.0> }
+little_ball { matte_red     translate < 1.0, 0, 2.5> }
+little_ball { matte_blue    translate < 1.0, 0, 3.0> }
+
+little_ball { matte_cyan    translate < 1.5, 0,-3.0> }
+little_ball { matte_yellow  translate < 1.5, 0,-2.5> }
+little_ball { matte_magenta translate < 1.5, 0,-2.0> }
+little_ball { matte_white   translate < 1.5, 0,-1.5> }
+little_ball { matte_red     translate < 1.5, 0,-1.0> }
+little_ball { matte_blue    translate < 1.5, 0,-0.5> }
+little_ball { matte_green   translate < 1.5, 0, 0.0> }
+little_ball { matte_cyan    translate < 1.5, 0, 0.5> }
+little_ball { matte_yellow  translate < 1.5, 0, 1.0> }
+little_ball { matte_magenta translate < 1.5, 0, 1.5> }
+little_ball { matte_red     translate < 1.5, 0, 2.0> }
+little_ball { matte_blue    translate < 1.5, 0, 2.5> }
+little_ball { matte_green   translate < 1.5, 0, 3.0> }
+
+little_ball { matte_yellow  translate < 2.0, 0,-3.0> }
+little_ball { matte_magenta translate < 2.0, 0,-2.5> }
+little_ball { matte_white   translate < 2.0, 0,-2.0> }
+little_ball { matte_red     translate < 2.0, 0,-1.5> }
+little_ball { matte_blue    translate < 2.0, 0,-1.0> }
+little_ball { matte_green   translate < 2.0, 0,-0.5> }
+little_ball { matte_cyan    translate < 2.0, 0, 0.0> }
+little_ball { matte_yellow  translate < 2.0, 0, 0.5> }
+little_ball { matte_magenta translate < 2.0, 0, 1.0> }
+little_ball { matte_red     translate < 2.0, 0, 1.5> }
+little_ball { matte_blue    translate < 2.0, 0, 2.0> }
+little_ball { matte_green   translate < 2.0, 0, 2.5> }
+little_ball { matte_cyan    translate < 2.0, 0, 3.0> }
+
+little_ball { matte_magenta translate < 2.5, 0,-3.0> }
+little_ball { matte_white   translate < 2.5, 0,-2.5> }
+little_ball { matte_red     translate < 2.5, 0,-2.0> }
+little_ball { matte_blue    translate < 2.5, 0,-1.5> }
+little_ball { matte_green   translate < 2.5, 0,-1.0> }
+little_ball { matte_cyan    translate < 2.5, 0,-0.5> }
+little_ball { matte_yellow  translate < 2.5, 0, 0.0> }
+little_ball { matte_magenta translate < 2.5, 0, 0.5> }
+little_ball { matte_red     translate < 2.5, 0, 1.0> }
+little_ball { matte_blue    translate < 2.5, 0, 1.5> }
+little_ball { matte_green   translate < 2.5, 0, 2.0> }
+little_ball { matte_cyan    translate < 2.5, 0, 2.5> }
+little_ball { matte_yellow  translate < 2.5, 0, 3.0> }
+
+little_ball { matte_white   translate < 3.0, 0,-3.0> }
+little_ball { matte_red     translate < 3.0, 0,-2.5> }
+little_ball { matte_blue    translate < 3.0, 0,-2.0> }
+little_ball { matte_green   translate < 3.0, 0,-1.5> }
+little_ball { matte_cyan    translate < 3.0, 0,-1.0> }
+little_ball { matte_yellow  translate < 3.0, 0,-0.5> }
+little_ball { matte_magenta translate < 3.0, 0, 0.0> }
+little_ball { matte_red     translate < 3.0, 0, 0.5> }
+little_ball { matte_blue    translate < 3.0, 0, 1.0> }
+little_ball { matte_green   translate < 3.0, 0, 1.5> }
+little_ball { matte_cyan    translate < 3.0, 0, 2.0> }
+little_ball { matte_yellow  translate < 3.0, 0, 2.5> }
+little_ball { matte_magenta translate < 3.0, 0, 3.0> }

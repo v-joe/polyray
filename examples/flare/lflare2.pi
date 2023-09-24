@@ -1,0 +1,53 @@
+/* Standard circular rings, various colors */
+
+viewpoint {
+   from < 0, 0,-15>
+   at <3,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 320, 240
+   aspect 4/3
+   }
+
+background black // 0.5*thistle
+
+include "../colors.inc"
+include "../texture.inc"
+
+// Add colors here for something more interesting than
+// white flares
+define flare_color1
+   color_map([0.0, 0.7, yellow, 0.8, yellow, 0.8]
+             [0.7, 0.8, yellow, 0.8, yellow, 0.5]
+             [0.8, 0.95, yellow, 0.5, yellow, 0.8]
+             [0.95, 1.0, yellow, 0.8, white, 1.0])[u]
+
+define flare_color2
+   color_map([0.0, 0.7, violet_red, 0.8, violet_red, 0.8]
+             [0.7, 0.8, violet_red, 0.8, violet_red, 0.5]
+             [0.8, 0.95, violet_red, 0.5, violet_red, 0.8]
+             [0.95, 1.0, violet_red, 0.8, white, 1.0])[u]
+
+define flare_color3
+   color_map([0.0, 0.7, coral, 0.8, coral, 0.8]
+             [0.7, 0.8, coral, 0.8, coral, 0.5]
+             [0.8, 0.95, coral, 0.5, coral, 0.8]
+             [0.95, 1.0, coral, 0.8, white, 1.0])[u]
+
+// Here's the light definition that puts it all together
+textured_light {
+   color white
+   translate <-10, 20, 50>
+   flare {
+      color (w % 3 == 0
+             ? flare_color1
+	     : (w % 3 == 1
+	        ? flare_color2
+		: flare_color3))
+
+      seed 12
+      size 0.003, 0.06
+      count 30
+      concave 2 // Force u to go from center out
+      }
+   }

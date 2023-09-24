@@ -1,0 +1,40 @@
+// Sample Polyray file
+// A gradient texture with changing 'alpha' values
+//
+viewpoint {
+   from <0, 5, -10>
+   at <0,0,0>
+   up <0,1,0>
+   angle 35
+   resolution 256, 256
+   aspect 1
+   }
+
+include "../colors.inc"
+include "../texture.inc"
+
+background midnightblue
+
+light <-10, 7, -5>
+light < 10, 7, -5>
+
+object {
+   disc <0, -2.005, 0>, <0, 1, 0>, 10
+   texture { checker matte_white, matte_black }
+   }
+
+define red_blue_check texture { checker shiny_red, shiny_blue }
+
+define index_tex_map
+texture_map([-2, 0, red_blue_check, bumpy_green],
+	    [0, 2, bumpy_green, reflective_blue])
+
+object {
+   sphere <0, 0, 0>, 2
+   texture { indexed x, index_tex_map }
+   }
+
+object {
+   disc <0, -2, 0>, <0, 1, 0>, 30
+   texture { special matte { color sky_color_map[noisy_onion_fn] } }
+   }

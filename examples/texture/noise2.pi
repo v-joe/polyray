@@ -1,0 +1,58 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 40
+   resolution 320, 160
+   aspect 2
+   }
+
+background <0, 0, 0>
+light <-10,3, -20>
+
+define test_map
+   color_map(
+      [0,   0.3, red,     orange]
+      [0.1, 0.3, orange,  blue]
+      [0.3, 0.5, blue,    skyblue]
+      [0.5, 0.7, skyblue, orange]
+      [0.7, 0.9, orange,  magenta]
+      [0.9, 1.0, magenta, red],
+      <1, 1, 1>)
+
+// Simple color map texture
+define test_noise_texture0
+texture {
+   special surface {
+      color test_map[noise(P)]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   translate <30, 20, -40>
+   scale <0.6, 0.6, 0.6>
+   }
+
+define test_noise_texture1
+texture {
+   special surface {
+      color test_map[noise(brownian(P))]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   translate <30, 20, -40>
+   scale <0.6, 0.6, 0.6>
+   }
+
+define two_sphere
+object { sphere <0, 0, 0>, 2 }
+
+two_sphere { translate <-2.5, 0, 0> test_noise_texture1 }
+two_sphere { translate < 2.5, 0, 0> test_noise_texture0 }

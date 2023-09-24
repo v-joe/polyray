@@ -1,0 +1,6 @@
+Hunt's surface
+	equation $$ 4(x^{2} + y^{2} + z^{2} - 13)^{3} + 27(3x^{2} + y^{2} -4z^{2} - 12)^{2} = 0 $$
+The Mitre surface
+	equation $$ 4x^{2}(x^{2} + y^{2} + z^{2}) - y^{2}(1 - y^{2} - z^{2}) = 0 $$
+Odd surface
+	equation $$ z^{2}x^{2} - z^{4} - 2zx^{2} + 2z^{3} + x^{2} - z^{2} - (x^{2} - z)^{2} - y^{4} - 2y^{2}x^{2} - y^{2}z^{2} + 2y^{2}z + y^{2} = 0 $$

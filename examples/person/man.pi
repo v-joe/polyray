@@ -1,0 +1,23 @@
+// Viewpoint file for person.inc
+
+viewpoint {
+	from <2,-1,21>
+	at <0,-1.5,0>
+	angle 45
+	up <0,1,0>
+	resolution 320,200
+	aspect 1.3333
+	}
+
+include "../colors.inc"
+
+spot_light 0.3*White, <-10,5,15>, <0,-1.75,0>, 3, 50, 60
+spot_light 0.3*White, <10,5,15>, <0,-1.75,0>, 3, 50, 60
+spot_light 0.3*White, <-10,-5,15>, <0,-1.75,0>, 3, 50, 60
+spot_light 0.3*White, <10,-5,15>, <0,-1.75,0>, 3, 50, 60
+spot_light 0.3*White, <0,10,10>, <0,-1.75,0>, 3, 50, 60
+
+define personcolor shiny_red
+include "man.inc"
+
+man { translate <-5, 0, 0> }

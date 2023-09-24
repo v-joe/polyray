@@ -1,0 +1,96 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-30>
+   at <0,0,0>
+   up <0,1,0>
+   angle 40
+   resolution 160, 160
+   }
+
+background <0, 0, 0>
+light <-10, 10, -20>
+light < 10,  0, -20>
+
+include "../colors.inc"
+
+define diamond
+object {
+    object { polynomial  0.573576 * y - 0.819152 * z -5.735764 }
+  * object { polynomial -0.40558 * x + 0.40558 * y - 0.819152 * z - 5.735764 }
+  * object { polynomial -0.573576 - 0.819152 * z - 5.735764 }
+  * object { polynomial -0.40558 * x - 0.40558 * y - 0.819152 * z - 5.735764 }
+  * object { polynomial -0.573576 * y - 0.819152 * z - 5.735764 }
+  * object { polynomial  0.40558 * x - 0.40558 * y - 0.819152 * z - 5.735764 }
+  * object { polynomial  0.573576 * x - 0.819152 * z - 5.735764 }
+  * object { polynomial  0.40558 * x + 0.40558 * y - 0.819152 * z - 5.735764 }
+  * object { polynomial -0.12393  * x + 0.623037 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial -0.352922 * x + 0.528186 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial -0.529186 * x + 0.352922 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial -0.623037 * x + 0.123930 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial -0.623037 * x - 0.123930 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial -0.528186 * x - 0.352922 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial -0.352922 * x - 0.528186 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial -0.12393  * x - 0.623037 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial  0.12393  * x - 0.623037 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial  0.352922 * x - 0.528186 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial  0.528186 * x - 0.352922 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial  0.623037 * x - 0.123930 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial  0.623037 * x + 0.123930 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial  0.528186 * x + 0.352922 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial  0.352922 * x + 0.528186 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial  0.12393  * x + 0.623037 * y - 0.772312 * z - 6.230374 }
+  * object { polynomial -0.14097  * x + 0.340332 * y - 0.929678 * z - 4.956499 }
+  * object { polynomial -0.340332 * x + 0.140970 * y - 0.929678 * z - 4.956499 }
+  * object { polynomial -0.340332 * x - 0.140970 * y - 0.929678 * z - 4.956499 }
+  * object { polynomial -0.14097  * x - 0.340332 * y - 0.929678 * z - 4.956499 }
+  * object { polynomial  0.14097  * x - 0.340332 * y - 0.929678 * z - 4.956499 }
+  * object { polynomial  0.14097  * x + 0.340332 * y - 0.929678 * z - 4.956499 }
+  * object { polynomial  0.340332 * x - 0.140970 * y - 0.929678 * z - 4.956499 }
+  * object { polynomial  0.340332 * x + 0.140970 * y - 0.929678 * z - 4.956499 }
+  * object { polynomial -1.0 * z - 3.501038 }
+  * object { polynomial  0.669131 * y + 0.743145 * z - 6.988564 }
+  * object { polynomial  0.473147 * x + 0.473147 * y + 0.743145 * z - 6.988564 }
+  * object { polynomial  0.669131 * x + 0.743145 * z - 6.988564 }
+  * object { polynomial  0.473147 * x - 0.473147 * y + 0.743145 * z - 6.988564 }
+  * object { polynomial -0.669131 * y + 0.743145 * z - 6.988564 }
+  * object { polynomial -0.473147 * x - 0.473147 * y + 0.743145 * z - 6.988564 }
+  * object { polynomial -0.669131 * x + 0.743145 * z - 6.988564 }
+  * object { polynomial -0.473147 * x + 0.473147 * y + 0.743145 * z - 6.988564 }
+  * object { polynomial  0.133918 * x + 0.673251 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial  0.381366 * x + 0.570755 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial  0.570755 * x + 0.381366 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial  0.673251 * x + 0.133918 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial  0.673251 * x - 0.133918 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial  0.570755 * x - 0.381366 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial  0.381366 * x - 0.570755 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial  0.133918 * x - 0.673251 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial -0.133918 * x - 0.673251 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial -0.381366 * x - 0.570755 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial -0.570755 * x - 0.381366 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial -0.673251 * x - 0.133918 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial -0.673251 * x + 0.133918 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial -0.570755 * x + 0.381366 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial -0.381366 * x + 0.570755 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial -0.133918 * x + 0.673251 * y + 0.727186 * z - 7.023385 }
+  * object { polynomial  0.195090 * x + 0.980785 * y - 9.807353 }
+  * object { polynomial  0.555570 * x + 0.831470 * y - 9.807353 }
+  * object { polynomial  0.831470 * x + 0.555570 * y - 9.807353 }
+  * object { polynomial  0.980785 * x + 0.195090 * y - 9.807353 }
+  * object { polynomial  0.980785 * x - 0.195090 * y - 9.807353 }
+  * object { polynomial  0.831470 * x - 0.555570 * y - 9.807353 }
+  * object { polynomial  0.555570 * x - 0.831470 * y - 9.807353 }
+  * object { polynomial  0.195090 * x - 0.980785 * y - 9.807353 }
+  * object { polynomial -0.195090 * x - 0.980785 * y - 9.807353 }
+  * object { polynomial -0.555570 * x - 0.831470 * y - 9.807353 }
+  * object { polynomial -0.831470 * x - 0.555570 * y - 9.807353 }
+  * object { polynomial -0.980785 * x - 0.195090 * y - 9.807353 }
+  * object { polynomial -0.980785 * x + 0.195090 * y - 9.807353 }
+  * object { polynomial -0.831470 * x + 0.555570 * y - 9.807353 }
+  * object { polynomial -0.555570 * x + 0.831470 * y - 9.807353 }
+  * object { polynomial -0.195090 * x + 0.980785 * y - 9.807353 }
+  }
+object { sphere <0, 0, 0>, 5 }
+diamond { shiny_red translate <0, 0, -1.75> rotate <80, 0, 0> }

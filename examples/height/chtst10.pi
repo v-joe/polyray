@@ -1,0 +1,42 @@
+start_frame 1
+end_frame 4
+
+outfile chtst
+
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 256, 256
+   }
+
+background white
+light <-10,3, -20>
+
+define phi (v - 0.5) * 3.14159265
+define theta u * 6.28318530
+
+define ures 240
+define vres 240
+
+if (frame == 1)
+define ribbed_cyl
+   object { smooth_cheight_fn ures, vres, 0.25 * cos(12 * theta),1.0, 1.0 }
+else if (frame == 2)
+define ribbed_cyl
+   object { smooth_cheight_fn ures, vres, 0.1 * cos(12 * phi),1.0, 1.0 }
+else if (frame == 3)
+define ribbed_cyl
+   object { smooth_cheight_fn ures, vres,
+               0.1 * cos(12 * phi) * cos(12 * theta), 1.0, 1.0 }
+else if (frame == 4)
+define ribbed_cyl
+   object { smooth_cheight_fn ures, vres,
+               0.1 * cos(12 * phi) + 0.1 * cos(12 * theta), 1.0, 1.0 }
+
+ribbed_cyl {
+   translate <0,-0.5,0>
+   scale <1, 3, 1>
+   rotate <-30, 0, 0>
+   }

@@ -1,0 +1,27 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -10>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 160, 160
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background black
+light <10, 10, -20>
+
+// Sorta like a torus, but with two gumdrop shapes near the hole
+object {
+   polynomial 4*(x^4 + (y^2 + z^2)^2) + 17 * x^2 * (y^2 + z^2) -
+	      20 * (x^2 + y^2 + z^2) + 17
+   bounding_box <-2, -2, -2>, <2, 2, 2>
+   rotate <0, 60, 20>
+   shiny_red
+   }

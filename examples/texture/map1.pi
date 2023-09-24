@@ -1,0 +1,81 @@
+// Sample file demonstrating the mapping of an image onto a box
+// Polyray input file: Alexander Enzmann
+
+viewpoint {
+   from <0,3,-10>
+   at <0,0,5>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background <0, 0, 0>
+light white, <10, 20, -50>
+
+// Pull in a Targa file - note that "m22u.tga" is a 16 bit Targa, and having
+// been created by Polyray, all parts of the image that hit the background
+// have the alpha bit set.  This means that unless we take steps to turn
+// off the transparency, we will be able to see through the background parts
+// of the image
+define ball_image image("m22u.tga")
+define box_image_texture
+texture {
+   special surface {
+      color planar_imagemap(ball_image, P, 1)
+      ambient 0.2
+      diffuse 0.8
+      }
+   }
+
+define ball_image_texture
+texture {
+   special surface {
+      color spherical_imagemap(ball_image, P)
+      ambient 0.2
+      diffuse 0.8
+      transmission 0, 1
+      }
+   }
+
+define can_image_texture
+texture {
+   special surface {
+      color cylindrical_imagemap(ball_image, P, 1)
+      ambient 0.2
+      diffuse 0.8
+      transmission 0, 1
+      }
+   }
+
+define basic_box object { box <-2, 0, -2>, <2, 1, 2> }
+
+basic_box {
+   box_image_texture { scale <2, 1, 2> }
+   rotate <-30, 30, 0>
+   translate <1, 0, -1>
+   }
+
+object {
+   sphere <0, 0, 0>, 1
+   ball_image_texture
+   rotate <30, 45, 0>
+   translate <0, 3, 0>
+   }
+
+object {
+   cylinder <0, 0, 0>, <0, 3, 0>, 1
+   can_image_texture { rotate <0, 180, 0> } // { scale <1, 3, 1> }
+   translate <-3, 0, 1>
+   }
+
+// Create a ground plane
+object {
+   disc <0, -0.001, 0>, <0, 1, 0>, 0, 1000
+   texture { checker matte_white, matte_black }
+   scale <10, 10, 10>
+   translate <0,-0.01,0>
+   }

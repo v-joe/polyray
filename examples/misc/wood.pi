@@ -1,0 +1,142 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 40
+   resolution 256, 256
+   }
+
+background <0, 0, 0>
+light <-10, 3, -20>
+light < 10, 10, -20>
+
+define wood_scale 2
+define light_wood <0.6, 0.24, 0.1>
+define median_wood <0.3, 0.12, 0.03>
+define dark_wood <0.05, 0.01, 0.005>
+define xydist wood_scale * sqrt(x * x + y * y)
+
+define wood_turb 0.7
+define wood_fn  (sawtooth(xydist + wood_turb * noise(P,1)) + 1) / 2
+
+define wood_map
+   color_map(
+      [0.0, 0.2, light_wood, light_wood]
+      [0.2, 0.3, light_wood, median_wood]
+      [0.3, 0.4, median_wood, light_wood]
+      [0.4, 0.7, light_wood, light_wood]
+      [0.7, 0.8, light_wood, median_wood]
+      [0.8, 0.9, median_wood, light_wood]
+      [0.9, 1.0, light_wood, dark_wood],
+      white)
+
+define wood_texture
+texture {
+   special surface {
+      color wood_map[wood_fn]
+      ambient 0.3
+      diffuse 0.8
+      specular white, 0.2 + 0.6 * wood_fn^4
+      microfacet Reitz 5 + 15 * (1 - wood_fn)
+      }
+   scale <0.3, 0.3, 0.3>
+   }
+
+define two_sphere object { sphere <0, 0, 0>, 2 }
+define corner_sphere object { sphere <0, 0, 0>, 0.3 }
+
+// two_sphere { rotate <-30, 30, 0> wood_texture }
+
+define rounded_box
+   object {
+// Make the corners of the box
+        corner_sphere { translate <-1,-1, -1> }
+      + corner_sphere { translate <-1, 1, -1> }
+      + corner_sphere { translate <-1,-1,  1> }
+      + corner_sphere { translate <-1, 1,  1> }
+      + corner_sphere { translate < 1,-1, -1> }
+      + corner_sphere { translate < 1, 1, -1> }
+      + corner_sphere { translate < 1,-1,  1> }
+      + corner_sphere { translate < 1, 1,  1> }
+// Make the edges of the box
+      + object { cylinder <-1, -1, -1>, <-1, 1, -1>, 0.3 }
+      + object { cylinder <-1,  1, -1>, < 1, 1, -1>, 0.3 }
+      + object { cylinder < 1,  1, -1>, < 1,-1, -1>, 0.3 }
+      + object { cylinder < 1, -1, -1>, <-1,-1, -1>, 0.3 }
+
+      + object { cylinder <-1, -1,  1>, <-1, 1,  1>, 0.3 }
+      + object { cylinder <-1,  1,  1>, < 1, 1,  1>, 0.3 }
+      + object { cylinder < 1,  1,  1>, < 1,-1,  1>, 0.3 }
+      + object { cylinder < 1, -1,  1>, <-1,-1,  1>, 0.3 }
+
+      + object { cylinder <-1, -1, -1>, <-1,-1,  1>, 0.3 }
+      + object { cylinder <-1,  1, -1>, <-1, 1,  1>, 0.3 }
+      + object { cylinder < 1,  1, -1>, < 1, 1,  1>, 0.3 }
+      + object { cylinder < 1, -1, -1>, < 1,-1,  1>, 0.3 }
+// Make the faces of the box
+       + object { box <-1, -1, -1.3>, <1, 1, 1.3> }
+       + object { box <-1, -1.3, -1>, <1, 1.3, 1> }
+       + object { box <-1.3, -1, -1>, <1.3, 1, 1> }
+      }
+// rounded_box { rotate <-30, 40, 0> wood_texture }
+
+define log_end_torus
+object {
+   torus 1, 0.3, <0, 0, 0>, <0, 0, 1>
+   }
+
+define dtheta 45
+define theta radians(dtheta)
+define log_tori
+   object {
+      (  log_end_torus { translate <0, 0, 2> }
+       + log_end_torus { translate <0, 0, -2> } )
+    * (  object { polynomial y rotate <0, 0, dtheta> }
+       + object { polynomial y rotate <0, 0,-dtheta> } )
+      }
+
+define log_body
+   object {
+        object { cylinder <0, 0, -2>, <0, 0, 2>, 1.3 }
+      & object { polynomial y translate <0, 1.3 * sin(theta), 0> }
+      }
+
+define log_caps
+   object {
+      (  object { disc <0, 0,-2.3>, <0, 0,-1>, 1 }
+       + object { disc <0, 0, 2.3>, <0, 0, 1>, 1 } )
+      & object { polynomial y translate <0, sin(theta), 0> }
+      }
+
+define log_trim
+   object {
+        object { sphere < cos(theta), sin(theta), -2>, 0.3 }
+      + object { sphere <-cos(theta), sin(theta), -2>, 0.3 }
+      + object { sphere < cos(theta), sin(theta),  2>, 0.3 }
+      + object { sphere <-cos(theta), sin(theta),  2>, 0.3 }
+      + object { cylinder <cos(theta), sin(theta), -2>,
+                          <cos(theta), sin(theta),  2>, 0.3 }
+      + object { cylinder <-cos(theta), sin(theta), -2>,
+                          <-cos(theta), sin(theta),  2>, 0.3 }
+      + object { cylinder <-cos(theta), sin(theta), -2>,
+                          < cos(theta), sin(theta), -2>, 0.3 }
+      + object { cylinder <-cos(theta), sin(theta),  2>,
+                          < cos(theta), sin(theta),  2>, 0.3 }
+      + object { polygon 4, <-cos(theta), 0.3 + sin(theta), -2>,
+                            <-cos(theta), 0.3 + sin(theta),  2>,
+                            < cos(theta), 0.3 + sin(theta),  2>,
+                            < cos(theta), 0.3 + sin(theta), -2> }
+      }
+
+define sliced_log
+   object {
+        log_body
+      + log_tori
+      + log_caps
+      + log_trim
+      }
+sliced_log { rotate <-30, 20, -10> wood_texture }

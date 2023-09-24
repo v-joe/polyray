@@ -1,0 +1,233 @@
+// Sample file demonstrating many of the features of Polyray.
+// Author: Alexander Enzmann
+
+// So far this image contains the following:
+//   A looking pond with ripples defined as a height function
+//   Columns along the side of the pond
+//   Spot light illuminating parts of the image
+//   Two wood display cases containing various polynomial surfaces
+
+viewpoint {
+   from <0, 8, -30>
+   at <0,0,10>
+   up <0,1,0>
+   angle 40
+   resolution 640, 480
+   aspect 1.3333
+   }
+
+background <0, 0, 0>
+light <0, 50, -30>
+spot_light white, <20, 30, -10>, <0, 0, 0>, 3, 10, 15
+
+include "../colors.inc"
+include "quarts.inc"
+
+// Define constants for the outer perimeter of the pond
+define tau (1 + sqrt(5))/2 // Golden Mean
+define width 5
+define length width * tau
+define height width * 0.10
+
+// Define constants for the ripples in the pond
+define ripple_steps  80
+define ripple_height  height/1.5
+define ripple_freq    6.0
+define ripple_falloff  1
+define ripple_x0       0 // x position of first ripple
+define ripple_z0      -2 // y position of first ripple
+define ripple_x1       3 // x position of second ripple
+define ripple_z1       2 // y position of second ripple
+define ripple_function0
+   height/2 +
+   ripple_height *
+   cos(ripple_freq *
+       sqrt((x-ripple_x0)^2 + (z/tau-ripple_z0)^2)) *
+   exp(-ripple_falloff *
+       sqrt((x-ripple_x0)^2 + (z/tau-ripple_z0)^2))
+define ripple_function1
+   height/2 +
+   ripple_height *
+   cos(ripple_freq *
+       sqrt((x-ripple_x1)^2 + (z/tau-ripple_z1)^2) + 2.5) *
+   exp(-ripple_falloff *
+       sqrt((x-ripple_x1)^2 + (z/tau-ripple_z1)^2))
+
+// Build the water surface from a bunch of ripples
+define ripple_function
+   ripple_function0 + ripple_function1
+
+// Define the textures to use for the components of the pond
+define pond_edge_texture matte_red
+define basic_water_color <0.2, 0.5, 1>
+define water_texture
+   texture {
+      surface {
+         ambient basic_water_color, 0.2
+         diffuse basic_water_color, 0.8
+         specular white, 1
+         }
+      }
+
+define pool
+   object {
+      // Top and bottom of the pond edge
+        object { box <-width - height, 0, length>,
+                     < width + height, height, length + height>
+                 pond_edge_texture }
+      + object { box <-width - height, 0, -length>,
+                     < width + height, height, -length - height>
+                 pond_edge_texture }
+
+      // The two sides of the pond edge
+      + object { box <-width, 0, -length>,
+                     <-width - height, height, length>
+                 pond_edge_texture }
+      + object { box < width, 0, -length>,
+                     < width + height, height, length>
+                 pond_edge_texture }
+
+      // Put a rippled surface into the pond
+      + object { height_fn ripple_steps, ripple_steps,
+			   -width, width, -length, length,
+                           ripple_function
+                 water_texture }
+      }
+
+define col_height width
+define col_radius height
+define cap_height height
+define cap_width 1.5 * col_radius
+define col_offset 2*cap_width
+define sin_color_offset (sin(3.14 * fmod(4*x*y*z, 1)) + 1) / 2
+define sin_color <sin_color_offset, 0, 1 - sin_color_offset>
+define column_texture
+texture {
+   special surface {
+      color sin_color
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.2
+      microfacet Reitz 10
+      }
+   translate <0, col_height/2, 0>
+   }
+
+define column
+   object {
+     object { cylinder <0, 0, 0>, <0, col_height, 0>,
+                       col_radius }
+   + object { box <-cap_width, 0, -cap_width>,
+                  < cap_width, cap_height, cap_width> }
+   + object { box <-cap_width, col_height, -cap_width>,
+                  < cap_width, col_height+cap_height, cap_width> }
+   column_texture
+   }
+
+define columns
+object {
+   // Columns along the sides of the pond
+     column { translate <-width-col_offset, 0, -length-col_offset> }
+   + column { translate < width+col_offset, 0, -length-col_offset> }
+   + column { translate <-width-col_offset, 0,  length+col_offset> }
+   + column { translate < width+col_offset, 0,  length+col_offset> }
+   }
+
+// Define a texture for the ground plane
+//define ground_texture matte_white
+define ground_texture
+texture {
+   special surface {
+      normal <N[0], N[1], N[2]+sin(10*x)*sin(10*z)/2>
+      color cornflowerblue
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.2
+      microfacet Reitz 10
+      }
+   scale <10, 1, 10>
+   }
+
+// Create a ground plane
+define ground
+object {
+   polynomial y
+   ground_texture
+   translate <0,-0.01,0>
+   }
+
+define light_wood <0.3, 0.12, 0.03>
+define dark_wood <0.05, 0.01, 0.005>
+define xydist sqrt(x * x + y * y)
+define wood_turb 0.5
+define wood_fn  (sawtooth(xydist + wood_turb * noise(P,4)) + 1) / 2
+define wood_map
+   color_map(
+      [0.0, 0.8, light_wood, light_wood]
+      [0.8, 0.9, light_wood, dark_wood])
+define wood_texture
+texture {
+   special surface {
+      color wood_map[wood_fn]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.3
+      microfacet Reitz 10
+      }
+   }
+
+// Put together the first display case
+define display_case1
+object {
+     bicorn        { rotate <90, 0, 0> translate <-4.5, 0,  3> }
+   + bifolia       { rotate <90, 0, 0> translate <-1.5, 0,  3> }
+   + cassini       { rotate <90, 0, 0> translate < 1.5, 0,  3> }
+   + csaddle       { translate < 4.5, 0,  3> }
+   + devils_curve  { translate <-4.5, 0,  0> }
+   + folium        { rotate <0, 0, 45> translate <-2, 0,  0> }
+   + hyp_torus     { translate < 1.5, 0,  0> }
+   + kampyle       { translate < 4.5, 0,  0> }
+   + lemniscate    { translate <-4.5, 0, -3> }
+   + qloop         { translate <-1.5, 0, -3> }
+   + monkey_saddle { translate < 1.5, 0, -3> }
+   + par_torus     { translate < 4.5, 0, -3> }
+   + (  object { box <-7, -4, -5.5>, < 7, 0, 5.5> wood_texture }
+      - object { box <-6, -3, -4.5>, < 6, 1, 4.5> wood_texture })
+   scale <0.4, 0.4, 0.4>
+   rotate <-90, -90, 0>
+   translate <-width-3*col_offset, 2*col_height/3, -length/2>
+   shiny_red
+   }
+
+// Put together the second display case
+define display_case2
+object {
+     piriform       { translate <-4.5, 0,  3> }
+   + quart_parab    { translate <-1.5, 0,  3> }
+   + quart_saddle   { translate < 1.5, 0,  3> }
+   + space_needle   { translate < 4.5, 0,  3> }
+   + parab4         { translate <-4.5, 0,  0> }
+   + steiner        { translate <-1.5, 0,  0> }
+   + strophoid      { translate < 1.5, 0,  0> }
+   + tear3          { translate < 4.5, 0,  0> }
+   + tear5          { translate <-4.5, 0, -3> }
+   + torus_5_2      { translate <-1.5, 0, -3> }
+   + crossed_trough { translate < 1.5, 0, -3> }
+   + twin_glob      { translate < 4.5, 0, -3> }
+   + (  object { box <-7, -4, -5.5>, < 7, 0, 5.5> wood_texture }
+      - object { box <-6, -3, -4.5>, < 6, 1, 4.5> wood_texture })
+   scale <0.4, 0.4, 0.4>
+   rotate <-90, -90, 0>
+   translate <-width-3*col_offset, 2*col_height/3, length/2>
+   shiny_red
+   }
+
+// Put the scene together
+object {
+     pool
+   + ground
+   + columns
+   + display_case1
+   + display_case2
+   rotate <0, 80, 0>
+   }

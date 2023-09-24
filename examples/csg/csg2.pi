@@ -1,0 +1,26 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,2,-6>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 160, 120
+   aspect 4/3
+   }
+
+background white
+light <-20, 3, -20>
+include "../colors.inc"
+
+define cylinder_z object { cylinder <0, 0, -5>, <0, 0, 5>, 0.5 }
+define unit_sphere object { sphere <0, 0, 0>, 1 uv_steps 16, 8 }
+
+// Define a CSG shape by deleting a cylinder from a sphere
+object {
+   unit_sphere - cylinder_z
+   shiny_red
+   rotate <0,-10, 0>
+   }

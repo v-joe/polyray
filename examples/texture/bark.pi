@@ -1,0 +1,60 @@
+include "../colors.inc"
+include "../texture.inc"
+
+viewpoint {
+  from <0,0,-8>
+  at <0,0,0>
+  up <0,1,0>
+  angle 35
+  resolution 320, 240
+  aspect 4/3
+  }
+
+background midnight_blue
+light 0.8*white, <-10, 10, -30>
+light 0.8*white, < 10, 10, -10>
+
+// who knows what these constants are good for.  maybe something.
+
+define barkv 1
+define rough 1
+define u_scale 64
+define v_scale 15
+define two_pi 2 * 3.14159265
+define bark_pos <u_scale*sawtooth(u),0,v_scale*v>
+define bark_texture
+texture {
+  special shiny {
+     color tan
+     normal N + rough*(dnoise(bark_pos,3)-<0.5,0.5,0.5>)
+     }
+  }
+
+define light_wood <0.6, 0.24, 0.1>
+define median_wood <0.3, 0.12, 0.03>
+define dark_wood <0.05, 0.01, 0.005>
+define wood_fn0
+   sawtooth(|<x+0.05*sin(6.28*(x+4*dnoise(P)[0])),
+	      y+0.05*sin(6.28*(y+4*dnoise(P)[1])), 0>|)
+define light_wood_texture
+texture {
+   special shiny {
+      color color_map([0, 0.8, light_wood, light_wood]
+		      [0.8, 1, median_wood, median_wood])[wood_fn0]
+      }
+   rotate <90, 0, 0>
+   scale <0.1, 0.1, 0.1>
+   }
+
+define bark
+object { cone <0,-4,0>, 1, <0,4,0>, 1 bark_texture }
+define cutting_sphere
+object { box <-1, -1, -1>, <1, 1, 1> light_wood_texture }
+
+object {
+   (bark - cutting_sphere { rotate <0, 90, 0> translate <0, -1, -1.2> })
+   * object { disc <0, 1.5, 0>, <0, 1, -2>, 3 light_wood_texture }
+   * object { disc <0, -3.5, 0>, <0, -1, 0>, 1 light_wood_texture }
+   rotate <35, -30, 0>
+   translate <0, 1, 0>
+   }

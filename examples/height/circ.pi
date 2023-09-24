@@ -1,0 +1,36 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from < 0, 12, -20>
+   at <0,0,-7>
+   up <0,1,0>
+   angle 38
+   resolution 640, 480
+   aspect 4/3
+   max_trace_depth 10
+   pixelsize 24
+   }
+
+background midnight_blue
+light <-50, 50, -50>
+include "../colors.inc"
+
+object {
+   smooth_height_field "circ1.jpg" 
+   translate <-0.5, 0, -0.5>
+   scale <30, 0.01, 30>
+   }
+
+object { sphere <  0, 2, -3>, 1.5 glass }
+object { sphere <  3, 2,  0>, 1.5 glass }
+object { sphere <  7, 2, -2>, 1.5 glass }
+object { sphere < -2, 2,  4>, 1.5 mirror }
+object { sphere < -8, 2,  1>, 1.5 glass }
+object { sphere < -4, 2, -5>, 1.5 glass }
+object { sphere <  2, 2, -6>, 1.5 mirror }
+object { sphere < -3, 2,-10>, 1.5 glass }
+object { sphere < -5, 2,-13>, 1.5 glass }
+object { sphere <  1, 2,-13>, 1.5 mirror }
+object { sphere <  6, 2,-10>, 1.5 glass }

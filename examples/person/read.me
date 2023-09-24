@@ -1,0 +1,79 @@
+A Polyray person, version 3, designed by Will Wagner (CIS 70530,250)
+for Polyray version 1.5.
+Thanks to Ken Boyce, Alexander Enzmann, and David Mason for their help
+and David Mason for his running file contribution.
+
+The files included in this archive are:
+
+read.me            (This file)
+man.pi/woman.pi    (Sample viewpoint files)
+man.inc/woman.inc  (The definitions of the body parts and bodies)
+rots.inc           (The file used to articulate the figures)
+run.inc            (David Mason's include file to make the figure run)
+
+The way to use this thing:
+
+The man.inc/woman.inc files are the heart of the person. They contain all
+the CSG data to generate the different parts of the body. Each
+part had to be generated at the origin (0,0,0) and translated
+into final position so the joints could be moved easily. All
+that needs to be done with these files is to "include" one in your
+main .pi file, and add "man" (or "woman") and whatever translations necessary
+to use it:
+
+include "man.inc"
+man { translations }
+
+or
+
+include "woman.inc"
+woman { translations }
+
+The rots.inc file contains a bunch of transforms for rotation
+of the joints. The names of the transforms are fairly self-explanatory.
+Just add each new rotation inside the brackets of the transform command.
+Note that each rotation will be performed in the order they appear,
+about the original axes *after* the previous rotation is performed. 
+The comments at the ends of the lines in rots.inc are some loose
+guesses as to the range of motion of each joint. Also, the surface
+definition for the person is found in this file. The old standby is
+currently used, "shiny_red". The wooden texture from texture.inc also
+looks pretty cool with a scale of about <0.25,0.25,3>.
+
+The man.pi/woman.pi files are just test files with viewpoint and light
+declarations that work pretty good, so you can see this person in all
+its glory with no work from you. If you use version 1.4, you'll get no
+feet, so don't get worried if you do.
+
+The person can only be used once in the same scene, unless you
+want a bunch of figures in the exact same pose. To get more
+than one pose you'll have to copy the .inc files to different
+names, and change the names of *every one* of the variables and
+body sections in the newly copied files. Just add a "2" to the
+end or whatever, something easy like that. Don't forget to change
+the name of the rotation include file in the new person include file.
+That is, of course, unless you can come up with something else really
+slick.
+
+New stuff for this version:
+	The coordinate system is changed - positive x is right (as before),
+but now positive y is up, and positive z is pointing out from the
+front of the figure. Fixed the abdomen so it doesn't go dark when
+using scan conversion. Struggled for a long time with the female
+figure - here it is (special thanks to David Mason). The feet are
+now really good, with round fronts (finally, thanks to version 1.5).
+Changed the structure of the file, from an idea of Alexander's from
+the sample files for version 1.5 - now everything is nested instead
+of being defined and added in another definition the way it used to
+be. It's *slightly* faster this way (any improvement is welcome).
+
+Stuff for future versions:
+	If you're really a glutton for punishment, I'll work on hands
+that have movable fingers and everything, but for now this is the
+definitive version of the people. If I find a good way to smooth the
+entire figure (using Bezier patches or something similar), I'll try
+that out. I also might try writing some sort of program that will
+generate an include file for you, instead of having to go through
+a bunch of headache figuring out the proper rotations yourself. Such
+a program might include rudimentary movement routines for animation.
+Only time will tell.

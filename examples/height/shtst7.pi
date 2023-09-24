@@ -1,0 +1,17 @@
+viewpoint {
+   from <0,0,-8>
+   at <-1.1, 0, 0> // <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+background black
+light <-10,3, -20>
+
+object {
+   sheight_fn 90, 45,
+              u,
+              1.0, 1.0
+   rotate <0, 180, 0>
+   }

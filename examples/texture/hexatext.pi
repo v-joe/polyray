@@ -1,0 +1,41 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   hither 1
+   resolution 160, 160
+   }
+
+background <0, 0, 0>
+light <-10,10, -20>
+include "../colors.inc"
+
+define v0 <1, 0, 0>
+define v1 rotate(v0, <0, 1, 0>, 120)
+define v2 rotate(v0, <0, 1, 0>, -120)
+define v3 rotate(v0, <0, 1, 0>, 60)
+define v4 rotate(v0, <0, 1, 0>, -60)
+define v5 rotate(v0, <0, 1, 0>, 180)
+define tri_fn max(P . v0, max(P . v1, P . v2))
+define hex_fn max(max(P . v0, max(P . v1, P . v2)),
+		  max(P . v3, max(P . v4, P . v5)))
+define xtri_fn
+   (P . v0 > P . v1
+      ? (P . v0 > P . v2 ? P . v0 : P . v2)
+      : (P . v1 > P . v2 ? P . v1 : P . v2))
+define tri_lookup_fn |fmod(tri_fn, 1)|
+define hex_lookup_fn |fmod(hex_fn, 1)|
+
+object {
+   sphere <0, 0, 0>, 2
+   texture {
+      special shiny { color white_marble_map[hex_lookup_fn] }
+      scale <0.3, 0.3, 0.3>
+      }
+   rotate <-45, 0, 0>
+   }

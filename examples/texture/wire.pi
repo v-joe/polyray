@@ -1,0 +1,49 @@
+//
+// Texture that simulates the "screen" shader in the Renderman Companion
+//
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,5,-7>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+background <0, 0, 0>
+light <-10, 20, -20>
+
+include "../colors.inc"
+
+define roughness 0.1
+define density 0.15
+define freq 4
+
+//
+// "wire_exper" returns 1 if we are on the visible part of the surface,
+// and returns 0 if we are on the see-through part of the surface.
+//
+define wire_exper (|fmod(freq * P[0], 1)| < density ? 1
+                     : (|fmod(freq * P[1], 1)| < density ? 1 : 0))
+define wire_red
+texture {
+   special surface {
+      ambient wire_exper * red, 0.1
+      diffuse wire_exper * red, 0.4
+      specular wire_exper * white, 0.5
+      microfacet Reitz 10
+      transmission white, 1 - wire_exper, 1.0
+      }
+   }
+
+object {
+   sphere <0, 0, 0>, 2
+   wire_red
+   }
+
+object {
+   disc <0, -2, 0>, <0, 1, 0>, 10
+   texture { checker matte_white, matte_black }
+   }

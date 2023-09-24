@@ -1,0 +1,34 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,20,-8>
+   at <0,0,1000>
+   up <0,1,0>
+   angle 45
+   yon 1000
+   resolution 256, 256
+   }
+
+include "../colors.inc"
+include "../texture.inc"
+background black
+light orange, < 0, 40, 900>
+
+object {
+   sphere <0, -10, 1000>, 100
+   texture {
+      surface {
+         ambient orange, 1
+         diffuse 0
+         specular 0
+         }
+      }
+   }
+
+object {
+   polynomial y
+   translate <0, -1, 0>
+   blue_ripple { scale <10, 10, 10> }
+   }

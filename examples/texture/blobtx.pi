@@ -1,0 +1,43 @@
+//
+// Demonstration of a summed texture - a different primary color is given
+// to each of the three blob components by positioning a texture at the
+// same place as the component and having the texture fade off with distance.
+//
+viewpoint {
+   from <0,0,-5>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 160,160
+   aspect 1
+   }
+
+include "../colors.inc"
+background SkyBlue
+light 0.6 * white, <-15,30,-25>
+light 0.6 * white, < 15,30,-25>
+
+// Positions of the blob components
+define blob_pos1 <0.75, 0, 0>
+define blob_pos2 rotate(blob_pos1, <0, 0, 1>, 120)
+define blob_pos3 rotate(blob_pos1, <0, 0, 1>, 240)
+
+define blob_dist_fn1 min(1, (1 - ((P - blob_pos1).(P - blob_pos1))/2)^2)
+define blob_dist_fn2 min(1, (1 - ((P - blob_pos2).(P - blob_pos2))/2)^2)
+define blob_dist_fn3 min(1, (1 - ((P - blob_pos3).(P - blob_pos3))/2)^2)
+
+define blobtx
+texture {
+   summed 0.8*blob_dist_fn1, shiny_red,
+	  0.8*blob_dist_fn2, shiny_green,
+	  0.8*blob_dist_fn3, shiny_blue
+   }
+
+object {
+   blob 0.6:
+      sphere blob_pos1, 1, 1,
+      sphere blob_pos2, 1, 1,
+      sphere blob_pos3, 1, 1
+   blobtx
+   rotate <0,30,0>
+   }

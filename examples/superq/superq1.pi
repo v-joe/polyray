@@ -1,0 +1,40 @@
+// Demonstrate the superquadric shape
+// Polyray input file: Alexander Enzmann
+viewpoint {
+   from <0, 6, -10>
+   at <0,0,0>
+   up <0,1,0>
+   angle 20
+   resolution 256, 256
+   }
+
+light 0.4*white, <40, 40, 80>
+light white, <-10, 10, -20>
+include "../colors.inc"
+include "../texture.inc"
+background (white + pink) / 6
+
+/*
+Nice shapes:
+    Shape            n     e
+    -------------------------
+    Cylinder        0.1   1
+    Rounded Box     0.1   0.1
+    Pillow          1     0.1
+    Sphere          1     1
+    Double Cone     2     1
+    Octahedron      2     2
+    Pinchy          3     3
+*/
+object {
+   superq 0.2, 0.8
+   rotate <70, -20, 0>
+   translate <0, 0.5, 0>
+   Tigers_Eye2
+   }
+
+object {
+   disc <0, 0, 0>, <0, 1, 0>, 20
+   bumpy_silver
+   translate <0, -1, 0>
+   }

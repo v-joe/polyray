@@ -1,0 +1,132 @@
+// Polyray sample data file written by Alexander Enzmann
+
+/*
+start_frame 0
+end_frame 29
+total_frames 30
+*/
+
+viewpoint {
+   from      <0, 4, -25>
+   up        <0, 1, 0>
+   at        <0, 0, 0>
+   angle 30
+   hither 1
+   resolution 512, 256
+   aspect 2
+   }
+
+background midnight_blue
+light white, <-10, 50, -20>
+light white, < 10, 50, -20>
+include "../colors.inc"
+
+define test_map
+   color_map(
+      [0,   0.1, red,     orange]
+      [0.1, 0.3, orange,  blue]
+      [0.3, 0.5, blue,    skyblue]
+      [0.5, 0.7, skyblue, orange]
+      [0.7, 0.9, orange,  magenta]
+      [0.9, 1.0, magenta, red],
+      <1, 1, 1>)
+
+// Simple color map texture
+define noise_texture0
+texture {
+   special surface {
+      color test_map[noise(P)]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   scale <0.6, 0.6, 0.6>
+   }
+
+define marble_turb 2
+define marble_fn  sawtooth(P[0] + marble_turb * noise(P,4))
+
+define white_marble_map
+   color_map(
+      [0.0, 0.8, <0.9, 0.9, 0.9>, <0.5, 0.5, 0.5>]
+      [0.8, 1.0, <0.5, 0.5, 0.5>, <0.2, 0.2, 0.2>])
+
+define white_marble_texture
+texture {
+   special surface {
+      color white_marble_map[marble_fn]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   }
+
+define box0 object { box <0, 0, 0>, <1, 5, 1> }
+
+define char_a
+object {
+     box0 { shear  0, 0, 0.4, 0, 0, 0 }
+   + box0 { shear  0, 0,-0.4, 0, 0, 0 translate <4, 0, 0> }
+   + object { box <1.5, 1.5, 0>, <3.5, 2, 1> }
+   }
+
+define char_e
+object {
+     box0
+   + object { box <0, 4.5, 0>, <4, 5, 1> }
+   + object { box <0, 2, 0>, <2.5, 2.5, 1> }
+   + object { box <0, 0, 0>, <4, 0.5, 1> }
+   }
+
+define char_d
+object {
+     box0
+   + (  (  object { cylinder <1, 2.5, -0.05>, <1, 2.5, 1.05>, 2.5
+		    u_steps 32 scale <1.2, 1, 1> }
+         * object { box <1, 0, 0>, <4.5, 5, 1> })
+       - object { cylinder <1.5, 2.5, -0.1>, <1.5, 2.5, 1.1>, 1 u_steps 32 } )
+   }
+
+define char_n
+object {
+     box0
+   + box0 { shear  0, 0, -0.6, 0, 0, 0 translate <3, 0, 0> }
+   + box0 { translate <3, 0, 0> }
+   }
+
+define char_r
+object {
+     box0
+   + (  (  object { cylinder <1.5, 3.5, -0.5>, <1.5, 3.5, 1.05>, 1.5
+		    u_steps 32 }
+           * object { box <0, 2, 0>, <4, 5, 1> })
+         - object { cylinder <1.5, 3.5, -0.1>, <1.5, 3.5, 1.1>, 0.75
+		    u_steps 32 })
+   + box0 { scale <1, 0.5, 1> shear  0, 0, -0.6, 0, 0, 0 translate <3, 0, 0> }
+   }
+
+define char_x
+object {
+     box0 { shear  0, 0, 0.8, 0, 0, 0 }
+   + box0 { shear  0, 0,-0.8, 0, 0, 0 translate <4, 0, 0> }
+   }
+
+object {
+     char_x
+   + char_a { translate <5, 0, 0> }
+   + char_n { translate <10, 0, 0> }
+   + char_d { translate <15, 0, 0> }
+   + char_e { translate <20, 0, 0> }
+   + char_r { translate <25, 0, 0> }
+   + object { disc <15, 0, 0>, <0, 1, 0>, 20
+	      u_steps 32
+	      v_steps 4
+	      texture { hexagon noise_texture0, matte_yellow, matte_orange
+		        scale <5, 5, 5>} }
+   translate <-15, -5, 0>
+   scale <0.5, 0.5, 0.5>
+   rotate <0, 12 * frame, 0>
+   white_marble_texture
+   }

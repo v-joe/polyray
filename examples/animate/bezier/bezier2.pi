@@ -1,0 +1,56 @@
+start_frame 0
+end_frame 59
+
+define t0 0
+define t1 60
+define increment frame / (t1 - t0)
+
+// Bezier patch
+viewpoint {
+   from <0,0,-15>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+background <0, 0, 0>
+light 0.8 * white, <-10,10, -5>
+light 0.8 * white, < 10,10, -5>
+
+define shiny_red
+texture {
+   special surface {
+      color (N . I > 0 ? magenta : red)
+      ambient 0.1
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   }
+
+define pt110 <1, 1, 0>
+define pt111 <8, 5, -4>
+define pt120 <1, 2, 0>
+define pt121 <8, -2, -4>
+define pt210 <2, 1, 0>
+define pt211 <-5, 5, -4>
+define pt220 <2, 2, 0>
+define pt221 <-5, -2, -4>
+
+define pt11 pt110 + increment * (pt111 - pt110)
+define pt12 pt120 + increment * (pt121 - pt120)
+define pt21 pt210 + increment * (pt211 - pt210)
+define pt22 pt220 + increment * (pt221 - pt220)
+
+object {
+   bezier 2, 0.005, 32, 32,
+      < 0.0, 0.0, 0.0>, < 1.0, 0.0, 0.0>, < 2.0, 0.0, 0.0>, < 3.0, 0.0, 0.0>,
+      < 0.0, 1.0, 0.0>, pt11,             pt21,             < 3.0, 1.0, 0.0>,
+      < 0.0, 2.0, 0.0>, pt12,             pt22,             < 3.0, 2.0, 0.0>,
+      < 0.0, 3.0, 0.0>, < 1.0, 3.0, 0.0>, < 2.0, 3.0, 0.0>, < 3.0, 3.0, 0.0>
+   translate <-1.5, -1.5, 0>
+   scale <2, 2, 2>
+   rotate <60, 20, 0>
+   shiny_red
+   }

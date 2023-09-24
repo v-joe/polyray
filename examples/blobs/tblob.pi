@@ -1,0 +1,28 @@
+viewpoint {
+   from <0, 3, -6>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 256, 256
+   aspect 1
+   }
+background SkyBlue
+light <-15,30,-25>
+include "../colors.inc"
+
+object {
+   blob 0.6:
+      1.0, 1.0, <0.75, 0, 0>,
+      1.0, 1.0, <0.75*cos(radians(120)), 0.75*sin(radians(120)), 0>,
+      1.0, 1.0, <0.75*cos(radians(240)), 0.75*sin(radians(240)), 0>
+   root_solver Sturm
+   glass
+   rotate <0,30,0>
+   }
+
+// Create a ground plane
+object {
+   disc <0, -0.001, 0>, <0, 1, 0>, 1000
+   texture { checker matte_white, matte_black }
+   translate <0,-2.5,0>
+   }

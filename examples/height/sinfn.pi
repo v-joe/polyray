@@ -1,0 +1,33 @@
+// File demonstrating height field function
+// Polyray input file: Alexander Enzmann
+
+// Define range of frames for animated sequence of images, uncomment the
+// next three lines to generate the frames
+// start_frame 0
+// end_frame 59
+// outfile sinsf
+
+define theta_offset radians(frame * 6)
+
+// Set up the camera
+viewpoint {
+   from <0,5,-5>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 256, 256
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background SkyBlue
+light <10,10,-10>
+
+// Define a sinusoidal surface
+object {
+   smooth_height_fn 128, 128, -2, 2, -2, 2,
+                    0.25 * sin(18.85 * x * z + theta_offset)
+   shiny_red
+   }

@@ -1,0 +1,54 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+start_frame 0
+end_frame 59
+
+// Set up the camera
+viewpoint {
+   from <0, 4, -8>
+   at <0,-1,0>
+   up <0,1,0>
+   angle 55
+   hither 1
+   resolution 128, 128
+   }
+
+light <0.5, 0.5, 0.7>, <-10, 2, -20>
+light <0.7, 0.5, 0.5>, < 10, 2, -20>
+
+background Midnight_Blue
+
+define green_tinted_mirror
+texture {
+   surface {
+      ambient green, 0.1
+      diffuse green, 0.3
+      specular white, 0.3
+      microfacet Reitz 5
+      reflection white, 0.8
+      }
+   }
+
+define block_environ
+environment("one.tga", "two.tga", "three.tga",
+            "four.tga", "five.tga", "six.tga")
+
+object {
+   disc <0, -2, 0>, <0, 1, 0>, 50
+   green_tinted_mirror
+   }
+
+object {
+   sphere <0, 1, 0>, 2
+   texture {
+      special surface {
+	 color environment_map(P, block_environ)
+	 ambient 0.1
+	 diffuse 0.6
+	 specular white, 0.7
+	 microfacet Phong 10
+	 }
+      }
+   rotate <0, frame * 6, 0>
+   }

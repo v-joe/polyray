@@ -1,0 +1,44 @@
+// Simple particle system
+// Polyray input file: Alexander Enzmann
+
+frame_time 0.1
+start_frame 0
+end_frame 41
+total_frames 42
+
+// Set up the camera
+viewpoint {
+   from <0,5,-8>
+   at <0,2,0>
+   up <0,1,0>
+   angle 40
+   resolution 80, 40
+   aspect 2
+   }
+
+background <0, 0, 0>
+light <-10, 30, -20>
+include "../../colors.inc"
+
+define asphere object { sphere <0, 0, 0>, 0.5 shiny_red }
+define bsphere object { sphere <0, 0, 0>, 0.5 shiny_green }
+define csphere object { sphere <0, 0, 0>, 0.5 shiny_yellow }
+define dsphere object { sphere <0, 0, 0>, 0.5 shiny_blue }
+
+// The force of gravity
+define gravity <0, -1, 0>
+
+if (frame == start_frame)
+particle {
+   position <-5, 0.0, 0>
+   velocity <2, 2, 0>
+   acceleration gravity
+   object (u < 1 ? "asphere" :
+	     (u < 2 ? "bsphere" :
+	        (u < 3 ? "csphere" : "dsphere")))
+   }
+
+object {
+   box <-10, -0.1, -10>, <10, 0, 10>
+   matte_yellow
+   }

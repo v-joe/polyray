@@ -1,0 +1,86 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,2,-6>
+   at <0,0,0>
+   up <0,1,0>
+   angle 20
+   resolution 160, 160
+   }
+
+background midnight_blue
+light <-10, 8, -10>
+light < 10, 8, -10>
+
+include "../colors.inc"
+
+define dens1 0.6
+define dens2 (dens1 + 1) / 2
+define splash1_layer1_map color_map(
+   [0, dens1, black, 1, black, 1]
+   [dens1, dens2, red/3, 0.5, red, 0]
+   [dens2, 1, red, red])
+define splash1_layer2_map color_map(
+   [0, dens1, black, 1, black, 1]
+   [dens1, dens2, blue/3, 0.5, blue, 0]
+   [dens2, 1, blue, blue])
+define splash1_layer3_map color_map(
+   [0, dens1, black, 1, black, 1]
+   [dens1, dens2, green/3, 0.5, green, 0]
+   [dens2, 1, green, green])
+define splash1_layer4_map color_map(
+   [0, dens1, black, 1, black, 1]
+   [dens1, dens2, yellow/3, 0.5, yellow, 0]
+   [dens2, 1, yellow, yellow])
+
+define noisy_x3 x + 5 * dnoise(4*P)[0]
+define noisy_y3 y + 5 * dnoise(4*P)[1]
+define noisy_z3 y + 5 * dnoise(4*P)[2]
+define noisy_x4 noisy_x3 - floor(noisy_x3)
+define noisy_y4 noisy_y3 - floor(noisy_y3)
+define noisy_z4 noisy_z3 - floor(noisy_z3)
+define noisy_checker3_fn fmod((noisy_x4+noisy_y4+noisy_z4)/3, 1)
+
+define splash1_layer1
+texture { special shiny { color splash1_layer1_map[noisy_checker3_fn] } }
+
+define splash1_layer2
+texture {
+   special shiny { color splash1_layer2_map[noisy_checker3_fn] }
+   scale <0.75, 1.7, 0.9>
+   rotate <60,-30, 0>
+   }
+
+define splash1_layer3
+texture {
+   special shiny { color splash1_layer3_map[noisy_checker3_fn] }
+   scale <1.5, 0.7, 1.2>
+   rotate <0, 30, 20>
+   }
+
+define splash1_layer4
+texture {
+   special shiny { color splash1_layer4_map[noisy_checker3_fn] }
+   scale <1.5, 0.7, 1.2>
+   rotate <10,-80, 0>
+   }
+
+define milky_white
+texture { shiny {
+   color white
+   ambient 0.2
+   diffuse 0.1
+   transmission white, 0.4, 1.0
+   specular white, 0.1
+   microfacet Cook 5
+   } }
+
+define splash1
+texture {
+   layered splash1_layer1, splash1_layer2, splash1_layer3,
+	   splash1_layer4, matte_white
+   }
+
+object { sphere <0, 0, 0>, 1 splash1 }

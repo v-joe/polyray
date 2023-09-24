@@ -1,0 +1,21 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,4,-10>
+   at <0,0,0>
+   up <0,1,0>
+   angle 20
+   resolution 256, 256
+   }
+
+background midnight_blue
+light <-10, 8, -10>
+light < 10, 8, -10>
+
+include "../colors.inc"
+include "../texture.inc"
+
+object { sphere <0, 0, 0>, 1 splash1 }
+object { disc <0, -1.001, 0>, <0, 1, 0>, 1000 splash1 }

@@ -1,0 +1,109 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+start_frame 0
+end_frame 100
+
+define t0 start_frame
+define t1 end_frame + 1
+
+define increment frame / (t1 - t0)
+define ang_inc 360 * increment
+define disp 0.15 * (cos(radians(3 * ang_inc)) + 1)
+define phas radians(2 * ang_inc)
+
+// Set up the camera
+viewpoint {
+   from <0,5,-9>
+   at <0,0.5,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+background <0, 0, 0>
+light <-10, 10, -10>
+
+define reflective_gold
+texture {
+   surface {
+      ambient gold, 0.2
+      diffuse gold, 0.7
+      specular white, 0.4
+      reflection white, 0.3
+      microfacet Phong 5
+      }
+   }
+
+// Make a sphere with ridges
+object {
+   sphere <0, 1, 0>, 2
+   reflective_gold
+   displace ((v > 0.1 && v < 0.2) ||
+             (v > 0.3 && v < 0.4) ||
+             (v > 0.5 && v < 0.6) ||
+             (v > 0.7 && v < 0.8) ||
+             (v > 0.9 && v < 1.0) ||
+	     (u > 0.0 && u < 0.05) ||
+	     (u > 0.25 && u < 0.3) ||
+	     (u > 0.5 && u < 0.55) ||
+	     (u > 0.75 && u < 0.8)
+	     ? disp : 0.0)
+   uv_steps 64, 32
+   rotate <ang_inc, 0, ang_inc>
+   rotate <1, 0, 1>, 2 * ang_inc
+   shading_flags 55
+   }
+
+// The standard sort of marble texture
+define green_marble
+texture {
+   noise surface {
+      ambient 0.3
+      diffuse 0.8
+      specular 0.3
+      reflection white, 0.3
+      microfacet Reitz 5
+      position_fn 1
+      lookup_fn 1
+      octaves 5
+      turbulence 3
+      color_map(
+         [0.0, 0.8, aquamarine, 0.6 * aquamarine]
+         [0.8, 1.0, 0.6 * aquamarine, <0.1, 0.1, 0.1>])
+      }
+   scale <5, 5, 5>
+   }
+
+object  {
+   sphere <0, 0, 0>, 11
+   green_marble
+   shading_flags 40
+   }
+
+define matte_white
+texture {
+   surface {
+      ambient white, 0.2
+      diffuse white, 0.8
+      }
+   }
+
+define matte_black
+texture {
+   surface {
+      ambient dark_slate_gray, 0.1
+      diffuse DarkSlateGray, 0.5
+      }
+   }
+
+object  {
+   disc <0, -2, 0>, <0, 1, 0>, 11
+   displace 0.5 * sin(phas + x/2) * sin(phas + z/2)
+   texture {
+      checker matte_white,  matte_black
+      translate <0, -0.5, 0>
+      scale <3, 10, 3>
+      }
+   shading_flags 8
+   }

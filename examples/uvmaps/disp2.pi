@@ -1,0 +1,65 @@
+//
+// Diplacement map: make the threads on a light bulb from a cylinder
+// Note: you have to use scan conversion for this file to work correctly
+//
+//start_frame 0
+//end_frame 59
+
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+define km      0.1
+define freq    5.0
+define phas    frame / 60
+define offset  0.0
+define damp    0.1
+
+// Set up the camera
+viewpoint {
+   from <0, 3,-15>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 160, 160
+   }
+
+background white
+light <-10,3, -20>
+
+define shiny_red
+texture {
+   surface {
+      ambient red, 0.2
+      diffuse red, 0.8
+      specular white, 0.7
+      microfacet Reitz 10
+      }
+   }
+
+define disp_fn
+   ((sin(2.0 * 3.14159 * (v * freq + 2.0 * u + phas)) + offset) * km) *
+      (v < damp
+	 ? (v / damp)
+	 : (v > (1 - damp) ? (1 - v) / damp : 1.0))
+
+object {
+   cylinder <0, -2, 0>, <0, 2, 0>, 2
+   shiny_red
+   uv_steps 32, 64
+   displace N * disp_fn
+   }
+
+if (0 == 1) {
+object {
+   cone <0, -2, 0>, 2, <0, -3, 0>, 0.5
+   shiny_red
+   }
+object {
+   disc <0, -3, 0>, <0,-1, 0>, 0.3, 0.5
+   shiny_red
+   }
+object {
+   cylinder <0, -3, 0>, <0, -3.5>, 0.3
+   shiny_red
+   }
+}

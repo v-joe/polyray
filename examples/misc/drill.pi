@@ -1,0 +1,47 @@
+// Drill bit
+viewpoint {
+   from <0, 0, -20>
+   at   <0, 0, 0>
+   up   <0, 1, 0>
+   resolution 256, 256
+   angle 45
+   }
+background sky_blue
+light white, < 200, 100, -300>
+include "../colors.inc"
+
+// Use polynomial approximation to a helix as the surface of the drill bit
+define Helix
+object {
+     object { polynomial -(1/6) * x * z^3 + x * z + (1/2) * y * z^2 - y }
+   * object { box <-2.01, -2.01, 0>, <2.01, 2.01, 1.4142> }
+   * object { cylinder <0, 0, -0.01>, <0, 0, 1.5>, 2 }
+   bounding_box <-2.02, -2.02, -0.01>, <2.02, 2.02, 1.415>
+   }
+
+define Full_Turn_Helix
+object {
+     Helix
+   + Helix { translate <0, 0,   sqrt(2)> rotate <0, 0, 90> }
+   + Helix { translate <0, 0, 2*sqrt(2)> rotate <0, 0, 180> }
+   + Helix { translate <0, 0, 3*sqrt(2)> rotate <0, 0, 270> }
+   }
+
+define drill_bit
+object {
+   (  Full_Turn_Helix
+    * (object { cone <0, 0, 0>, 0, <0, 0, 3>, 2 } +
+       object { cylinder <0, 0, 3>, <0, 0, 4*sqrt(2)+0.001>, 2 }))
+   + Full_Turn_Helix { translate <0, 0, 4*sqrt(2)> }
+   + Full_Turn_Helix { translate <0, 0, 8*sqrt(2)> }
+   + object { cylinder <0, 0, 12*sqrt(2)>, <0, 0, 25>, 2 }
+   + object { disc <0, 0, 12*sqrt(2)>, <0, 0, -1>, 2 }
+   + object { disc <0, 0, 25>, <0, 0, 1>, 2 }
+   }
+
+drill_bit {
+   rotate <-90, 0, 0>
+   translate <0, -12, 8>
+   rotate <0, 0, 45>
+   shiny_red
+   }

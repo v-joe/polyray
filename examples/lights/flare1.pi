@@ -1,0 +1,44 @@
+// Generic Polyray input File: a light with a glow around it
+// Polyray input file: Alexander Enzmann
+define t 0
+define light1_loc < 10, 12, 20>
+define at_loc light1_loc
+
+// Set up the camera
+viewpoint {
+   from < 5, 3,-15>
+   at at_loc
+   up <0,1,0>
+   angle 45
+   resolution 160, 120
+   aspect 4/3
+   }
+
+background black // midnight_blue
+include "../colors.inc"
+
+define flare_color1 (<0.2, 1, 0.3> + white) / 2
+define flare_color2 (<1, 0.5, 0.2> + white) / 2
+define flare_color3 (<1, 0.5, 1.0> + white) / 2
+static define flare_map2
+   color_map([0.00, 0.20, flare_color1, 0.4, flare_color2, 0.4]
+             [0.20, 0.40, flare_color2, 0.4, flare_color3, 0.8]
+             [0.40, 1.00, flare_color3, 0.8, black,        1.0])
+static define flare_map3
+   color_map([0.00, 0.10, black,        1.0, flare_color1, 0.4]
+             [0.10, 0.20, flare_color1, 0.4, flare_color2, 0.4]
+             [0.20, 0.40, flare_color2, 0.4, flare_color3, 0.8]
+             [0.40, 1.00, flare_color3, 0.8, black,        1.0])
+
+textured_light {
+   color 0.8*white
+   translate light1_loc
+   flare {
+      color (x > 0 ? flare_map2[u] : flare_map3[u])
+      count 0
+      sphere 0.5
+      }
+   }
+
+object { sphere light1_loc, 0.3 shading_flags 0
+         texture { surface { color white ambient 1 diffuse 0 } } }

@@ -1,0 +1,89 @@
+// Static variable demo - blob components bounce off the sides of a box
+// Polyray input file: Alexander Enzmann
+start_frame 0
+end_frame 200
+
+// Set up the camera
+viewpoint {
+   from <0,10,-20>
+   at <0, 0, 0>
+   up <0,1,0>
+   angle 18
+   resolution 320, 160
+   aspect 2
+   }
+
+background <0, 0, 0>
+light <-10, 10, -20>
+include "../../colors.inc"
+
+// Dimensions of the box that things rattle around in
+define box_width 5
+define box_height 5
+define box_thick 0.05
+
+// Size of randomness added to velocity after a bounce off a wall
+define rscale 0.05
+define rbounce rscale * brownian(<0, 0, 0>, 1)[0]
+
+// Size of the ball
+define sphrad 0.5
+
+// Size of the walls to the enclosing area
+define wall_wid 1
+define wall_height 0.5
+
+/* Change position from frame to frame bouncing off the walls of a box */
+
+// Make the reflection calculations a little easier
+define bwidth box_width - sphrad
+define bheight box_height - sphrad
+
+// Include the file that calculates the blob component positions
+include "blbmv2.inc"
+
+// Only define the complicated texture the first time...
+if (frame == start_frame)
+   include "blbmvtx.inc"
+
+static define pos0 <px0, sphrad+box_thick, py0>
+static define pos1 <px1, sphrad+box_thick, py1>
+static define pos2 <px2, sphrad+box_thick, py2>
+static define pos3 <px3, sphrad+box_thick, py3>
+static define pos4 <px4, sphrad+box_thick, py4>
+static define pos5 <px5, sphrad+box_thick, py5>
+static define pos6 <px6, sphrad+box_thick, py6>
+static define pos7 <px7, sphrad+box_thick, py7>
+static define pos8 <px8, sphrad+box_thick, py8>
+static define pos9 <px9, sphrad+box_thick, py9>
+
+// Moving, and bouncing blob components
+object {
+   blob 0.5:
+      sphere pos0, 1, 2*sphrad,
+      sphere pos1, 1, 2*sphrad,
+      sphere pos2, 1, 2*sphrad,
+      sphere pos3, 1, 2*sphrad,
+      sphere pos4, 1, 2*sphrad,
+      sphere pos5, 1, 2*sphrad,
+      sphere pos6, 1, 2*sphrad,
+      sphere pos7, 1, 2*sphrad,
+      sphere pos8, 1, 2*sphrad,
+      sphere pos9, 1, 2*sphrad
+   shiny_red
+   }
+
+// Boundary box
+define wid0 box_width + wall_wid
+object {
+     object {
+	box <-wid0, 0.0, -wid0>, <wid0, wall_height, wid0>
+	// texture { special shiny { color white_marble_map[marble_fn] } }
+	Stone24
+	}
+   - object {
+        box <-box_width, box_thick, -box_width>,
+	    < box_width, wall_height+0.1, box_width>
+	texture { /* matte */ reflective { color aquamarine } }
+	}
+   }

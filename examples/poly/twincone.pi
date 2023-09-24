@@ -1,0 +1,27 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 160, 160
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background black
+light <10, 10, -20>
+
+// Define a surface
+object {
+     object { polynomial x^2 - y^2 + z^2 }
+   & object { box <-1, -1, -1>, <1, 1, 1> }
+   bounding_box <-1, -1, -1>, <1, 1, 1>
+   rotate <20, -30, 0>
+   shiny_red
+   }

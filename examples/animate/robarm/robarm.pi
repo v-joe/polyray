@@ -1,0 +1,141 @@
+//
+// Animation of a robot arm solving the "Towers of Hanoi" problem.
+// Author: Alexander Enzmann
+//
+viewpoint {
+   from <-4,14,-30>
+   at <4,2,0>
+   up <0,1,0>
+   angle 13
+   resolution 320, 160
+   aspect 2
+   }
+
+//viewpoint {
+//   from <4, 8, -30>
+//   at <8,2,0>
+//   up <0,1,0>
+//   angle 15
+//   resolution 320, 160
+//   aspect 2
+//   }
+
+background midnight_blue
+light <10, 20, -20>
+
+include "../../colors.inc"
+include "robtex.inc"
+
+// How many steps will be taken between moves?  They are divided
+// between three sub-steps: up, over, down.  Each of these will
+// be assumed to take 10 frames, with 30 frames for the move.
+define frames_per_submove 6
+define submoves_per_move 6
+define frames_per_move submoves_per_move * frames_per_submove
+define total_moves 7
+
+// Define the number of frames in the animation
+start_frame 0
+end_frame total_moves * frames_per_submove * submoves_per_move - 1
+
+define move floor(frame / frames_per_move)
+define submove floor(fmod(frame, frames_per_move) / frames_per_submove)
+define submove_increment fmod(frame, frames_per_submove) / (frames_per_submove - 1)
+
+// Build the pegs
+include "pegs.inc"
+pegs { translate <peg_distance, 0, 0> }
+
+// Build and position the wafers
+include "robwafer.inc"
+wafer0 { translate <peg_distance, wafer_height0, wafer_offset0> }
+wafer1 { translate <peg_distance, wafer_height1, wafer_offset1> }
+wafer2 { translate <peg_distance, wafer_height2, wafer_offset2> }
+
+// Build and align the robot arm
+define robot_arm_alpha -atan(moving_wafer_offset / peg_distance)
+define robot_arm_theta -asin(0.5 * (wafer_width - 0.1))
+
+define hand_length 0.3 + 1.5 + 2 * cos(robot_arm_theta)
+define distancexy sqrt(peg_distance * peg_distance +
+                       moving_wafer_offset * moving_wafer_offset) -
+                  hand_length
+define distancez (moving_wafer_height + 0.4) - 3
+define wafer_distance sqrt(distancez * distancez + distancexy * distancexy)
+
+define robot_arm_beta -asin(distancez / distancexy)
+define section2_offset wafer_distance - 4
+
+include "robarm.inc"
+robot_arm
+
+// Add a floor underneath the arm & the pegs
+object {
+   disc <4, -0.0001, 0>, <0, 1, 0>, 10
+   texture { checker matte_brown, matte_orange }
+   }
+// Here's how we play:
+//
+// Stage 1:
+//
+//      |          |          |
+//     ***         |          |
+//    *****        |          |
+//   *******       |          |
+//  ---------  ---------  ---------
+//
+// Stage 2:
+//
+//      |          |          |
+//      |          |          |
+//    *****        |          |
+//   *******      ***         |
+//  ---------  ---------  ---------
+//
+// Stage 3:
+//
+//      |          |          |
+//      |          |          |
+//      |          |          |
+//   *******      ***       *****
+//  ---------  ---------  ---------
+//
+// Stage 4:
+//
+//      |          |          |
+//      |          |          |
+//      |          |         ***
+//   *******       |        *****
+//  ---------  ---------  ---------
+//
+// Stage 5:
+//
+//      |          |          |
+//      |          |          |
+//      |          |         ***
+//      |       *******     *****
+//  ---------  ---------  ---------
+//
+// Stage 6:
+//
+//      |          |          |
+//      |          |          |
+//      |          |          |
+//     ***      *******     *****
+//  ---------  ---------  ---------
+//
+// Stage 7:
+//
+//      |          |          |
+//      |          |          |
+//      |        *****        |
+//     ***      *******       |
+//  ---------  ---------  ---------
+//
+// Stage 8:
+//
+//      |          |          |
+//      |         ***         |
+//      |        *****        |
+//      |       *******       |
+//  ---------  ---------  ---------

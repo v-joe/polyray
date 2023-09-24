@@ -1,0 +1,10 @@
+// This is the file that generates the shadow depth file used in "depmap.pi"
+// Polyray input file: Alexander Enzmann
+viewpoint {
+   from <-10, 5, -20>
+   at <0,0,0>
+   up <0,1,0>
+   angle 20
+   resolution 128, 128
+   }
+include "depmap.inc"

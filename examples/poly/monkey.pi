@@ -1,0 +1,30 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 160, 160
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background black
+light <10, 10, -20>
+
+// Monkey Saddle
+// This surface has three parts that sweep up and three down.  This gives
+// a saddle that has a place for two legs and a tail...
+define c 1
+object {
+     object { polynomial c*(x^3 - 3*x*y^2) - z }
+   & object { box <-1, -1, -1>, <1, 1, 1> }
+   bounding_box <-1, -1, -1>, <1, 1, 1>
+   rotate <0, 30, 0>
+   shiny_red
+   }

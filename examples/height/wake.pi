@@ -1,0 +1,25 @@
+// Polyray Raytracer
+// Height field sample - Wake behind a boat
+// by Alexander Enzmann
+
+include "../colors.inc"
+
+viewpoint {
+   from <0,5,-10>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+light <-45, 25, -4>
+light <0, 25, 0>
+
+// Define the wake based on a Targa height field
+object {
+   height_field "wave.tga"
+   translate <-1/2,0,-1/2>
+   scale <8, 0.03, 8>
+   rotate <0, -30, 0>
+   shiny_red
+   }

@@ -1,0 +1,49 @@
+viewpoint {
+   from  <0, 12, -20>
+   up    <0, 1, 0>
+   at    <0, 0, -1>
+   angle 25
+   resolution 640, 320
+   aspect 2
+   }
+
+light 0.7 * white, <-5, 15, -20>
+light 0.7 * white, < 5, 15, -20>
+background midnightblue
+
+include "../colors.inc"
+
+object {
+   blob 0.5:
+// Interacting spheres
+      sphere <-2, 1.5, 0>, 1, 3,
+      sphere < 2, 1.5, 0>, 1, 3,
+
+// Left to right cylinders
+      cylinder <-6, 0, -6>, < 6, 0, -6>, 1, 0.5,
+      cylinder <-6, 0, -4>, < 6, 0, -4>, 1, 0.5,
+      cylinder <-6, 0, -2>, < 6, 0, -2>, 1, 0.5,
+      cylinder <-6, 0,  0>, < 6, 0,  0>, 1, 0.5,
+      cylinder <-6, 0,  2>, < 6, 0,  2>, 1, 0.5,
+      cylinder <-6, 0,  4>, < 6, 0,  4>, 1, 0.5,
+      cylinder <-6, 0,  6>, < 6, 0,  6>, 1, 0.5,
+
+// Front to back cylinders
+      cylinder <-6, 0, -6>, <-6, 0, 6>, 1, 0.5,
+      cylinder <-4, 0, -6>, <-4, 0, 6>, 1, 0.5,
+      cylinder <-2, 0, -6>, <-2, 0, 6>, 1, 0.5,
+      cylinder < 0, 0, -6>, < 0, 0, 6>, 1, 0.5,
+      cylinder < 2, 0, -6>, < 2, 0, 6>, 1, 0.5,
+      cylinder < 4, 0, -6>, < 4, 0, 6>, 1, 0.5,
+      cylinder < 6, 0, -6>, < 6, 0, 6>, 1, 0.5
+   mirror
+   }
+
+object {
+   polygon 4, <-6, 0, -6>, <-6, 0,  6>,
+              < 6, 0,  6>, < 6, 0, -6>
+   texture {
+      checker matte_white, matte_black
+      scale <2, 1, 2>
+      }
+   }

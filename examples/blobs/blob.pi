@@ -1,0 +1,27 @@
+viewpoint {
+   from <0,0,-5>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 160,160
+   aspect 1
+   }
+background SkyBlue
+light 0.6 * white, <-15,30,-25>
+light 0.6 * white, < 15,30,-25>
+object {
+   blob 0.6:
+      1.0, 1.0, <0.75, 0, 0>,
+      1.0, 1.0, <0.75*cos(radians(120)), 0.75*sin(radians(120)), 0>,
+      1.0, 1.0, <0.75*cos(radians(240)), 0.75*sin(radians(240)), 0>
+   u_steps 20
+   v_steps 20
+   texture {
+      surface {
+         ambient red, 0.2
+         diffuse red, 0.5
+         specular white, 0.7
+         }
+      }
+   rotate <0,30,0>
+   }

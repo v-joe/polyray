@@ -1,0 +1,46 @@
+// Sample Polyray file
+// A gradient texture with changing 'alpha' values
+//
+viewpoint {
+   from <0, 5, -10>
+   at <0,2,0>
+   up <0,1,0>
+   angle 35
+   resolution 160, 80
+   aspect 2
+   }
+
+include "../colors.inc"
+include "../texture.inc"
+
+background midnightblue
+
+light <-10, 7, -5>
+
+object {
+   disc <0, -0.005, 0>, <0, 1, 0>, 10
+   texture { checker matte_white, matte_black }
+   }
+
+object {
+   sphere <0, 0, 0>, 2
+   texture {
+      noise surface {
+	 ambient 0.2
+	 diffuse 0.8
+	 specular 0.2
+	 turbulence 0.2
+	 position_fn position_objectx
+	 color_map(
+	    [-2,   0,   blue,  0.8, blue,  0.8]
+	    [-1,   0.5, green, 0.5, green, 0.5]
+	    [ 0.5, 1.0, green, 0.5, tan,   0]
+	    [ 1.0, 1.7, tan,   tan]
+	    [ 1.7, 2,   white, white])
+	 }
+      rotate <0, 0, 90>
+      scale <1, 1, 1>
+      }
+   translate <0, 2, 0>
+   shading_flags shadow_check + transmit_check + cast_shadows
+   }

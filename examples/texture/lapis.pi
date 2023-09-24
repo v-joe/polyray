@@ -1,0 +1,28 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,2,-6>
+   at <0,0,0>
+   up <0,1,0>
+   angle 20
+   resolution 256, 256
+   }
+
+background midnight_blue
+light <-10, 8, -10>
+light < 10, 8, -10>
+
+include "../colors.inc"
+include "lapis.inc"
+
+static define lapis_layer3_fn noise(5*P, 2)
+static define lapis_layer1_fn noise(15*P, 5)
+define Lapis_Lazuli
+texture {
+   layered
+      texture { special shiny { color lapis_layer2[lapis_layer3_fn] } },
+      texture { special shiny { color lapis_layer1[lapis_layer1_fn] } }
+   }
+object { sphere <0, 0, 0>, 1 Lapis_Lazuli }

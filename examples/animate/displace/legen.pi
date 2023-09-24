@@ -1,0 +1,71 @@
+start_frame 0
+end_frame 35
+
+define t0 0
+define t1 end_frame + 1
+define increment frame / (t1 - t0)
+
+// Set up the camera
+viewpoint {
+   from <0,5,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 40
+   resolution 200, 200
+   }
+
+background <0, 0, 0>
+light <-10, 20, -20>
+include "../../colors.inc"
+
+define Grnt0a_map
+      color_map(
+	 [0.000, 0.153, <0.729, 0.502, 0.451>, 0.306,
+			<0.769, 0.686, 0.592>, 0.792]
+	 [0.153, 0.398, <0.769, 0.686, 0.592>,  0.792,
+			<0.843, 0.753, 0.718>,  0.396]
+	 [0.398, 0.559, <0.843, 0.753, 0.718>,  0.396,
+			<0.780, 0.667, 0.561>,  0.976]
+	 [0.559, 0.729, <0.780, 0.667, 0.561>,  0.976,
+			<0.741, 0.659, 0.576>,  0.820]
+	 [0.729, 1.001, <0.741, 0.659, 0.576>, 0.820,
+			<0.729, 0.502, 0.451>,  0.306])
+define Grnt23_map
+      color_map(
+	 [0.000, 0.178, <0.831, 0.631, 0.569>, <0.925, 0.831, 0.714>]
+	 [0.178, 0.356, <0.925, 0.831, 0.714>, <0.871, 0.702, 0.659>]
+	 [0.356, 0.525, <0.871, 0.702, 0.659>, <0.831, 0.631, 0.569>]
+	 [0.525, 0.729, <0.831, 0.631, 0.569>, <0.937, 0.882, 0.820>]
+	 [0.729, 1.001, <0.937, 0.882, 0.820>, <0.831, 0.631, 0.569>])
+define granite_fn_05 noise(8 * (P + 1.0 * dnoise(P, 1)), 5)
+define granite_fn_06 noise(8 * (P + 1.2 * dnoise(P, 1)), 5)
+define Grnt0a Grnt0a_map[granite_fn_06]
+define Grnt23 Grnt23_map[granite_fn_05]
+
+define Stone12
+texture {
+   layered
+      texture { special shiny { color Grnt0a }
+	        scale <1, 3, 2> rotate <0, 0, -30> },
+      texture { special shiny { color Grnt23 }
+	        scale <1, 5, 1> rotate <0, 0, 50> }
+   }
+
+define pi 3.1415926535897932384626
+define two_pi 2 * pi
+
+// Convert u-v coordinates on a sphere into angles
+define theta u * two_pi
+define phi (v - 0.5) * pi
+
+
+define legendre_sphere
+object {
+   sphere <0, 0, 0>, 2
+   uv_steps 128, 64
+   displace N * 0.01 *
+	    legendre(4, 2, cos(theta + increment * two_pi)) *
+	    legendre(3, 2, cos(2*phi + increment * two_pi))
+   Stone12
+   }
+legendre_sphere

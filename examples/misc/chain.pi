@@ -1,0 +1,85 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 30, -20>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 320, 240
+   aspect 4/3
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background midnight_blue
+light 0.7 * white, <-10, 30, -20>
+light 0.7 * white, < 10, 30, -20>
+
+// Link of a chain.  Extends from -1.2 to 1.2, width is 0.7, height is 0.2
+define link
+object {
+     (  object { torus 0.5, 0.2, <-0.5, 0, 0>, <0, 1, 0> }
+      - object { disc <-0.5, 0, 0>, <-1, 0, 0>, 1 })
+   + object { cylinder <-0.5, 0,-0.5>, <0.5, 0,-0.5>, 0.2 }
+   + object { cylinder <-0.5, 0, 0.5>, <0.5, 0, 0.5>, 0.2 }
+   + (  object { torus 0.5, 0.2, < 0.5, 0, 0>, <0, 1, 0> }
+     - object { disc <0.5, 0, 0>, <1, 0, 0>, 1 })
+   }
+
+define half_link
+object {
+     (  object { torus 0.5, 0.2, <1, 0, 0>, <0, 0, 1> }
+      - object { disc <1, 0, 0>, <-1, 0, 0>, 1 })
+   + object { cylinder <1, -0.5, 0>, <1.5, -0.5, 0>, 0.2 }
+   + object { cylinder <1,  0.5, 0>, <1.5,  0.5, 0>, 0.2 }
+   }
+
+// 1 and 2 half links of a chain, built to be put into a gridded object
+define grid_link
+object {
+     half_link { rotate <0, 180, 0> } // Half link on the left
+   + link                             // Full link
+   + half_link                        // Half link on the right
+   }
+
+// Reasonable metallic brass texture
+define brass_color  <0.71, 0.65, 0.26>
+define brass
+texture {
+   surface {
+      color brass_color
+      ambient 0.2
+      diffuse 0.7
+      specular brass_color, 0.75
+      microfacet Phong 10
+      reflection 0.75
+      }
+   }
+
+// Several rows of chains made up of individual links - the gridded object
+// makes it easier to assemble.
+object {
+   gridded "allwhite.tga",
+      grid_link { scale <1/3,1/3,1/3> translate <0.5, 0.5, 0.5> brass }
+   translate <-15, 0, -15>
+   scale <4, 4, 4>
+   rotate <0, 30, 0>
+   }
+
+// Checkered floor
+object {
+   disc <0, -2, 0>, <0, 1, 0>, 100
+   texture { checker matte_white, matte_black scale <4, 4, 4> }
+   }
+
+// Bumpy glass surface - acts as a ripply lens to the chains below
+object {
+   smooth_height_fn 200, 200, -2, 2, -2, 2, 0.1 * sin(18.85 * x * z)
+   scale <8, 1, 8>
+   translate <0, 5, 0>
+   glass
+   }

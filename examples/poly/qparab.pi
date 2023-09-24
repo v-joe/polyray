@@ -1,0 +1,27 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 160, 160
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background black
+light <10, 10, -20>
+
+// Quartic paraboloid.  Looks like the quadric paraboloid, but is squared
+// off on the bottom and sides.
+object {
+     object { polynomial x^4 + z^4 - y }
+   & object { box <-2, 0, -0.6>, <2, 2, 2> }
+   bounding_box <-2, 0, -0.6>, <2, 2, 2>
+   shiny_red
+   }

@@ -1,0 +1,28 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-10>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 128, 128
+   }
+
+include "../colors.inc"
+
+background <0, 0, 0>
+light <-10, 10, -20>
+
+object {
+   // lathe 2, <0, 1, 0>, 3, <1,-2>, <2, 0>, <1, 2>
+   lathe 3, <0, 1, 0>, 7,
+      <1,-2>, <1.1, -1, 1>,
+      <2, -0.5>,
+      <2, 0>,
+      <2.5,  0.5, 1>,
+      <1.1, 1, 1>, <1, 2>
+   // root_solver Sturm
+   shiny_red
+   }

@@ -1,0 +1,29 @@
+viewpoint {
+   from  <0, 8, -15>
+   up    <0, 1, 0>
+   at    <0, 0, 0>
+   angle 35
+   resolution 160, 160
+   }
+
+light < 10, 30, -20>
+background midnightblue
+
+object {
+      blob 0.5:
+	 cylinder <-7, 0, 0>, <7, 0, 0>, 2, 4,
+	 cylinder <0, 0, -7>, <0, 0, 7>, 2, 4,
+	 sphere <0, 3, 0>, -4, 2.5
+
+      texture {
+         surface {
+            color red
+            ambient 0.2
+            diffuse 0.8
+            specular white, 1
+            microfacet Phong 5
+            }
+         }
+   rotate <-30, 0, 0>
+   }
+

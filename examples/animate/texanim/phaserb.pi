@@ -1,0 +1,40 @@
+// Attempt to make an object melt using noise and alpha.  Perhaps the
+// aftereffect of being hit by a phaser?
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 128, 128
+   }
+
+start_frame 0
+end_frame 40
+
+define t0 0
+define t1 40
+define increment  (frame - t0) / (t1 - t0)
+
+include "../../colors.inc"
+background coral
+light <-10,3, -20>
+
+define bright_green texture { surface { color green ambient 1 diffuse 0 } }
+define clear texture { surface { ambient 0 diffuse 0 transmission white, 1, 1 }}
+
+define pwidth  0.1
+define poffset (1.0 - increment) * (1 + pwidth)
+define phaser_fn noise(2*P, 1)
+define phaser_map
+   texture_map([0, poffset-pwidth, shiny_red, shiny_red],
+	       [poffset-pwidth, poffset, shiny_red, bright_green],
+	       [poffset, 1, clear, clear])
+
+define phaser_blast texture { indexed phaser_fn, phaser_map }
+
+object {
+   sphere <0, 0, 0>, 2
+   phaser_blast
+   }

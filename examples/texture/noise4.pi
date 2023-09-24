@@ -1,0 +1,78 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 0, -8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 320, 160
+   aspect 2
+   }
+
+background <0, 0, 0>
+light 0.7*white, <-15, 3, -20>
+light 0.7*white, < 15, 3, -20>
+
+include "../colors.inc"
+include "../texture.inc"
+
+// Simple color map texture
+define noise_texture0
+texture {
+   noise surface {
+      color white
+      position_fn position_plain
+      lookup_fn lookup_cos
+      normal bump_normal
+      turbulence 2
+      frequency 3
+      bump_scale 3
+      octaves 2
+      ambient 0.1
+      diffuse 0.5
+      specular 0.6
+      microfacet Reitz 10
+      color_map(
+         [0,   0.2, red,     orange]
+         [0.2, 0.3, orange,  blue]
+         [0.3, 0.5, blue,    skyblue]
+         [0.5, 0.7, skyblue, orange]
+         [0.7, 0.9, orange,  magenta]
+         [0.9, 1.0, magenta, red],
+         <1, 1, 1>)
+      }
+   scale <0.5, 0.5, 0.5>
+   }
+
+define ripple_marble_texture
+texture {
+   noise surface {
+      color white
+      position_fn position_objectx
+      lookup_fn lookup_sawtooth
+      octaves 4
+      turbulence 3
+      normal ripple_normal
+      frequency 10
+      bump_scale 5
+      ambient 0.1
+      diffuse 0.5
+      specular 0.6
+      microfacet Reitz 10
+      color_map(
+         [0.0, 0.8, <1, 1, 1>, <0.6, 0.6, 0.6>]
+         [0.8, 1.0, <0.6, 0.6, 0.6>, <0.1, 0.1, 0.1>])
+      }
+   translate <-5, 0, 0>
+   }
+
+object { sphere <0, 0, 0>, 2
+   noise_texture0
+   translate <-3, 0, 0>
+   }
+object { sphere <0, 0, 0>, 2
+   ripple_marble_texture
+   translate <3, 0, 0>
+   }

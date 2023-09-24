@@ -1,0 +1,56 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 640, 480
+   aspect 4/3
+   }
+
+background white/5
+light <-10,3, -20>
+
+include "../colors.inc"
+
+point <-1, -1, -0.1>, blue
+point <0.25, 0.75, 0>, green
+point <0.75, 0.25, 0>, green
+point <0.75, 0.75, 0>, green
+
+define sc 1
+define sp1 [sc*<-1, -1, 0>, sc*<-0.5, 0.2, 0>,
+            sc*< 2,  1, 0>, sc*< 1,   1.5, 0>,
+            sc*< 2,  2, 0>]
+define sp1x [<0.5, 1.2, 0>, sc*<-1, -1, 0>, sc*<-0.5, 0.2, 0>,
+            sc*< 2,  1, 0>, sc*< 1,   1.5, 0>,
+            sc*< 2,  2, 0>, <1, 0.5, 0>]
+define sp2x [<0.5, 1.2, 0>, sc*<-1, -1, 0>, sc*<-0.5, 0.2, 0>,
+            sc*< 2,  1, 0>, sc*< 1,   1.5, 0>,
+            sc*< 2,  2, 0>, sc*<-1, -1, 0>, <0.5, 1.2, 0>]
+define sp1p [1, 1, 1, 1, 1]
+define sp2p [1, 2, 1, 1, 3, 1]
+define sp2 [red, yellow, green]
+define sp3 [cyan, blue, magenta]
+
+draw 0, 1, 256, spline(4, u, sp2x, sp2p), spline(0, u, sp2)
+draw 0, 1, 256, spline(1, u, sp1), spline(0, u, sp3)
+
+   object { sphere sp1[0], 0.1 uv_steps 8, 4 shiny_blue }
+   object { sphere sp1[1], 0.1 uv_steps 8, 4 shiny_blue }
+   object { sphere sp1[2], 0.1 uv_steps 8, 4 shiny_blue }
+   object { sphere sp1[3], 0.1 uv_steps 8, 4 shiny_blue }
+   object { sphere sp1[4], 0.1 uv_steps 8, 4 shiny_blue }
+   object { sphere spline(4, 0.05, sp2x, sp2p), 0.05 uv_steps 8, 4 shiny_red }
+   object { sphere spline(4, 0.15, sp2x, sp2p), 0.05 uv_steps 8, 4 shiny_red }
+   object { sphere spline(4, 0.25, sp2x, sp2p), 0.05 uv_steps 8, 4 shiny_red }
+   object { sphere spline(4, 0.35, sp2x, sp2p), 0.05 uv_steps 8, 4 shiny_red }
+   object { sphere spline(4, 0.45, sp2x, sp2p), 0.05 uv_steps 8, 4 shiny_red }
+   object { sphere spline(4, 0.55, sp2x, sp2p), 0.05 uv_steps 8, 4 shiny_red }
+   object { sphere spline(4, 0.65, sp2x, sp2p), 0.05 uv_steps 8, 4 shiny_red }
+   object { sphere spline(4, 0.75, sp2x, sp2p), 0.05 uv_steps 8, 4 shiny_red }
+   object { sphere spline(4, 0.85, sp2x, sp2p), 0.05 uv_steps 8, 4 shiny_red }
+   object { sphere spline(4, 0.95, sp2x, sp2p), 0.05 uv_steps 8, 4 shiny_red }

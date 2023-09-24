@@ -1,0 +1,65 @@
+// File demonstrating refraction, CSG, etc.
+// Polyray input file: Alexander Enzmann
+
+//start_frame 0
+//total_frames 20
+//outfile lens
+
+// Define the position of the eye based on the frame number
+define eye_x_pos 0
+//define eye_x_pos frame / 2 - 5
+define eye_height 4
+define eye_dist 10
+
+viewpoint {
+   from <eye_x_pos,eye_height,-eye_dist>
+   at <0,0,0>
+   up <0,1,0>
+   angle 35
+   resolution 320, 320
+   }
+
+background <0.196078, 0.6, 0.8>
+light <-10,10,-10>
+include "../colors.inc"
+
+// Make a convex lens by intersecting two spheres
+define convex_lens
+object {
+     object { sphere <0,0,-0.5>, 1 }
+   * object { sphere <0,0, 0.5>, 1 }
+   glass
+   }
+
+// Put two lenses in line - with two lenses the magnified image
+// will end up right-side-up.
+convex_lens {
+   rotate <degrees(atan(eye_height/eye_dist)),0,0>
+   translate <0,eye_height/8,-eye_dist/8>
+   }
+convex_lens {
+   rotate <degrees(atan(eye_height/eye_dist)),0,0>
+   translate <0,eye_height/2,-eye_dist/2>
+   }
+
+// Create a ground plane
+object {
+   disc <0, -1.001, 0>, <0, 1, 0>, 500
+   texture { checker matte_white, matte_black }
+   }
+
+// Make a bunch of little colored balls on the ground
+define little_ball object { sphere <0.5, 0.3, 0.5>, 0.3 }
+
+object {
+   gridded "grdimg1.tga",
+      little_ball { matte_red }
+      little_ball { matte_yellow }
+      little_ball { matte_green }
+      little_ball { matte_cyan }
+      little_ball { matte_blue }
+      little_ball { matte_magenta }
+   translate <-8, 0, -8>
+   scale <0.5, 0.5, 0.5>
+   translate <0, -1, 0>
+   }

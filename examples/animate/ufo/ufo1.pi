@@ -1,0 +1,74 @@
+include "../../colors.inc"
+
+start_frame 0
+end_frame 80
+
+define t0 0
+define t1 80
+define increment  (frame - t0) / (t1 - t0)
+
+define Dim_Charcoal_Grey <0.184314, 0.309804, 0.309804>
+define Charcoal_Grey <0.28, 0.46, 0.46>
+
+define bright_green texture { surface { color green ambient 1 diffuse 0 } }
+define clear texture { surface { ambient 0 diffuse 0 transmission white, 1, 1 }}
+define matte_charcoal
+   texture { matte { color Charcoal_Grey ambient 0.2 diffuse 0.8 } }
+
+define pwidth  0.1
+define poffset (1.0 - increment) * (1 + pwidth)
+define phaser_fn1 noise(2*P, 1)
+define phaser_fn2 noise(2*(P+<0, 50, 100>), 1)
+define phaser_fn3 noise(2*(P+<50, -37, -17>), 1)
+define phaser_map1
+   texture_map([0, poffset-pwidth, shiny_red, shiny_red],
+	       [poffset-pwidth, poffset, shiny_red, bright_green],
+	       [poffset, 1, clear, clear])
+define phaser_map2
+   texture_map([0, poffset-pwidth, mirror, mirror],
+	       [poffset-pwidth, poffset, mirror, bright_green],
+	       [poffset, 1, clear, clear])
+define phaser_map3
+   texture_map([0, poffset-pwidth, matte_charcoal, matte_charcoal],
+	       [poffset-pwidth, poffset, matte_charcoal, bright_green],
+	       [poffset, 1, clear, clear])
+
+// Define the color of the gun assembly
+define Body_Tex1 texture { indexed phaser_fn1, phaser_map1 }
+define Body_Tex2 texture { indexed phaser_fn2, phaser_map2 }
+define Gun_Texture texture { indexed phaser_fn3, phaser_map3 }
+
+// A single UFO
+include "ufo1.inc"
+
+// Define the location and orientation of the UFO
+// Only change x and z for now to get the locations
+define UFO_Location1 <0, 20, 0>
+define UFO_Orientation1 <30, 60, 0>
+
+// Change the orientations of the barrels for the ufo.
+define Gun_Orientation1_1 <90, 80, 0>
+define Gun_Orientation1_2 <90, 80, 0>
+
+// Now make a UFO with a gun assembly hanging off the top and bottom
+object {
+   UFO_Body
+   + Gun_Barrels { rotate Gun_Orientation1_1 translate Gun_Assembly_Location1 }
+   + Gun_Barrels { rotate Gun_Orientation1_2 translate Gun_Assembly_Location2 }
+   rotate <-30, 0, 0>
+   }
+
+// Put in some ground for reference
+// object { disc <0, -30, 0>, <0, 1, 0>, 500 Ground_Texture }
+
+viewpoint {
+   from  <0, 20, -150.0>
+   at <0, 0, 0>
+   up <0, 1, 0>
+   angle 40
+   resolution 160, 120
+   aspect 4/3
+   }
+
+light 0.8*white, < 100, 200, -100>
+background black

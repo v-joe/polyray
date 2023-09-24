@@ -1,0 +1,30 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 160, 160
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background black
+light <10, 10, -20>
+
+// Variant of a devil's curve in 3-space.  This figure has a top and
+// bottom part that are very similar to a hyperboloid of one sheet,
+// however the central region is pinched in the middle leaving two
+// teardrop shaped holes.
+object {
+     object { polynomial x^4 + 2*x^2*z^2 - 0.36*x^2 - y^4 + 0.25*y^2 + z^4 }
+   & object { box <-2, -2, -0.5>, <2, 2, 0.5> }
+   bounding_box <-2, -2, -0.5>, <2, 2, 0.5>
+   rotate <40, 30, 0>
+   shiny_red
+   }

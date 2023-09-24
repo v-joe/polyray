@@ -1,0 +1,48 @@
+// Set up the camera
+start_frame 0
+total_frames 90
+end_frame total_frames-1
+
+define ang 360 * (frame / total_frames)
+define from_pos rotate(<20, 5, 0>, <0, 1, 0>, ang)
+
+viewpoint {
+   from from_pos
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+include "../colors.inc"
+background midnight_blue
+
+textured_light {
+   color white
+   translate <-10, 30,  20>
+   flare {
+      color green
+      count 20
+      seed 4
+      spacing 5
+      }
+   }
+
+textured_light {
+   color white
+   translate <-10, 30, -20>
+   flare {
+      color red
+      count 20
+      seed 8
+      }
+   }
+
+object {
+   sphere <0, 0, 0>, 2
+   shiny_red
+   }
+
+object {
+   disc <0, -2, 0>, <0, 1, 0>, 8
+   }

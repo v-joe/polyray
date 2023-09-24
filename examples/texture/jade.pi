@@ -1,0 +1,65 @@
+viewpoint {
+   from <0,15,-25>
+   at <0,4,0>
+   up <0,1,0>
+   angle 30
+   resolution 320, 240
+   aspect 4/3
+   }
+
+background white
+light 0.8*white, <-10, 10, -20>
+light 0.8*white, < 10, 10, -20>
+
+define position_objectx     1
+define position_cylindrical 3
+define lookup_sawtooth 1
+
+define jade
+texture {
+   noise surface {
+      ambient 0.3
+      diffuse 0.8
+      specular 0.4
+      microfacet Reitz 5
+      position_fn position_objectx
+      lookup_fn   lookup_sawtooth
+      octaves     3
+      turbulence  3
+      color_map(
+         [0.0, 0.8, <0.1, 0.6, 0.1>, <0.0, 0.3, 0.0>]
+         [0.8, 1.0, <0.1, 0.6, 0.1>, <0.0, 0.2, 0.0>])
+      }
+    rotate <80, 0, 0>
+    scale <3, 3, 3>
+   }
+
+define light_wood
+texture {
+   noise surface {
+      ambient 0.2
+      diffuse 0.7
+      specular white, 0.5
+      microfacet Reitz 10
+      position_fn position_cylindrical
+      position_scale 1
+      lookup_fn lookup_sawtooth
+      octaves 3
+      turbulence 1
+      color_map(
+         [0.0, 0.8, <1, 0.72, 0.25>, <1, 0.72, 0.25>]
+         [0.8, 1.0, <0.5, 0.5, 0.07>, <0.4, 0.4, 0.035>])
+      }
+   // scale <2, 2, 2>
+   }
+
+define vase
+object {
+   lathe 2, <0, 1, 0>, 12,
+      <0, 0>, <2, 0>,   <3.5, 1>,   <3.5, 2>,   <1, 7>,   <3.5, 8>,
+      <2, 8>, <0.5, 7>, <2.5, 2>, <2.5, 1>, <2, 0.5>, <0, 0.5>
+   }
+
+// Make a jade vase
+vase { jade translate <-4.5, 0, 0> }
+vase { light_wood translate <4.5, 0, 0> }

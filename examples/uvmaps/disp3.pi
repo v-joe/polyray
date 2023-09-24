@@ -1,0 +1,163 @@
+//
+// Diplacement map: using a height map for displacement.  In order to handle
+// shadows in the image, a depthmapped light is used.  This image is generated
+// as two frames.  The first frame makes the shadow map, the second frame
+// builds the image
+//
+
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+start_frame 0
+end_frame 1
+outfile disp
+
+// Define the characteristics of the depth mapped light
+define light_from <-10, 20, -20>
+define light_at <0, 0, 0>
+define light_up <0, 1, 0>
+define light_angle 35
+
+if (frame == 0) {
+   // The first frame generates the shadow map
+   define eye_pos light_from
+   define at_pos light_at
+   define up_dir light_up
+   define fov_angle light_angle
+   define x_res 480
+   define y_res 360
+   define fov_aspect 4/3
+   define form 1
+   }
+else {
+   // The second frame generates the actual image
+   define eye_pos <0, 0, -15>
+   define at_pos <0, 0, 0>
+   define up_dir <0, 1, 0>
+   define fov_angle 30
+   define x_res 480
+   define y_res 360
+   define fov_aspect 4/3
+   define form 0
+   }
+
+// Set up the camera, the values here depend on what happened in the 
+viewpoint {
+   from eye_pos
+   at at_pos
+   angle fov_angle
+   up up_dir
+   resolution x_res, y_res
+   aspect fov_aspect
+   image_format form
+   }
+
+background black
+
+// Can only use the light after we have rendered the depth map for it
+if (frame == 1)
+depthmapped_light {
+   depth "disp000.tga"
+   from light_from
+   at light_at
+   up light_up
+   hither 0.2
+   angle light_angle
+   aspect fov_aspect
+   }
+
+include "../colors.inc"
+include "../texture.inc"
+
+define fract_image image("fract005.jpg")
+
+define fract_tex
+texture {
+   special surface {
+      color planar_imagemap(fract_image, <u, 0, v>)
+      ambient 0.2
+      diffuse 0.7
+      specular white, 0.1
+      microfacet Cook 5
+      }
+   }
+
+define disp_fn (heightmap(fract_image, <u, 0, v>) + 128) / 256
+
+object {
+   sphere <0, 1, 0>, 1
+   fract_tex
+   // shiny_blue
+   uv_steps 128, 64
+   displace disp_fn
+   bounding_box <-2, -2, -2>, <2, 2, 2> // Needed due to displacement
+   rotate <0, -90, 0>
+   }
+
+object { sphere <0, 1, 0>, 2.5 matte_grey dither 0.05 scale <1, 1.5, 1> }
+object { sphere <0, 1, 0>, 2.6 matte_grey dither 0.05 scale <1, 1.5, 1> }
+object { sphere <0, 1, 0>, 2.7 matte_grey dither 0.05 scale <1, 1.5, 1> }
+object { sphere <0, 1, 0>, 2.8 matte_grey dither 0.05 scale <1, 1.5, 1> }
+object { sphere <0, 1, 0>, 2.9 matte_grey dither 0.05 scale <1, 1.5, 1> }
+
+define marble_turb 4
+define marble_fn  sawtooth(P[0] + marble_turb * noise(P,4))
+define red_marble_map
+   color_map(
+      [0.0, 0.8, <0.8, 0.8, 0.6>, <0.8, 0.4, 0.4>]
+      [0.8, 1.0, <0.8, 0.4, 0.4>, <0.8, 0.2, 0.2>])
+define red_marble
+texture {
+   special surface {
+      color red_marble_map[marble_fn]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   rotate <90, 0, 0>
+   scale <0.1, 0.1, 0.1>
+   }
+
+object {
+   object { cylinder <0, -3, 0>, <0, -2, 0>, 2 uv_steps 32, 32 }
+   + object { disc <0, -2, 0>, <0, 1, 0>, 1, 2 }
+   + object { cylinder <0, -3, 0>, <0, -2, 0>, 1 }
+   red_marble
+   }
+
+define freq 12
+define candlestick
+object {
+   cylinder <0, -3, 0>, <0, 3, 0>, 0.1
+   uv_steps 32, 64
+   displace N * 0.5 * (0.1 + (1 + cos(5 * freq * v)) * exp(-2 * v))
+   }
+define slat1
+   object {
+      box <0, 0, -30>, <2.95, 1, 30>
+      wooden { scale <0.3, 0.3, 0.3> rotate <10, 5, 0> }
+      }
+define slat2
+   object {
+      box <0, 0, -30>, <2.95, 1, 30>
+      wooden { scale <0.3, 0.3, 0.3> rotate <10, 5, 0> translate <0, 0, 100> }
+      }
+
+object {
+     candlestick { translate <-3, 0, -3> }
+   + candlestick { translate <-3, 0,  3> }
+   + candlestick { translate < 3, 0, -3> }
+   + candlestick { translate < 3, 0,  3> }
+   sapphire_agate
+   }
+object {
+     slat1 { translate <-12, 0, 0> }
+   + slat2 { translate < -9, 0, 0> }
+   + slat1 { translate < -6, 0, 0> }
+   + slat2 { translate < -3, 0, 0> }
+   + slat1 { translate <  0, 0, 0> }
+   + slat2 { translate <  3, 0, 0> }
+   + slat1 { translate <  6, 0, 0> }
+   + slat2 { translate <  9, 0, 0> }
+   translate <0, -4, 0>
+   }

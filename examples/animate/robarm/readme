@@ -1,0 +1,18 @@
+Alexander Enzmann
+23 October 1992
+
+This is an animation of a chrome & brass robot arm playing the "towers of
+Hanoi".  The objective is to move the discs from one peg to another, with
+the stipulations that you may only move one at a time, and you may only move
+a disc onto one that is larger.
+
+This is one of those classical problems that you get assigned in a programming
+class.  Espically Pascal, where the professors delight in assigning programs
+that do lots of recursion.
+
+Every frame in the animation was generated from a Polyray v1.5 data file.  The
+final FLI was created using DTA.  I know there are still a few bugs in the
+movement.  However the motions of the arm and hand contain a number of elements
+that lend to the realism of the scene.
+
+Enjoy, Xander

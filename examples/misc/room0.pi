@@ -1,0 +1,38 @@
+// Data file for raytracing that matches the environment map example.
+background Midnight_Blue
+include "../colors.inc"
+
+define sphere_location <0, 0, 0>
+define light_location <-10, 30, -2>
+
+
+// The viewpoint will change based on what we are rendering.
+viewpoint {
+   from <0, 6, -8>
+   at <0, 0, 0>
+   up <0, 1, 0>
+   angle 60
+   resolution 256, 256
+   aspect 1
+   image_format 0
+   }
+
+light light_location
+
+// A mirrored sphere with characteristics matching the one
+// using the environment map.
+object {
+   sphere sphere_location, 2
+   texture {
+      surface {
+	 color white
+	 ambient 0.0
+	 diffuse 0.2
+	 specular 0.4
+	 microfacet Phong 10
+	 reflection 0.8
+	 }
+      }
+   }
+
+include "room2.inc"

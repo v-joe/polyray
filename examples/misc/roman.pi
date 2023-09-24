@@ -1,0 +1,149 @@
+// Adapted from: Persistence Of Vision raytracer version 1.0 sample file.
+// By Rick Mallett of Carleton University,  Ottowa.
+// First stage of the Tower of Pisa 
+// Warning:  This picture can take a very long time to ray trace
+// due to the large number of objects.  You have been warned :->  
+viewpoint {
+   from <0, 25, -150>
+   at   <0, 40, 0>
+   up <0, 1, 0>
+   angle 45
+   resolution 640, 480
+   aspect 4/3
+   }
+
+// Add a light source
+light <60, 100, -110>
+
+include "../colors.inc"
+
+define red_marble
+texture {
+   special surface {
+      color red_marble_map[marble_fn]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   }
+
+
+define ground_ripple
+texture {
+   noise surface {
+      color <1, 0.66, 0.2>
+      normal 2
+      frequency 100
+      bump_scale 2
+      ambient 0.3
+      diffuse 0.7
+      }
+   }
+
+define cloudy_sky
+texture {
+   special surface {
+      ambient 0.9
+      diffuse 0
+      specular 0
+      color color_map(
+	 [0.0, 0.6, <0.4, 0.4, 0.4>, <1, 1, 1>]
+	 [0.6, 0.8, <1, 1, 1>, <0.196078, 0.6, 0.8>]
+	 [0.8, 1.0, <0.196078, 0.6, 0.8>, <0.196078, 0.6, 0.8>])[noise(3*P, 3)]
+      }
+   }
+
+define beam
+object { cylinder <2, 0, 0>, <2, 40, 0>, 0.5 }
+
+// create a sample column for the base of the structure
+define BaseColumn
+object {
+     beam
+   + beam { rotate <0,  25.7, 0> }
+   + beam { rotate <0,  51.4, 0> }
+   + beam { rotate <0,  77.1, 0> }
+   + beam { rotate <0, 102.8, 0> }
+   + beam { rotate <0, 128.5, 0> }
+   + beam { rotate <0, 154.2, 0> }
+   + beam { rotate <0, 179.9, 0> }
+   + beam { rotate <0, 205.6, 0> }
+   + beam { rotate <0, 231.3, 0> }
+   + beam { rotate <0, 257.0, 0> }
+   + beam { rotate <0, 282.7, 0> }
+   + beam { rotate <0, 308.4, 0> }
+   + beam { rotate <0, 334.1, 0> }
+   red_marble
+   }
+
+// a rectangular pad to serve as a footing for the column
+define BasePad
+object {
+   box <-4, -1, -4>, <4, 1, 4>
+   red_marble
+   }
+
+// a basic arch to span the columns
+define BaseArch
+object {
+   (  object { cylinder <-2, 0, 0>, <2, 0, 0>, 12.5 }
+    + object { cylinder <-2, 0, 0>, <2, 0, 0>, 8.5 }
+    + object { disc <-2, 0, 0>, <-1, 0, 0>, 8.5, 12.5 }
+    + object { disc < 2, 0, 0>, < 1, 0, 0>, 8.5, 12.5 })
+   & object { disc <0, 0, 0>, <0,-1, 0>, 13 }
+   red_marble { rotate <30, 30, 0> }
+   }
+
+// and finally define the first floor floor
+define BaseFloor
+object {
+     object { cylinder <0, -2, 0>, <0, 2, 0>, 40 }
+   + object { cylinder <0, -2, 0>, <0, 2, 0>, 50 }
+   + object { disc <0, -2, 0>, <0, -1, 0>, 40, 50 }
+   + object { disc <0,  2, 0>, <0,  1, 0>, 40, 50 }
+   red_marble
+   }
+
+// place a ring of 14 columns with footings around the base
+define FullColumn
+object {
+     BaseColumn { translate <45, 0, 0> }
+   + BasePad { translate <45, -1, 0> }
+   + BasePad { translate <45, 41, 0> }
+   + BaseArch { translate <45, 41, 0> rotate <0, -12.85, 0> }
+   }
+
+define Level1
+object {
+     FullColumn
+   + FullColumn { rotate <0,  25.7, 0> }
+   + FullColumn { rotate <0,  51.4, 0> }
+   + FullColumn { rotate <0,  77.1, 0> }
+   + FullColumn { rotate <0, 102.8, 0> }
+   + FullColumn { rotate <0, 128.5, 0> }
+   + FullColumn { rotate <0, 154.2, 0> }
+   + FullColumn { rotate <0, 179.9, 0> }
+   + FullColumn { rotate <0, 205.6, 0> }
+   + FullColumn { rotate <0, 231.3, 0> }
+   + FullColumn { rotate <0, 257.0, 0> }
+   + FullColumn { rotate <0, 282.7, 0> }
+   + FullColumn { rotate <0, 308.4, 0> }
+   + FullColumn { rotate <0, 334.1, 0> }
+   + BaseFloor { translate <0, 56.5, 0> }
+   }
+
+Level1
+
+// Add the sky to the picture
+object {
+   sphere <0, -1, 0>, 1000
+   scale <1, 0.2, 1>
+   cloudy_sky { scale <1000, 500, 100> }
+   }
+
+// Define the desert floor
+object {
+   disc <0, -1, 0>, <0, 1, 0>, 1001
+   ground_ripple { scale <500, 500, 500> }
+   }

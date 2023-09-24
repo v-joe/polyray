@@ -1,0 +1,76 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,4,-10>
+   at <0,0,12>
+   up <0,1,0>
+   angle 45
+   hither 1
+   resolution 320, 240
+   aspect 1.33333
+   }
+
+background sky_blue
+light <-10,3, -20>
+
+include "../colors.inc"
+
+define test_map
+   color_map(
+      [0,   0.1, red,     orange]
+      [0.1, 0.3, orange,  blue]
+      [0.3, 0.5, blue,    skyblue]
+      [0.5, 0.7, skyblue, orange]
+      [0.7, 0.9, orange,  magenta]
+      [0.9, 1.0, magenta, red],
+      <1, 1, 1>)
+
+// Simple color map texture
+define noise_texture
+texture {
+   special surface {
+      color test_map[noise(P)]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   scale <0.3, 0.3, 0.3>
+   }
+
+define marble_turb 1
+define marble_fn  (sawtooth(P[0] + marble_turb * noise(P,6)) + 1) / 2
+
+define white_marble_map
+   color_map(
+      [0.0, 0.8, <0.9, 0.9, 0.9>, <0.5, 0.5, 0.5>]
+      [0.8, 1.0, <0.5, 0.5, 0.5>, <0.2, 0.2, 0.2>])
+
+// Simple marble textures
+define white_marble
+texture {
+   special surface {
+      color white_marble_map[marble_fn]
+      ambient 0.2
+      diffuse 0.8
+      specular white, 0.5
+      microfacet Reitz 10
+      }
+   scale <0.6, 0.6, 0.6>
+   }
+
+object {
+   polynomial y + 2
+   texture {
+      hexagon
+         matte_green,
+	 matte_red,
+	 matte_blue
+      scale <6, 6, 6>
+      }
+   }
+object { sphere < 0, 0,12>, 2 mirror }
+object { sphere <-6, 0,10>, 2 reflective_gold }
+object { sphere < 6, 0,10>, 2 reflective_coral }

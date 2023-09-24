@@ -1,0 +1,38 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 6, -8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 60
+   resolution 160, 160
+   }
+
+background <0, 0, 0>
+light <-10,3, -20>
+include "../colors.inc"
+
+// A displacement function using the variables u and v that builds
+// spikes and ridges on a sphere
+define displace_fn
+   (((u > 0.0  && u < 0.05 && v > 0.45 && v < 0.55) ||
+     (u > 0.25 && u < 0.3  && v > 0.45 && v < 0.55) ||
+     (u > 0.5  && u < 0.55 && v > 0.45 && v < 0.55) ||
+     (u > 0.75 && u < 0.8  && v > 0.45 && v < 0.55) ||
+     (v > 0.95)) ? 1 :
+    (((u > 0.125 && u < 0.175) ||
+      (u > 0.375 && u < 0.425) ||
+      (u > 0.625 && u < 0.675) ||
+      (u > 0.875 && u < 0.925)) ? 0.2 : 0))
+
+define two_sphere
+object {
+   sphere <0, 0, 0>, 2
+   displace 2 * N * displace_fn
+   uv_steps 64, 64
+   shiny_red
+   }
+
+two_sphere

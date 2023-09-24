@@ -1,0 +1,46 @@
+// Sample Polyray file
+// A gradient texture with changing 'alpha' values
+//
+viewpoint {
+   from <0, 8, -8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+include "../colors.inc"
+
+background midnightblue
+
+light <-10, 7, -5>
+
+define position_radial  5
+define lookup_plain    0
+
+define patriotic_radial
+texture {
+   special surface {
+      position P + dnoise(P, 3)
+      ambient 0.3
+      diffuse 0.8
+      specular 0.3
+      microfacet Reitz 5
+      color color_map(
+	 [0.0, 0.3, white, white]
+	 [0.3, 0.4, white, red]
+	 [0.4, 0.6, red, red]
+	 [0.6, 0.8, red, blue]
+	 [0.8, 0.9, blue, blue]
+	 [0.9, 1.0, blue, white])[0.5 + atan2(x, z)/6.28319]
+      }
+   }
+
+object {
+   sphere <0, 0, 0>, 1
+   texture { checker matte_white, matte_black }
+   }
+object {
+   disc <0, -1, 0>, <0, 1, 0>, 20
+   patriotic_radial
+   }

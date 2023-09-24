@@ -1,0 +1,44 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+//
+
+// Set up the camera
+viewpoint {
+   from <0,5,-15>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 128, 128
+   }
+
+background midnight_blue
+light <-10, 20, -10>
+light < 10, 20, -10>
+
+define bozo1
+texture {
+   noise surface {
+      color white
+      octaves 2
+      position_fn 1
+      lookup_fn 1
+      turbulence 2
+      ambient 0.3
+      diffuse 0.8
+      specular 0.6
+      microfacet Reitz 10
+      color_map(
+	 [0,   0.1, red,     orange]
+	 [0.1, 0.3, orange,  blue]
+	 [0.3, 0.5, blue,    skyblue]
+	 [0.5, 0.7, skyblue, orange]
+	 [0.7, 0.9, orange,  magenta]
+	 [0.9, 1.0, magenta, red])
+      }
+   }
+
+object {
+   lathe 2, <0, 1, 0>, 5,
+         <3, -5>, <0.5, -3>, <4, -2>, <3, 2>, <0, 4>
+   bozo1
+   }

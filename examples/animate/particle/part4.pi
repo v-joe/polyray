@@ -1,0 +1,66 @@
+// Simple particle system
+// Polyray input file: Alexander Enzmann
+
+frame_time 0.1
+start_frame 0
+end_frame 60
+total_frames 61
+
+// The variable t must be declared "noeval" in order to use it in
+// expressions that are within a particle generator.  If we didn't use
+// noeval, all the particles would end up being emitted from the exact
+// same location.
+define noeval t frame / total_frames
+
+// Set up the camera
+viewpoint {
+   from <0,8,-10>
+   at <0,2,0>
+   up <0,1,0>
+   angle 55
+   resolution 320, 160
+   aspect 2
+   }
+
+background <0, 0, 0>
+light <-10, 30, -20>
+
+include "../../colors.inc"
+
+define asphere object { sphere <0, 0, 0>, 0.4 shiny_red uv_steps 6, 3 }
+define bsphere object { sphere <0, 0, 0>, 0.4 shiny_blue uv_steps 6, 3 }
+
+// emission_position and emission_magnitude are used within a particle
+// generator, so they are noeval.  Note that since "t" is used within
+// these expressions, it must also be declared noeval.
+define noeval emission_position <8 * sin(radians(720 * t)), 0, 0>
+define noeval emission_magnitude 1.5 + 0.5 * cos(radians(4*360 * t))
+
+// define chimny
+object {
+     object { cone <0, 0, 0>, 1, <0, 1, 0>, 0.5 }
+   + object { disc <0, 1, 0>, <0, 1, 0>, 0.3, 0.5 }
+   translate emission_position
+   }
+
+// The force of gravity
+define gravity <0, -1, 0>
+
+// Define the emmisions from the chimny
+if (frame == start_frame)
+// define chimny_particle
+particle {
+   birth 1
+   death (y < 0 ? 1 : 0)
+   avoid 1
+   position emission_position + <0, 1, 0>
+   velocity emission_magnitude * brownian(<0, 0, 0>, <1, 1, 1>)
+   acceleration gravity
+   object "bsphere"
+   count 10
+   }
+
+object {
+   polygon 4, <-10, 0,-10>, <-10, 0, 10>, < 10, 0, 10>, < 10, 0,-10>
+   matte_yellow
+   }

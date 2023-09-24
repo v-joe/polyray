@@ -1,0 +1,22 @@
+//
+// Definitions to make a ripple texture.  Adjust the values of ripple_freq
+// and ripple_phase below for the desired effect
+//
+define ripple_freq 20
+define ripple_phase 0
+
+define ripple_center1 2*(<random, random, random> - white/2)
+define ripple_center2 2*(<random, random, random> - white/2)
+define ripple_center3 2*(<random, random, random> - white/2)
+define ripple_center4 2*(<random, random, random> - white/2)
+define ripple_center5 2*(<random, random, random> - white/2)
+
+// Piece together the centers to make an overall ripple
+define ripple_fn
+   (ripple(P, ripple_center1, ripple_freq, ripple_phase) +
+    ripple(P, ripple_center2, ripple_freq, ripple_phase) +
+    ripple(P, ripple_center3, ripple_freq, ripple_phase) +
+    ripple(P, ripple_center4, ripple_freq, ripple_phase) +
+    ripple(P, ripple_center5, ripple_freq, ripple_phase)) / 5
+
+include "ripple.inc"

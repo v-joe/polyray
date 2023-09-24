@@ -1,0 +1,30 @@
+//
+// Cool cubic function from a POV-Ray data file by Eduard Schwan
+//
+viewpoint {
+   from <-6, 6,-30>
+   at <0, 0, 0>
+   up <0, 1, 0>
+   angle 45
+   resolution 160, 160
+   }
+
+light <10, 10, -10>
+
+include "../colors.inc"
+
+background black
+
+define term1 0.2
+define term2 -0.3
+define termC 6
+
+define cubic_tubes_fn
+   term2 * x^2 + term1 * x * y * z + term2 * y^2 + term2 * z^2 + termC
+
+object {
+   object { polynomial cubic_tubes_fn }
+   & object { sphere <0, 0, 0>, 10 }
+   shiny_red
+   rotate <0, 10, 0>
+   }

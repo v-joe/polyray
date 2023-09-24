@@ -1,0 +1,43 @@
+// Use a marble function to deform a sphere.  The coloring of the marble
+// function is exactly lined up with the peaks and valleys of the deformation.
+//
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+include "../../colors.inc"
+
+background <0, 0, 0>
+light <-10,3, -20>
+
+// Define the "marble" function - layers that are wiggled a bit by
+// the standard noise function.
+define disp_fn0 sawtooth(x + 2 * noise(P, 4))
+
+// Make an animation that turns the deformed sphere by 6 degrees at a time
+start_frame 0
+end_frame 59
+total_frames 60
+
+define ang 360 * frame / total_frames
+
+// The color map for a black/white marble
+define mid_white_marble
+   color_map([0.0, 0.2, 0.2*white, 0.5*white]
+	     [0.2, 1.0, 0.5*white, 1.0*white])
+
+// Make a deformed marble sphere
+object {
+   sphere <0, 0, 0>, 2
+   uv_steps 128, 512
+   displace 0.3 * disp_fn0
+   texture { special shiny { color mid_white_marble[disp_fn0] } }
+   rotate <0, ang, 0>
+   }

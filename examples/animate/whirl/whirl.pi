@@ -1,0 +1,141 @@
+//
+// Demonstration of a whirling spheres
+//
+// Polyray input file - Alexander Enzmann
+//
+
+// Define the range of the animation
+start_frame  0
+end_frame    119
+total_frames 120
+outfile whirl
+
+// Set up the camera
+viewpoint {
+   from <0,3,-20>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+// Set up background color & lights
+background skyblue
+//light <-10,20,-50>
+light < 10,20,-50>
+
+include "../../colors.inc"
+
+// Give the (time dependent) location of the sphere points
+define ang radians(6 * frame)
+
+define r10 1
+define r11 1
+define r20 2
+define r21 1
+define r30 2
+define r31 3
+define r40 3
+define r41 4
+define r50 4
+define r51 1
+define r60 1
+define r61 3
+define r70 2
+define r71 2
+define r80 3
+define r81 5
+
+define s1 3
+define s2 2
+define s3 1.5
+define s4 1
+define s5 3
+define s6 2
+define s7 1.5
+define s8 1
+define s09 2
+define s10 1.5
+define s11 3
+define s12 1.5
+define s13 2
+define s14 3
+define s15 2
+define s16 1.5
+define s17 1
+
+define r09x 3
+define r09y 2
+define r09z 1
+define r10x 1
+define r10y 2
+define r10z 1
+define r11x 2
+define r11y 0.5
+define r11z 3
+define r12x 5
+define r12y 0
+define r12z 0
+define r13x 3
+define r13y 3
+define r13z 3
+define r14x 4
+define r14y 0
+define r14z 1
+define r15x 0
+define r15y 0
+define r15z 4
+define r16x 0
+define r16y 3
+define r16z 0.5
+
+define o09 radians(0)
+define o10 radians(192)
+define o11 radians(15)
+define o12 radians(20)
+define o13 radians(117)
+define o14 radians(300)
+define o15 radians(270)
+define o16 radians(90)
+
+// Define the positions of the various spheres
+define loc1 < r10 * cos(s1*ang), 0, r11 * sin(s1*ang)>
+define loc2 < r20 * cos(s2*ang), 0, r21 * sin(s2*ang)>
+define loc3 < r30 * cos(s3*ang), 0, r31 * sin(s3*ang)>
+define loc4 < r40 * cos(s4*ang), 0, r41 * sin(s4*ang)>
+define loc5 < r50 * cos(s5*ang), r51 * sin(s5*ang), 0>
+define loc6 < r60 * cos(s6*ang), r61 * sin(s6*ang), 0>
+define loc7 < r70 * cos(s7*ang), r71 * sin(s7*ang), 0>
+define loc8 < r80 * cos(s8*ang), r81 * sin(s8*ang), 0>
+
+define loc09 <r09x*cos(s09*ang+o09),r09y*cos(s09*ang+o09),r09z*cos(s09*ang+o09)>
+define loc10 <r10x*cos(s10*ang+o10),r10y*cos(s10*ang+o10),r10z*cos(s10*ang+o10)>
+define loc11 <r11x*cos(s11*ang+o11),r11y*cos(s11*ang+o11),r11z*cos(s11*ang+o12)>
+define loc12 <r12x*cos(s12*ang+o12),r12y*cos(s12*ang+o12),r12z*cos(s12*ang+o12)>
+define loc13 <r13x*cos(s13*ang+o13),r13y*cos(s13*ang+o13),r13z*cos(s13*ang+o13)>
+define loc14 <r14x*cos(s14*ang+o14),r14y*cos(s14*ang+o14),r14z*cos(s14*ang+o14)>
+define loc15 <r15x*cos(s15*ang+o15),r15y*cos(s15*ang+o15),r15z*cos(s15*ang+o15)>
+define loc16 <r16x*cos(s16*ang+o16),r16y*cos(s16*ang+o16),r16z*cos(s16*ang+o16)>
+
+//
+// The following spheres make a set of whirling balls
+//
+// Note that by changing the center location of the spheres rather than
+// using a "translate" statement, the textures do not move with the spheres
+//
+object { sphere loc1, 0.5 shiny_red }
+object { sphere loc2, 0.5 shiny_blue }
+object { sphere loc3, 0.5 texture { checker matte_cyan, matte_magenta } }
+object { sphere loc4, 0.5 texture {hexagon matte_brown,matte_white,shiny_blue}}
+object { sphere loc5, 0.5 shiny_coral }
+object { sphere loc6, 0.5 texture { checker matte_red, matte_blue } }
+object { sphere loc7, 0.5 shiny_orange }
+object { sphere loc8, 0.5 matte_brown }
+object { sphere loc09, 0.5 shiny_red }
+object { sphere loc10, 0.5 texture {hexagon shiny_red,shiny_green,shiny_blue}}
+object { sphere loc11, 0.5 texture { checker shiny_coral, shiny_green } }
+object { sphere loc12, 0.5 shiny_green }
+object { sphere loc13, 0.5 shiny_coral }
+object { sphere loc14, 0.5 texture { checker matte_red, matte_blue } }
+object { sphere loc15, 0.5 shiny_orange }
+object { sphere loc16, 0.5 matte_brown }

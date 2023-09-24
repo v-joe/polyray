@@ -1,0 +1,138 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+//
+// Makes picture in a picture by successively rendering the same scene
+// and putting the result of each pass into picture frames on the walls
+//
+start_frame 0
+end_frame 5
+total_frames 5
+
+define complexity 1
+
+if (frame < 1) {
+   define x_res 80
+   define y_res 60
+   }
+else if (frame < 3) {
+   define x_res 160
+   define y_res 120
+   }
+else if (frame < 4) {
+   define x_res 320
+   define y_res 240
+   }
+else {
+   define x_res 640
+   define y_res 480
+   }
+
+viewpoint {
+   from <0,5,-9>
+   at <0,2,10>
+   up <0,1,0>
+   angle 60
+   resolution x_res, y_res
+   aspect 4/3
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+include "../texture.inc"
+
+// Support files
+include "recurtex.inc"
+include "recspot.inc"
+include "diff.inc"
+
+// Some extra illumination
+light 0.4*white, < 7, 9, -9>
+light 0.4*white, <-7, 9, -9>
+
+// Base for the object
+define base_leg
+object {
+   object { cone <0, 0, 0>, 0.5, <3, 1, 0>, 0.2 }
+   + object { sphere <3, 1, 0>, 0.2 }
+   + object { cone <3, 1, 0>, 0.2, <4, 2, 0>, 0.1 }
+   + object { sphere <4, 2, 0>, 0.1 }
+   + object { cone <4, 2, 0>, 0.1, <0, 5, 0>, 0 }
+   }
+
+object {
+     base_leg
+   + base_leg { rotate <0,  60, 0> }
+   + base_leg { rotate <0, 120, 0> }
+   + base_leg { rotate <0, 180, 0> }
+   + base_leg { rotate <0, 240, 0> }
+   + base_leg { rotate <0, 300, 0> }
+   + object { sphere <0, 0, 0>, 0.5 }
+   jade
+   scale <0.5, 0.5, 0.5>
+   translate <0, 0, 1.5>
+   }
+
+// The room we are in
+object { box <-8, 0, -10>, <8, 10, 10> wall_texture }
+
+if (frame > 0 && complexity > 0)
+   define picture_texture
+      texture {
+	 special surface {
+	    color planar_imagemap(wall_image, P, 1)
+	    ambient 0.3
+	    diffuse 0.7
+	    }
+	 rotate <-90, 0, 0>
+	 }
+else
+   define picture_texture matte_green
+
+define painting
+object { box <0, 0, 0>, <1, 1, 0.1> picture_texture }
+
+define corner_sphere object { sphere <0, 0, 0>, 0.1 }
+define horizontal_cross_rod object { cylinder <0, 0, 0>, <1, 0, 0>, 0.1 }
+define vertical_cross_rod object { cylinder <0, 0, 0>, <0, 1, 0>, 0.1 }
+define picture_frame
+object {
+     corner_sphere
+   + corner_sphere { translate <1, 0, 0> }
+   + corner_sphere { translate <1, 1, 0> }
+   + corner_sphere { translate <0, 1, 0> }
+   + horizontal_cross_rod
+   + horizontal_cross_rod { translate <0, 1, 0> }
+   + vertical_cross_rod
+   + vertical_cross_rod { translate <1, 0, 0> }
+   }
+
+define picture object { painting + picture_frame }
+
+if (complexity > 0) {
+   define frame_texture0 Stone8 { scale <0.3, 0.3, 0.3> }
+   define frame_texture1 Stone23 { scale <0.3, 0.3, 0.3> }
+   define frame_texture2 Stone24 { scale <0.3, 0.3, 0.3> }
+   }
+else {
+   define frame_texture0 matte_red
+   define frame_texture1 matte_green
+   define frame_texture2 matte_blue
+   }
+
+picture {
+   rotate <0, 90, 0> translate <0, 0, 1>
+   scale <1, 6, 8>
+   translate <7.95, 2, 1>
+   frame_texture0
+   }
+picture {
+   scale <8, 6, 1>
+   translate <-4, 2, 9.95>
+   frame_texture1
+   }
+picture {
+   rotate <0,-90, 0>
+   scale <1, 6, 8>
+   translate <-7.95, 2, 1>
+   frame_texture2
+   }

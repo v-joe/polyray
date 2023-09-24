@@ -1,0 +1,9 @@
+// This file is use to create the grid for "chain.pi".  The whole reason
+// for this file is to create a 32x32 greyscale Targa that has the value
+// one in every pixel.  This is achieved by tracing a background that
+// is set to 1/255 in every channel (which turns into the value 1 in the
+// eight bit representation of a color).  By setting the pixelsize to 8,
+// and turning off RLE compression we can generate a greyscale Targa
+// appropriate for use in a gridded object
+viewpoint { resolution 32, 32 }
+background <1/255, 1/255, 1/255>

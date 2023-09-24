@@ -1,0 +1,79 @@
+// Simple particle system
+// Polyray input file: Alexander Enzmann
+
+frame_time 0.1
+start_frame 0
+end_frame 250
+total_frames 250
+
+// Set up the camera
+viewpoint {
+   from <0,20,-15>
+   at <0,2,0>
+   up <0,1,0>
+   angle 60
+   resolution 200, 200
+   }
+
+background <0, 0, 0>
+light <-10, 30, -20>
+
+include "../../colors.inc"
+
+define asphere object { sphere <0, 0, 0>, 0.3 shiny_red uv_steps 8, 4 }
+define bsphere object { sphere <0, 0, 0>, 0.3 shiny_blue uv_steps 8, 4 }
+
+define gravity <0, -1, 0>
+
+// Secondary burst in the air
+if (frame == start_frame)
+static define part2
+particle {
+   death ((I[1] < 0 && y < 0.1) ? 1 : 0)
+   position P
+   velocity <0, 1.5, 0> + brownian(<0, 0, 0>, <1, 0.5, 1>)
+   acceleration gravity
+   object "asphere"
+   count 20
+   }
+
+// Central burst of spheres - these spheres bounce
+if (frame == start_frame)
+particle {
+   avoid 1
+   death (|x| > 10 || |z| > 10 ? 1 : (|y| > 3 ? "part2" : 0))
+   position <0, 1, 0>
+   velocity 5*brownian(<0, 0, 0>, <1, 0, 1>)
+   object "bsphere"
+   count 20
+   }
+
+// Floor
+object { box <-10, -0.1, -10>, <10, 0, 10> matte_yellow }
+
+// Walls
+object {
+   object { box <-10, -0.1, -10>, <-9, 3, 10> } +
+   object { box <  9, -0.1, -10>, <10, 3, 10> } +
+   object { box <-10, -0.1, -10>, <10, 3, -9> } +
+   object { box <-10, -0.1,   9>, <10, 3, 10> }
+   }
+
+// Obstacles
+define can
+object { 
+   object { cylinder <0, 0, 0>, <0, 2, 0>, 1 } +
+   object { disc <0, 0, 0>, <0,-1, 0>, 1 } +
+   object { disc <0, 2, 0>, <0, 1, 0>, 1 }
+   shiny_green
+   }
+
+can { translate <-5, 0, -5> }
+can { translate <-5, 0,  5> }
+can { translate < 5, 0, -5> }
+can { translate < 4, 0,  5> }
+
+object { sphere <-6, 0, 0>, 1 shiny_green scale <1, 2, 1> }
+object { sphere < 6, 0, 0>, 1 shiny_green scale <1, 2, 1> }
+object { sphere < 0, 0,-6>, 1 shiny_green scale <1, 2, 1> }
+object { sphere < 0, 0, 6>, 1 shiny_green scale <1, 2, 1> }

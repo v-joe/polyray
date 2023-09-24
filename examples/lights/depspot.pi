@@ -1,0 +1,79 @@
+// Sample file demonstrating a spotlight.  A red/blue checkered sphere lies on 
+// a black/white checkered plane, a spotlight shines down.
+// Polyray input file - Alexander Enzmann
+start_frame 0
+end_frame 1
+total_frames 2
+
+/* Define the characteristics of the light */
+define dep_up   <0, 1, 0>
+define dep_from <10, 10, 0>
+define dep_at   <0, 0, 0>
+define dep_fov   20
+define dep_resx 128
+define dep_resy 128
+
+if ((frame % 2) == 0) {
+   // Location and orientation of the spotlight
+   define from_loc dep_from
+   define at_loc dep_at
+   define up_val dep_up
+   define fov_val dep_fov
+   define resx dep_resx
+   define resy dep_resy
+   define img_format 1
+   define psize 32
+   }
+else {
+   // Location and orientation of the camera
+   define from_loc <0,10,-12>
+   define at_loc <0,0,0>
+   define up_val <0, 1, 0>
+   define fov_val 40
+   define resx 256
+   define resy 256
+   define img_format 0
+   define psize 24
+   }
+
+viewpoint {
+   from from_loc
+   at at_loc
+   up up_val
+   angle fov_val
+   resolution resx, resy
+   image_format img_format
+   antialias 1
+   pixelsize psize
+   }
+
+background SkyBlue
+
+if ((frame % 2) == 1) {
+   depthmapped_light {
+      color white
+      depth "out000.tga"
+      from dep_from
+      at dep_at
+      up dep_up
+      angle dep_fov
+      aspect 1
+      hither 0.1
+      }
+   }
+
+// spot_light white, <10,10,0>, <3,0,0>, 3, 5, 20
+
+include "../colors.inc"
+
+// Create a sphere with a checker texture
+object {
+   sphere <0, 0, 0>, 2
+   texture { checker shiny_red, shiny_blue }
+   }
+
+object {
+   disc <0, -2.01, 0>, <0, 1, 0>, 15
+   texture { checker matte_white, matte_black }
+   }
+

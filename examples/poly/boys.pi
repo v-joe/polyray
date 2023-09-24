@@ -1,0 +1,50 @@
+// Boy surface
+// Formula by way of: Peter Wang
+
+// Set up the camera
+viewpoint {
+   from <0, 0, -20>
+   at   <0, 0, 0>
+   up   <0, 1, 0>
+   angle 10
+   resolution 256, 256
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background midnight_blue
+light < 10, 3, -20>
+
+// Definition of Boy surface as a parametric equation
+define Boys_surfx (2/3)*(cos(u)*cos(2*v)+sqrt(2)*sin(u)*cos(v))*cos(u) /
+                  (sqrt(2) - sin(2*u)*sin(3*v))
+define Boys_surfy (2/3)*(cos(u)*sin(2*v)-sqrt(2)*sin(u)*sin(v))*cos(u) /
+                  (sqrt(2)-sin(2*u)*sin(3*v))
+define Boys_surfz sqrt(2)*cos(u)^2 / (sqrt(2) - sin(2*u)*sin(2*v))
+
+// Definition of the surface as a polynomial
+define Boys_surf 64*(1-z)^3*z^3-48*(1-z)^2*z^2*(3*x^2+3*y^2+2*z^2)+
+                 12*(1-z)*z*(27*(x^2+y^2)^2-24*z^2*(x^2+y^2)+
+                           36*sqrt(2)*y*z*(y^2-3*x^2)+4*z^4)+
+                 (9*x^2+9*y^2-2*z^2)*(-81*(x^2+y^2)^2-72*z^2*(x^2+y^2)+
+                                      108*sqrt(2)*x*z*(x^2-3*y^2)+4*z^4)
+
+// Define the surface in two distinct ways, as a parametric surface and
+// as a polynomial surface.  Try rendering it both ways...
+if (0 == 1)
+   object {
+      parametric <Boys_surfx,Boys_surfy,Boys_surfz>
+      rotate <-20, 0, 0>
+      shiny_red
+      uv_bounds -pi/2, pi/2, -pi/2, pi/2
+      uv_steps 32, 32
+      }
+else
+   object {
+      polynomial Boys_surf
+      bounding_box <-3, -3, -3>, <3, 3, 3>
+      rotate <-20, 0, 0>
+      shiny_red
+      }

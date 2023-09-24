@@ -1,0 +1,46 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <2,8,-6>
+   at <0,0,0>
+   up <0,1,0>
+   angle 40
+   resolution 320, 240
+   aspect 4/3
+   }
+
+background white // <0, 0, 0>
+light 0.8*white, <-10, 20, -20>
+light 0.8*white, < -40, 40, 80>
+
+include "../colors.inc"
+include "../texture.inc"
+
+object {
+   box <-3, -0.5, -3>, <3, 0, 3>
+   // Variant of basic_ripple_texture
+   texture {
+      special reflective {
+	 color 0.8*cyan
+	 normal N + ripple_val
+	 }
+      scale white/2
+      }
+   }
+
+object {
+   torus 2, 1, <0, 0, 0>, <0, 1, 0>
+   // Variant of basic_ripple_texture
+   texture {
+      special matte {
+	 color 0.8*white
+	 normal N + ripple_val
+	 transmission white, 0.4, 1.0
+	 }
+      scale <0.1, 0.1, 0.1>
+      }
+   scale white/2
+   translate <0, 1.5, 0>
+   }

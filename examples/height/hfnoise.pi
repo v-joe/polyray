@@ -1,0 +1,41 @@
+// File demonstrating height field function
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <-2, 6, -10>
+   at <0, 0, 0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+// Set up background color & lights
+background SkyBlue
+light <10, 10, -10>
+
+define field_texture
+texture {
+   checker
+      texture {
+	 surface {
+	    ambient coral, 0.2
+	    diffuse coral, 0.8
+	    }
+	 },
+      texture {
+	 surface {
+	    ambient aquamarine, 0.2
+	    diffuse aquamarine, 0.8
+	    specular white, 0.7
+	    microfacet Phong 10
+	    }
+	 }
+   scale <4, 4, 4>
+   }
+
+// Define a noise based height field
+object {
+   height_fn 128, 128, -4, 4, -4, 4, noise(P, 2)
+   field_texture
+   }

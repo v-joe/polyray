@@ -1,0 +1,32 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+background <0, 0, 0>
+light <-10, 10, -20>
+light < 10, 10, -20>
+
+include "../colors.inc"
+
+define white_marble
+texture { special shiny { color white_marble_map[marble_fn] } }
+
+define red_marble
+texture { special shiny { color red_marble_map[marble_fn] } }
+
+define jade
+texture { special shiny { color jade_color_map[marble_fn] } }
+
+object {
+     object { sphere <0, 0, 0>, 2 white_marble uv_steps 16, 8 }
+   - object { sphere <0, 0,-2>, 1.5 jade uv_steps 16, 8 }
+   rotate <0, 10, 0>
+   }

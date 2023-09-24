@@ -1,0 +1,28 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 160, 160
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background black
+light <10, 10, -20>
+
+// Bifolia
+define a 3
+object {
+// Put the definition of the surface here
+     object { polynomial (x^2 + y^2 + z^2)^2 - a*(x^2 + z^2)*y }
+   & object { box <-1, -1, -0.1>, <1, 1, 1> }
+   bounding_box <-1, -1, -0.1>, <1, 1, 1>
+   shiny_red
+   }

@@ -1,0 +1,37 @@
+//
+// Animated sequence of a UFO launch from home base.  The animation is
+// composed of 4 sequences tied together.  Each sequence involves motion
+// of the UFO, the camera, or both.  The events in the individual segments
+// of the animation are:
+//
+//    0) Pan counterclockwise a full 180 degrees, ending up looking at the
+//       launch pad of the UFO.
+//
+//    1) Look straight at the launch pad as the UFO rises
+//
+//    2) Track the UFO as it finishes it's rise, reducing the field of view
+//       (zoom in) at the same time
+//
+//    3) Follow behind the UFO as it flys off along the landscape
+//
+
+// Flag for rough/coarse detail rendering
+define complexity 1
+
+include "../../colors.inc"
+
+// Define the lengths of the individual sequences
+include "sequence.inc"
+
+// UFO and launch pad
+include "launch1.inc"
+
+// Cratered/bumpy landscape
+if (frame == start_frame)
+   include "ground.inc"
+craters
+
+// Camera
+include "view.inc"
+
+light 0.8*white, < 1000, 2000, -1000>

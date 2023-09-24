@@ -1,0 +1,55 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 256, 256
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background midnight_blue
+light <10, 10, -20>
+
+
+// Torus - basic doughnut shape.  The distance from the origin to the center
+// of the ring is "r0", the distance from the center of the ring to the surface
+// is "r1".  The hole of the doughnut is lined up with the z-axis.
+define r0 1
+define r1 0.4
+
+// Now define some bounding shapes
+define inner_cylinder object { polynomial x^2 + y^2 - (r0-(r1+0.1))^2 }
+define outer_sphere   object { sphere <0, 0, 0>, r0+r1+0.1 }
+define bound_box      object { box <-(r0+r1+0.1), -(r0+r1+0.1), -(r1+0.1)>,
+                                   < (r0+r1+0.1),  (r0+r1+0.1),  (r1+0.1)> }
+
+// Define the equation of a torus, using the radii above
+define torus_expression (x^2 + y^2 + z^2 - (r0^2 + r1^2))^2 -
+                           4 * r0^2 * (r1^2 - z^2)
+// Instantiate a torus
+object {
+   polynomial torus_expression
+   root_solver Ferrari
+   shiny_red
+   rotate <90,0,0>
+   }
+
+// make a bounding shape for the torus
+object {
+   (bound_box * outer_sphere) - inner_cylinder
+   rotate <90,0,0>
+   texture {
+      surface {
+         ambient white, 0.2
+         diffuse 0.1
+         transmission white, 0.7, 1.0
+         }
+      }
+   }

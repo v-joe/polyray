@@ -1,0 +1,7 @@
+// Image mapping to the background
+viewpoint { from <0, 0, -10> angle 20 resolution 128, 128 antialias 0 }
+define img1 image("testimg.jpg")
+background (w == 0 ? planar_imagemap(img1, P)
+                   : spherical_imagemap(img1, N))
+object { sphere <-1, 1, 0>, 0.5 texture { surface { reflection 1 } } }
+object { sphere < 1, -1, 0>, 0.5 texture { surface { transmission 1, 5.5 } } }

@@ -1,0 +1,68 @@
+// Corkscrew shape - a helix is used in CSG with a cylinder to make something
+// very reminiscent of a drill bit.
+// Polyray input file: Alexander Enzmann
+
+viewpoint {
+   from <0, 0, -10>
+   at   <0, 0, 0>
+   up   <0, 1, 0>
+   resolution 128, 128
+   angle 45
+   }
+
+// Toss in a couple of light sources. 
+//light white, <-200, 100, -300>
+light white, < 200, 100, -300>
+include "../colors.inc"
+
+//
+// Approximation to the helix z = arctan(y/x).
+//
+// The helix can be approximated with an algebraic equation (kept to the
+// range of a quartic) with the following steps:
+//
+//    tan(z) = y/x   =>  sin(z)/cos(z) = y/x   =>
+//
+// (1) x sin(z) - y cos(z) = 0
+//
+// Using the taylor expansions for sin, cos about z = 0,
+//
+//    sin(z) = z - z^3/3! + z^5/5! - ...
+//    cos(z) = 1 - z^2/2! + z^6/6! - ...
+//
+// Throwing out the high order terms, the expression (1) can be written as:
+//
+//    x (z - z^3/6) - y (1 + z^2/2) = 0, or
+//
+//(2) -1/6 x z^3 + x z + 1/2 y z^2 - y = 0
+//
+//This helix (2) turns 90 degrees in the range 0 <= z <= sqrt(2)/2.  By using
+//scale <2 2 2>, the helix defined below turns 90 degrees in the range
+//0 <= z <= sqrt(2) = 1.4042.
+
+define Helix
+object {
+     object { polynomial -(1/6) * x * z^3 + x * z + (1/2) * y * z^2 - y }
+   * object { box <-2.01, -2.01, 0>, <2.01, 2.01, 1.4142> }
+   * object { cylinder <0, 0, -0.01>, <0, 0, 1.5>, 2 }
+   bounding_box <-2.02, -2.02, -0.01>, <2.02, 2.02, 1.415>
+   }
+
+define Red_Helix Helix { shiny_red }
+define Green_Helix Helix { shiny_green }
+
+define Full_Turn_Helix
+object {
+     Helix
+   + Helix { translate <0, 0,   sqrt(2)> rotate <0, 0, 90> }
+   + Helix { translate <0, 0, 2*sqrt(2)> rotate <0, 0, 180> }
+   + Helix { translate <0, 0, 3*sqrt(2)> rotate <0, 0, 270> }
+   }
+
+object {
+     Full_Turn_Helix
+   + Full_Turn_Helix { translate <0, 0, 4*sqrt(2)> }
+   shiny_red
+   rotate <-90, 0, 0>
+   translate <0, -6, 5>
+   }

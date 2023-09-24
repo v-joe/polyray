@@ -1,0 +1,102 @@
+// Set up the camera
+viewpoint {
+   from <5,20,-40>
+   at <0,7,0>
+   up <0,1,0>
+   angle 30
+   resolution 320, 240
+   aspect 4/3
+   max_trace_depth 8
+   }
+
+background white/4
+light <-100,100, -200>
+
+include "../colors.inc"
+
+define floor_tex
+   texture {
+      layered
+	 texture {
+	    special surface {
+	       color color_map(
+		     [0.0, 0.1, white, 0.7, coral, 0.7]
+		     [0.1, 0.2, coral, 0.7, white, 0.7]
+		     [0.2, 0.3, white, 0.7, black, 0.7]
+		     [0.3, 0.4, black, 0.7, black, 1]
+		     [0.4, 1.0, black, 1,   black, 1])[sawtooth(x+5*noise(P,7))]
+	       ambient 0.05
+	       diffuse 0.4
+	       specular white, 0.4
+	       microfacet Cook 4
+	       // reflection white, 0.6
+	       }
+	    },
+	 // texture { checker reflective_green, reflective_yellow }
+	 texture { checker shiny_green, shiny_yellow }
+      translate <-0.5, -0.5, -0.5>
+      scale <5, 500, 5>
+      }
+
+define unit_sphere object { sphere <0.5, 0.5, 0.5>, 0.5 floor_tex }
+define xunit_sphere object { sphere <0.5, 0.5, 0.5>, 0.5 }
+
+object {
+   gridded "allblk2.tga",
+      unit_sphere
+   translate <-128, 0, -128>
+   scale <5, 1, 5>
+   translate <0, 4, 0>
+   }
+
+define marb_fn sawtooth(x + 5 * noise(P, 5))
+define mirbump (marb_fn < 0.2 ? (dnoise(20*P) - white/2) : black)
+
+object {
+   sphere <-10, 11, 7>, 6
+   texture {
+      layered
+	 texture {
+	    special surface {
+	       color color_map(
+		     [0.0, 0.1, pink, 0,    coral, 0]
+		     [0.1, 0.2, coral, 0,   tan, 0]
+		     [0.2, 0.3, tan, 0,     white, 0]
+		     [0.3, 0.4, white, 0,   black, 0.2]
+		     [0.4, 1.0, black, 0.2, black, 1])[sawtooth(x+5*noise(P,5))]
+	       ambient 0.05
+	       diffuse 0.2
+	       specular 0.4
+	       microfacet Cook 4
+	       reflection white, 0.8
+	       normal N + mirbump
+	       }
+	    },
+	 texture {
+	    surface {
+	       color white
+	       ambient 0.02
+	       diffuse 0.1
+	       specular 0.4
+	       microfacet Cook 4
+	       reflection 0.8
+	       }
+	 }
+      }
+   }
+
+include "chkgrid.inc"
+object {
+   glass_sphere_text +
+   glass_sphere_text { rotate <0, -120, 0> } +
+   glass_sphere_text { rotate <0, -240, 0> }
+   translate <5, 5, 0>
+   texture {
+      surface {
+	 color (white+pink) / 2
+	 ambient 0.02
+	 diffuse 0.3
+	 transmission 0.8, 1
+	 }
+      }
+   }

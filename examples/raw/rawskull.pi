@@ -1,0 +1,25 @@
+// Set up the camera
+viewpoint {
+   from <0,0,-25>
+   at <0,0,0>
+   up <0,1,0>
+   angle 25
+   resolution 160, 160
+   }
+
+background white
+light <-10,3, -20>
+include "../colors.inc"
+
+if (0 == 1)
+   /* If txt001 is defined then it will be used for the skull object */
+   define txt001 shiny_blue
+
+define skull
+object { raw "skull.raw", 30 rotate <90, -30, 180> translate <0, 3, 0> }
+
+skull { shiny_red }
+skull { shiny_coral translate < 4, 4, 5> }
+skull { shiny_green translate <-4, 4, 5> }
+skull { metallic_magenta translate < 4,-4, 5> }
+skull { metallic_orange translate <-4,-4, 5> }

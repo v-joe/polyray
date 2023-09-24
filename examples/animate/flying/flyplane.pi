@@ -1,0 +1,55 @@
+//
+// Lights and colors
+//
+light 0.8 * white, <-1000, 3000, -3000>
+light 0.8 * white, < 1000, 3000, -3000>
+include "../../colors.inc"
+
+//
+// Move a plane along a spline path.
+//
+start_frame 0
+end_frame 159
+total_frames 160
+
+//
+// Do the calculations for location and orientation
+//
+include "fig8-2.inc"
+
+//
+// Rotate the plane into position
+//
+include "plane.inc"
+fighter_plane {
+   // rotate <0, 90, 0>
+   rotate <180, 0, 0>
+   rotate <bank_angle, 0, 0>
+   rotate half_angle, 180
+   translate pos
+   }
+
+//
+// Track the movement of the object
+//
+define vpos0 rotate(<-10,-4, 0>, <1, 0, 0>, bank_angle)
+define vpos1 rotate(vpos0, half_angle, 180)
+define vpos2 vpos1 + pos
+
+define vat0 rotate(<0,-1, 0>, <1, 0, 0>, bank_angle)
+define vat1 rotate(vat0, half_angle, 180)
+define vat2 vat1 + pos
+
+define vup0 rotate(<0,-1, 0>, <1, 0, 0>, bank_angle)
+define vup1 rotate(vup0, half_angle, 180)
+
+viewpoint {
+   from vpos2 // <0,7,-25>
+   at vat2    // pos
+   up vup1    // <0,1,0>
+   angle 30
+   resolution 320, 200
+   aspect 4/3
+   }
+
+include "desert.inc"

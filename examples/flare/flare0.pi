@@ -1,0 +1,43 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+define light0_loc <-10, 10,-10>
+define at_loc light0_loc
+
+// Set up the camera
+viewpoint {
+   from < 5, 3,-15>
+   at at_loc
+   up <0,1,0>
+   angle 45
+   resolution 160, 120
+   aspect 4/3
+   }
+
+background black // midnight_blue
+include "../colors.inc"
+
+define flare_color01 (gold + white) / 2
+define flare_color02 (yellow + white) / 2
+define flare_color03 (red + white) / 2
+static define flare_map0
+   color_map([0.00, 0.20, flare_color01, 0.4, flare_color02, 0.4]
+             [0.20, 0.40, flare_color02, 0.4, flare_color03, 0.8]
+             [0.40, 1.00, flare_color03, 0.8, black,        1.0])
+static define flare_map1
+   color_map([0.00, 0.10, black,         1.0, flare_color01, 0.4]
+             [0.10, 0.20, flare_color01, 0.4, flare_color02, 0.4]
+             [0.20, 0.40, flare_color02, 0.4, flare_color03, 0.8]
+             [0.40, 1.00, flare_color03, 0.8, black,        1.0])
+textured_light {
+   color 0.8*white
+   translate light0_loc
+   flare {
+      color (x > 0 ? flare_map0[u] : flare_map1[u])
+      size 0.3, 0.1
+      count 1
+      seed 1
+      }
+   }
+object { sphere light0_loc, 0.3 shading_flags 0
+         texture { surface { color white ambient 1 diffuse 0 } } }

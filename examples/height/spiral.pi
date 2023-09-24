@@ -1,0 +1,95 @@
+// File demonstrating height field function
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 20, -20>
+   at <0, 0, 0>
+   up <0,1,0>
+   angle 45
+   resolution 512, 512
+   }
+
+// Get various surface finishes
+include "spcolor.inc"
+
+// Set up background color & lights
+background midnightblue
+light <10,50,-20>
+
+define VeryDarkWood1 <0.30 , 0.15 , 0.09>
+define DarkWood1 < 0.60 , 0.30 , 0.18>
+
+define Wooden
+texture {
+   noise surface {
+      color white
+      position_fn 3
+      lookup_fn 2
+      octaves 1
+      turbulence 5
+      ambient 0.2
+      diffuse 0.8
+      specular 0.25
+      microfacet Reitz 10
+      color_map(
+         [0,   0.1, DarkWood1,   DarkWood1]
+         [0.1, 0.9, DarkWood1, VeryDarkWood1]
+         [0.9, 1, VeryDarkWood1,  VeryDarkWood1])
+      }
+   scale <0.5, 0.5, 0.5>
+   translate <0.3, 0.7, 0>
+   rotate <90, 0, 0>
+   }
+
+object {
+   height_field "spirhf.tga"
+   translate <-0.5, 0, -0.5>
+   rotate <180, 0, 0>
+   Wooden
+   scale <24,-0.2, 24>
+   }
+
+// Define the distances and angles of the balls
+define t0   0 define t1 200 define t2 -30 define t3 -80 define t4  130
+define t5  50 define t6  90 define t7  70 define t8 170 define t9 -120 
+define r0  1.5 define r1  4.7 define r2  6.3 define r3  4.4 define r4  9.5
+define r5  8   define r6  3.4 define r7  5.5 define r8  7.2 define r9  9.2
+
+// Define the positions of the balls
+define loc0 <r0*cos(radians(t0)), 0.5, r0*sin(radians(t0))>
+define loc1 <r1*cos(radians(t1)), 0.5, r1*sin(radians(t1))>
+define loc2 <r2*cos(radians(t2)), 0.5, r2*sin(radians(t2))>
+define loc3 <r3*cos(radians(t3)), 0.5, r3*sin(radians(t3))>
+define loc4 <r4*cos(radians(t4)), 0.5, r4*sin(radians(t4))>
+define loc5 <r5*cos(radians(t5)), 0.5, r5*sin(radians(t5))>
+define loc6 <r6*cos(radians(t6)), 0.5, r6*sin(radians(t6))>
+define loc7 <r7*cos(radians(t7)), 0.5, r7*sin(radians(t7))>
+define loc8 <r8*cos(radians(t8)), 0.5, r8*sin(radians(t8))>
+define loc9 <r9*cos(radians(t9)), 0.5, r9*sin(radians(t9))>
+
+define t10  95 define t11  120 define t12 -15 define t13 -35 define t14  65
+define t15 -25 define t16  -90 define t17 145 define t18 150 define t19 -160 
+define r10  7.2 define r11  0.9 define r12  6.2 define r13  4.2 define r14  3.5
+define r15  8.5 define r16  6.3 define r17  5   define r18  9.3 define r19  7
+define loc10 <r10*cos(radians(t10)), 0.5, r10*sin(radians(t10))>
+define loc11 <r11*cos(radians(t11)), 0.5, r11*sin(radians(t11))>
+define loc12 <r12*cos(radians(t12)), 0.5, r12*sin(radians(t12))>
+define loc13 <r13*cos(radians(t13)), 0.5, r13*sin(radians(t13))>
+define loc14 <r14*cos(radians(t14)), 0.5, r14*sin(radians(t14))>
+define loc15 <r15*cos(radians(t15)), 0.5, r15*sin(radians(t15))>
+define loc16 <r16*cos(radians(t16)), 0.5, r16*sin(radians(t16))>
+define loc17 <r17*cos(radians(t17)), 0.5, r17*sin(radians(t17))>
+define loc18 <r18*cos(radians(t18)), 0.5, r18*sin(radians(t18))>
+define loc19 <r19*cos(radians(t19)), 0.5, r19*sin(radians(t19))>
+
+object{sphere loc0,0.5 shiny_red     } object{sphere loc1,0.5 shiny_blue   }
+object{sphere loc2,0.5 shiny_green   } object{sphere loc3,0.5 shiny_coral  }
+object{sphere loc4,0.5 shiny_cyan    } object{sphere loc5,0.5 shiny_yellow }
+object{sphere loc6,0.5 shiny_magenta } object{sphere loc7,0.5 shiny_orange }
+object{sphere loc8,0.5 shiny_gold    } object{sphere loc9,0.5 shiny_salmon }
+object{sphere loc10,0.5 shiny_red    } object{sphere loc11,0.5 shiny_blue  }
+object{sphere loc12,0.5 shiny_green  } object{sphere loc13,0.5 shiny_coral }
+object{sphere loc14,0.5 shiny_cyan   } object{sphere loc15,0.5 shiny_yellow}
+object{sphere loc16,0.5 shiny_magenta} object{sphere loc17,0.5 shiny_orange}
+object{sphere loc18,0.5 shiny_gold   } object{sphere loc19,0.5 shiny_salmon}

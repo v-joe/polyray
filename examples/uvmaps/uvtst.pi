@@ -1,0 +1,66 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+background <0, 0, 0>
+light <-10,3, -20>
+
+define shiny_red
+texture {
+   surface {
+      ambient red, 0.2
+      diffuse red, 0.8
+      specular white, 0.7
+      microfacet Reitz 10
+      }
+   }
+
+define two_sided_red_blue
+texture {
+   special surface {
+      color (N . I < 0 ? red : blue)
+      ambient 0.1
+      diffuse 0.7
+      specular white, 0.7
+      microfacet Cook 5
+      }
+   }
+
+object {
+   sphere <-2, 2, 0>, 1
+   uv_bounds 0.3, 1.0, 0.0, 0.8
+   two_sided_red_blue
+   }
+object {
+   cone <-2, 0, 0>, 0, <-2,-2, 0>, 1
+   uv_bounds 0.3, 1.0, 0.0, 0.8
+   two_sided_red_blue
+   }
+object {
+   disc < 2, 2, 0>, <0, 1, -1>, 1
+   uv_bounds 0.3, 1.0, 0.0, 1.0
+   two_sided_red_blue
+   }
+object {
+   cylinder < 2,-2, 0>, < 2, 0, 0>, 1
+   uv_bounds 0.3, 1.0, 0.0, 0.8
+   two_sided_red_blue
+   }
+object {
+   parabola <0, -2, 0>, <0, 0, 0>, 1
+   uv_bounds 0.3, 1.0, 0.0, 0.5
+   two_sided_red_blue
+   }
+object {
+   torus 0.5, 0.25, <0, 1, 0>, <0, 1, -1>
+   uv_bounds 0.3, 1.0, 0.0, 0.7
+   two_sided_red_blue
+   }

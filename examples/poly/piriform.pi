@@ -1,0 +1,29 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <0, 5, -5>
+   at   <0, 0,  0>
+   up   <0, 1,  0>
+   angle 30
+   resolution 160, 160
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background black
+light <10, 10, -20>
+
+// Piriform - very nice teardrop shape
+object {
+   polynomial (x^4 - x^3) + y^2 + z^2
+   root_solver Ferrari
+   translate <-0.5, 0, 0>
+   bounding_box <-0.5, -1, -1>, <0.5, 1, 1>
+   scale <4, 2, 2>
+   rotate <0, 0, -90>
+   shiny_red
+   }

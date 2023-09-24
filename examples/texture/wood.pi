@@ -1,0 +1,46 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <2,4,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+background <0, 0, 0>
+light <-10, 20, -20>
+light < -40, 40, 80>
+
+include "../colors.inc"
+include "wood1.inc"
+
+static define noisy_wood_fn1
+   sawtooth(|<x+0.5*dnoise(P,3)[0], y+0.5*dnoise(P,3)[1], 0>|)
+
+static define brightness
+   1-|wood1[noisy_wood_fn1]|/sqrt(3)
+
+define shiny_wood
+texture {
+   special shiny {
+      color wood1[noisy_wood_fn1]
+      diffuse 0.2 + 0.4 * brightness
+      specular white, 0.3
+      microfacet Cook brightness * 10
+      }
+   scale <0.4, 0.4, 0.4>
+   }
+
+object {
+   sphere <0, 0, 0>, 1
+   shiny_wood
+   translate <0, 1, 0>
+   }
+
+object {
+   box <-3, -0.5, -3>, <3, 0, 3>
+   shiny_wood
+   }

@@ -1,0 +1,54 @@
+viewpoint {
+   from <0,0,-12>
+   at   <0,0,0>
+   up   <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+background black
+light <-10, 20, -2>
+light < 10, 20, -2>
+
+// Create a red sphere with green highlights
+object {
+   sphere <0, 0, 0>, 2
+   texture {
+      surface {
+         ambient red, 0.2
+         diffuse red, 0.6
+         specular yellow, 0.6
+         transmission blue, 0.6, 1.0
+         microfacet Phong 15
+         }
+      }
+   }
+
+// Put a green sphere behind the red one.  This sphere should
+// not show through.
+object {
+   sphere <-2, 0, 3>, 2
+   texture {
+      surface {
+         ambient green, 0.2
+         diffuse green, 0.8
+         specular white, 0.4
+         microfacet Phong 15
+         }
+      }
+   }
+
+// Put a blue sphere behind the red one - This one should
+// show through due to the transmission characteristics of
+// the red sphere.
+object {
+   sphere < 2, 0, 3>, 2
+   texture {
+      surface {
+         ambient blue, 0.2
+         diffuse blue, 0.8
+         specular white, 0.4
+         microfacet Phong 15
+         }
+      }
+   }

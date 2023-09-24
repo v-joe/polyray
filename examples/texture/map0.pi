@@ -1,0 +1,17 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Test basic image mapping by projecting an input file onto
+// the background
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 160, 160
+   }
+
+// Define the background color as coming from an image file
+background planar_imagemap(image("m22u.tga"), P, 1)

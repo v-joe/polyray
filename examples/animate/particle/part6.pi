@@ -1,0 +1,149 @@
+// Simple particle system
+// Polyray input file: Alexander Enzmann
+
+frame_time 0.1
+start_frame 0
+end_frame 60
+total_frames 61
+
+// The variable t must be declared "noeval" in order to use it in
+// expressions that are within a particle generator.  If we didn't use
+// noeval, all the particles would end up being emitted from the exact
+// same location.
+define noeval t frame / total_frames
+
+// Set up the camera
+viewpoint {
+   from <0,8,-10>
+   at <0,2,0>
+   up <0,1,0>
+   angle 55
+   resolution 320, 160
+   aspect 2
+   max_trace_depth 20
+   antialias 1
+   }
+
+background <0, 0, 0>
+light <-10, 30, -20>
+
+include "../../colors.inc"
+
+if (frame == start_frame)
+   include "part6tex.inc"
+
+// emission_position and emission_magnitude are used within a particle
+// generator, so they are noeval.  Note that since "t" is used within
+// these expressions, it must also be declared noeval.
+define noeval emission_position <8 * sin(radians(720 * t)), 0, 0>
+define noeval emission_magnitude 1.5 + 0.5 * cos(radians(4*360 * t))
+
+// define chimny
+object {
+     object { cone <0, 0, 0>, 1, <0, 1, 0>, 0.5 }
+   + object { disc <0, 1, 0>, <0, 1, 0>, 0.3, 0.5 }
+   translate emission_position
+   }
+
+// The force of gravity
+define gravity <0, -1, 0>
+
+// Define the emmisions from the chimny
+if (frame == start_frame) {
+   static define part9
+   particle {
+      death (u > 0.1 ? 1 : 0)
+      position P
+      velocity I
+      object "bsphere9"
+      count 1
+      }
+
+   static define part8
+   particle {
+      death (u > 0.1 ? "part9" : 0)
+      position P
+      velocity I
+      object "bsphere8"
+      count 1
+      }
+
+   static define part7
+   particle {
+      death (u > 0.1 ? "part8" : 0)
+      position P
+      velocity I
+      object "bsphere7"
+      count 1
+      }
+
+   static define part6
+   particle {
+      death (u > 0.1 ? "part7" : 0)
+      position P
+      velocity I
+      object "bsphere6"
+      count 1
+      }
+
+   static define part5
+   particle {
+      death (u > 0.1 ? "part6" : 0)
+      position P
+      velocity I
+      object "bsphere5"
+      count 1
+      }
+
+   static define part4
+   particle {
+      death (u > 0.1 ? "part5" : 0)
+      position P
+      velocity I
+      object "bsphere4"
+      count 1
+      }
+
+   static define part3
+   particle {
+      death (u > 0.1 ? "part4" : 0)
+      position P
+      velocity I
+      object "bsphere3"
+      count 1
+      }
+
+   static define part2
+   particle {
+      death (u > 0.1 ? "part3" : 0)
+      position P
+      velocity I
+      object "bsphere2"
+      count 1
+      }
+
+   static define part1
+   particle {
+      death (u > 0.1 ? "part2" : 0)
+      position P
+      velocity I
+      object "bsphere1"
+      count 1
+      }
+
+   // define starting particle system for spewing smoke
+   particle {
+      birth 1                 // Particles are created every frame
+      death (u > 0.1 ? "part1" : 0) // They change form after 3 frames
+      position emission_position + <0, 1, 0>
+      velocity emission_magnitude * brownian(<0, 0, 0>, <1, 1, 1>) + <0, 0.5, 0>
+      object "bsphere0"
+      count 5
+      }
+   }
+
+object {
+   polygon 4, <-10, 0,-10>, <-10, 0, 10>, < 10, 0, 10>, < 10, 0,-10>
+   texture { checker matte_yellow, texture { matte { color coral } }
+	     scale 2.5*white }
+   }

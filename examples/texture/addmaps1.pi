@@ -1,0 +1,29 @@
+// Add two color maps together
+
+// Set up the camera
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 45
+   resolution 256, 256
+   }
+
+background <0, 0, 0>
+light <-10,3, -20>
+
+include "../colors.inc"
+
+static define wood_fn3 sawtooth(3 * sqrt(x*x+y*y))
+
+define add_tex1
+texture {
+   special shiny {
+      color (red_marble_map[agate_fn] + jade_color_map[wood_fn3]) / 2
+      }
+   }
+
+object {
+   sphere <0, 0, 0>, 2
+   add_tex1
+   }

@@ -1,0 +1,64 @@
+include "../colors.inc"
+
+viewpoint {
+   from <-7, 4, -6>
+   at <-0.5, 1.0, -1.0>
+   up <0, 1, 0>
+   aspect 1.333
+   angle 0.5*degrees(atan(2.25))
+
+   max_trace_depth 20
+   resolution 320, 240
+   pixelsize 24
+   antialias 2
+
+   aperture 0.2
+   max_samples 4
+   }
+
+background 0.2 * white
+
+light 0.7*white, < 2, 4, -3>
+light 0.4*white, <-10, 8, -2>
+
+object {
+   disc <0, 0, 0>, <0, 1, 0>, 1000
+   texture {
+      checker
+	 texture { matte { color white reflection white, 0.135 } },
+	 texture { matte { color blue_violet reflection white, 0.135 } }
+	 }
+   }
+
+object {
+   sphere < 1.25, 0.8, 0>, 0.65
+   texture { shiny { color red reflection white, 0.95 } }
+   }
+
+object {
+   sphere < -1.25, 0.85, -1.0>, 0.7
+   texture { shiny { color green reflection white, 0.95 } }
+   }
+
+object {
+   box -white, white
+   rotate <-45, -45, 0>
+   translate < 1, 1.3, 2>
+   mirror
+   }
+
+object { sphere <-2.5, 1, 0>, 1 mirror }
+
+define Disk_Y
+   object {
+        object { disc <0, 0, 0>, <0,-1, 0>, 1 }
+      + object { disc <0, 1, 0>, <0, 1, 0>, 1 }
+      + object { cylinder <0, 0, 0>, <0, 1, 0>, 1 }
+      }
+object {
+     Disk_Y { scale <0.75, 0.65, 0.75> }
+   * Disk_Y { scale <0.73, 1.00, 0.73> }
+   translate <2.5, 0.75, -1.25>
+   rotate <0, 0, 15>
+   mirror
+   }

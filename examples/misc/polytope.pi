@@ -1,0 +1,200 @@
+//
+// Polyray data file by Alexander Enzmann
+// 4 February 1992
+//
+// A number of polytopes (including the 5 regular polyhedra):
+//   tetrahedron, cube, octahedron, dodecahedron, icosahedron,
+//   stella_octangula, compound_cubocta, compound_dodecicos,
+//   cuboctahedron, and icosidodecahedron.
+//
+// Each of the 5 platonic solids has been scaled so that it exactly
+// fits into a sphere of radius 1.
+//  
+
+viewpoint {
+   from  <0,0,-12>
+   at    <0,0,0>
+   up    <0,1,0>
+   angle 45
+   resolution 512, 512
+   }
+
+background midnight_blue
+light < 20,30,-20>
+light <-20,30,-20>
+
+include "../colors.inc"
+
+define  tau 1.6180339887 // Golden mean = (1 + sqrt(5))/2
+define itau 0.6180339888 // tau^-1
+
+// dist to vertex = 1.73073
+define tetrahedron
+object {
+     object { polynomial  x + y + z - 1 }
+   * object { polynomial  x - y - z - 1 }
+   * object { polynomial -x + y - z - 1 }
+   * object { polynomial -x - y + z - 1 }
+   scale <1/1.73073, 1/1.73073, 1/1.73073>
+   bounding_box <-1, -1, -1>, <1, 1, 1>
+   }
+
+// dist to a vertex = 1.73205
+define cube
+object {
+     object { polynomial  x - 1 }
+   * object { polynomial  y - 1 }
+   * object { polynomial  z - 1 }
+   * object { polynomial -x - 1 }
+   * object { polynomial -y - 1 }
+   * object { polynomial -z - 1 }
+   scale <1/1.73205, 1/1.73205, 1/1.73205>
+   bounding_box <-1, -1, -1>, <1, 1, 1>
+   }
+
+// dist to vertex = 1
+define octahedron
+object {
+     object { polynomial  x + y + z - 1 }
+   * object { polynomial  x + y - z - 1 }
+   * object { polynomial  x - y + z - 1 }
+   * object { polynomial  x - y - z - 1 }
+   * object { polynomial -x + y + z - 1 }
+   * object { polynomial -x + y - z - 1 }
+   * object { polynomial -x - y + z - 1 }
+   * object { polynomial -x - y - z - 1 }
+   bounding_box <-1, -1, -1>, <1, 1, 1>
+   }
+
+// dist to vertex = 0.66158
+define dodecahedron
+object {
+     object { polynomial  z + tau * y - 1 }
+   * object { polynomial  z - tau * y - 1 }
+   * object { polynomial -z + tau * y - 1 }
+   * object { polynomial -z - tau * y - 1 }
+   * object { polynomial  x + tau * z - 1 }
+   * object { polynomial  x - tau * z - 1 }
+   * object { polynomial -x + tau * z - 1 }
+   * object { polynomial -x - tau * z - 1 }
+   * object { polynomial  y + tau * x - 1 }
+   * object { polynomial  y - tau * x - 1 }
+   * object { polynomial -y + tau * x - 1 }
+   * object { polynomial -y - tau * x - 1 }
+   scale <1/0.66158, 1/0.66158, 1/0.66158>
+   bounding_box <-1, -1, -1>, <1, 1, 1>
+   }
+
+// Icosahedron, dist from center to a vertex = 0.72654
+define icosahedron
+object {
+     object { polynomial  x + y + z - 1 }
+   * object { polynomial  x + y - z - 1 }
+   * object { polynomial  x - y + z - 1 }
+   * object { polynomial  x - y - z - 1 }
+   * object { polynomial -x + y + z - 1 }
+   * object { polynomial -x + y - z - 1 }
+   * object { polynomial -x - y + z - 1 }
+   * object { polynomial -x - y - z - 1 }
+   * object { polynomial  itau * y + tau * z - 1 }
+   * object { polynomial  itau * y - tau * z - 1 }
+   * object { polynomial -itau * y + tau * z - 1 }
+   * object { polynomial -itau * y - tau * z - 1 }
+   * object { polynomial  itau * z + tau * x - 1 }
+   * object { polynomial  itau * z - tau * x - 1 }
+   * object { polynomial -itau * z + tau * x - 1 }
+   * object { polynomial -itau * z - tau * x - 1 }
+   * object { polynomial  itau * x + tau * y - 1 }
+   * object { polynomial  itau * x - tau * y - 1 }
+   * object { polynomial -itau * x + tau * y - 1 }
+   * object { polynomial -itau * x - tau * y - 1 }
+   scale <1/0.72654, 1/0.72654, 1/0.72654>
+   bounding_box <-1, -1, -1>, <1, 1, 1>
+   }
+
+// Simplest compound figure, two tetrahedrons
+define stella_octangula
+object {
+    tetrahedron
+  + tetrahedron { rotate <180, 90, 0> }
+  }
+
+// Compound figure made out of cube and octahedron
+define compound_cubocta
+object {
+   cube + octahedron { scale <1.1547, 1.1547, 1.1547> }
+   }
+
+// Compound figure made out of dodecahedron and icosahedron
+define compound_dodecicos
+object {
+   dodecahedron + icosahedron { scale <1.0982, 1.0982, 1.0982> }
+   }
+
+// The two quasi-regular polytopes
+define cuboctahedron
+object {
+   cube * octahedron { scale <1.1547, 1.1547, 1.1547> }
+   }
+
+define icosidodecahedron
+object {
+   dodecahedron * icosahedron { scale <1.0982, 1.0982, 1.0982> }
+   }
+
+// Place the various polytopes in a circles around
+// a sphere
+define red_tex matte_red
+define green_tex matte_green
+
+tetrahedron {
+   rotate <15, 15, 0>
+   translate <2, 0, 2>
+   red_tex
+   }
+cube {
+   rotate <15, 15, 0>
+   translate <2*cos(radians(72)),   2*sin(radians(72)), 2>
+   red_tex
+   }
+octahedron {
+   rotate <15, 15, 0>
+   translate <2*cos(radians(144)),  2*sin(radians(144)), 2>
+   red_tex
+   }
+dodecahedron {
+   rotate <15, 15, 0>
+   translate <2*cos(radians(-144)), 2*sin(radians(-144)), 2>
+   red_tex
+   }
+icosahedron {
+   rotate <15, 15, 0>
+   translate <2*cos(radians(-72)),  2*sin(radians(-72)), 2>
+   red_tex
+   }
+
+stella_octangula {
+   rotate <15, 15, 0>
+   translate <3*cos(radians(36)),   3*sin(radians(36)), 0>
+   green_tex
+   }
+compound_cubocta {
+   rotate <15, 15, 0>
+   translate <3*cos(radians(108)),  3*sin(radians(108)), 0>
+   green_tex
+   }
+compound_dodecicos {
+   rotate <15, 15, 0>
+   translate <3*cos(radians(180)),  3*sin(radians(180)), 0>
+   green_tex
+   }
+cuboctahedron {
+   rotate <15, 15, 0>
+   translate <3*cos(radians(-108)), 3*sin(radians(-108)), 0>
+   green_tex
+   }
+icosidodecahedron {
+   rotate <15, 15, 0>
+   translate <3*cos(radians(-36)),  3*sin(radians(-36)), 0>
+   green_tex
+   }

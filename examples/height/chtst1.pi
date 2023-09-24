@@ -1,0 +1,35 @@
+viewpoint {
+   from <0,0,-8>
+   at <0,0,0>
+   up <0,1,0>
+   angle 30
+   resolution 256, 256
+   }
+
+background black
+light <-10,3, -20>
+
+define shiny_red
+texture {
+   surface {
+      ambient red, 0.2
+      diffuse red, 0.8
+      specular white, 0.7
+      microfacet Reitz 10
+      }
+   }
+
+object {
+  object {
+     cheight_field "allgrey.tga", 1/128, 1 // Cylinder of radius 1
+     scale <1, 2, 1>
+     translate <0, -1, 0>
+     shiny_red
+     // rotate <30, -80, 0>
+     // rotate <-30, 0, 0> // Spots
+     // rotate <-60, 30, 0>
+     // rotate <0, 180, 0>
+     // rotate <90, 0, 0>
+     rotate <0, 5, 0>
+     }
+- object { disc <0, 0, 0>, <0, 0, -1>, 200 } }

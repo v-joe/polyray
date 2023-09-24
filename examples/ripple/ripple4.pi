@@ -1,0 +1,9 @@
+// Two ripples that diminish over distance interacting with each other
+define C1 <0, 0, 0>
+define C2 <2, 0, 2>
+
+define ripple_fn
+   0.2 * ripple(P, C1, 20, 0) * exp(-|C1-P|) +
+   0.2 * ripple(P, C2, 10, 0) * exp(-|C2-P|)
+
+include "ripple.inc"

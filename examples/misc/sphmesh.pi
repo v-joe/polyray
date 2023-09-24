@@ -1,0 +1,224 @@
+// Generic Polyray input File
+// Polyray input file: Alexander Enzmann
+
+// Set up the camera
+viewpoint {
+   from <15, 20, -15>
+   at   <0, 6, 6>
+   up   <0, 1, 0>
+   angle 45
+   resolution 320, 240
+   aspect 4/3
+   }
+
+// Get various surface finishes
+include "../colors.inc"
+
+// Set up background color & lights
+background midnight_blue
+light < 10, 30, -20>
+light <-20, 30, -20>
+
+define node
+object {
+   sphere <0, 0, 0>, 1
+   texture {
+      surface {
+         ambient red, 0.2
+         diffuse red, 0.6
+         specular white, 1.0
+         microfacet Reitz 5
+         }
+      }
+   }
+
+define xrod
+object {
+   cylinder <-10, 0, 0>, <10, 0, 0>, 0.3
+   texture {
+      surface {
+         ambient gold, 0.2
+         diffuse gold, 0.8
+         specular white, 0.5
+         microfacet Reitz 5
+         }
+      }
+   }
+
+define yrod
+object {
+   cylinder <0, -4, 0>, <0, 16, 0>, 0.3
+   texture {
+      surface {
+         ambient gold, 0.2
+         diffuse gold, 0.8
+         specular white, 0.5
+         microfacet Reitz 5
+         }
+      }
+   }
+
+define zrod
+object {
+   cylinder <0, 0, -4>, <0, 0, 16>, 0.3
+   texture {
+      surface {
+         ambient gold, 0.2
+         diffuse gold, 0.8
+         specular white, 0.5
+         microfacet Reitz 5
+         }
+      }
+   }
+
+// Build the 3D mesh of spherical nodes
+
+//Level 1
+node { translate <-6, 0, 0> }
+node { translate <-2, 0, 0> }
+node { translate < 2, 0, 0> }
+node { translate < 6, 0, 0> }
+
+node { translate <-6, 0, 4> }
+node { translate <-2, 0, 4> }
+node { translate < 2, 0, 4> }
+node { translate < 6, 0, 4> }
+
+node { translate <-6, 0, 8> }
+node { translate <-2, 0, 8> }
+node { translate < 2, 0, 8> }
+node { translate < 6, 0, 8> }
+
+node { translate <-6, 0,12> }
+node { translate <-2, 0,12> }
+node { translate < 2, 0,12> }
+node { translate < 6, 0,12> }
+
+// Level 2
+node { translate <-6, 4, 0> }
+node { translate <-2, 4, 0> }
+node { translate < 2, 4, 0> }
+node { translate < 6, 4, 0> }
+
+node { translate <-6, 4, 4> }
+node { translate <-2, 4, 4> }
+node { translate < 2, 4, 4> }
+node { translate < 6, 4, 4> }
+
+node { translate <-6, 4, 8> }
+node { translate <-2, 4, 8> }
+node { translate < 2, 4, 8> }
+node { translate < 6, 4, 8> }
+
+node { translate <-6, 4,12> }
+node { translate <-2, 4,12> }
+node { translate < 2, 4,12> }
+node { translate < 6, 4,12> }
+
+// Level 3
+node { translate <-6, 8, 0> }
+node { translate <-2, 8, 0> }
+node { translate < 2, 8, 0> }
+node { translate < 6, 8, 0> }
+
+node { translate <-6, 8, 4> }
+node { translate <-2, 8, 4> }
+node { translate < 2, 8, 4> }
+node { translate < 6, 8, 4> }
+
+node { translate <-6, 8, 8> }
+node { translate <-2, 8, 8> }
+node { translate < 2, 8, 8> }
+node { translate < 6, 8, 8> }
+
+node { translate <-6, 8,12> }
+node { translate <-2, 8,12> }
+node { translate < 2, 8,12> }
+node { translate < 6, 8,12> }
+
+// Level 4
+node { translate <-6,12, 0> }
+node { translate <-2,12, 0> }
+node { translate < 2,12, 0> }
+node { translate < 6,12, 0> }
+
+node { translate <-6,12, 4> }
+node { translate <-2,12, 4> }
+node { translate < 2,12, 4> }
+node { translate < 6,12, 4> }
+
+node { translate <-6,12, 8> }
+node { translate <-2,12, 8> }
+node { translate < 2,12, 8> }
+node { translate < 6,12, 8> }
+
+node { translate <-6,12,12> }
+node { translate <-2,12,12> }
+node { translate < 2,12,12> }
+node { translate < 6,12,12> }
+
+
+// Up-down mesh of connecting rods
+yrod { translate <-6, 0, 0> }
+yrod { translate <-2, 0, 0> }
+yrod { translate < 2, 0, 0> }
+yrod { translate < 6, 0, 0> }
+
+yrod { translate <-6, 0, 4> }
+yrod { translate <-2, 0, 4> }
+yrod { translate < 2, 0, 4> }
+yrod { translate < 6, 0, 4> }
+
+yrod { translate <-6, 0, 8> }
+yrod { translate <-2, 0, 8> }
+yrod { translate < 2, 0, 8> }
+yrod { translate < 6, 0, 8> }
+
+yrod { translate <-6, 0,12> }
+yrod { translate <-2, 0,12> }
+yrod { translate < 2, 0,12> }
+yrod { translate < 6, 0,12> }
+
+// Front-back mesh of connecting rods
+zrod { translate <-6, 0, 0> }
+zrod { translate <-2, 0, 0> }
+zrod { translate < 2, 0, 0> }
+zrod { translate < 6, 0, 0> }
+
+zrod { translate <-6, 4, 0> }
+zrod { translate <-2, 4, 0> }
+zrod { translate < 2, 4, 0> }
+zrod { translate < 6, 4, 0> }
+
+zrod { translate <-6, 8, 0> }
+zrod { translate <-2, 8, 0> }
+zrod { translate < 2, 8, 0> }
+zrod { translate < 6, 8, 0> }
+
+zrod { translate <-6,12, 0> }
+zrod { translate <-2,12, 0> }
+zrod { translate < 2,12, 0> }
+zrod { translate < 6,12, 0> }
+
+// Left-right mesh of connecting rods
+xrod { translate <0, 0, 0> }
+xrod { translate <0, 4, 0> }
+xrod { translate <0, 8, 0> }
+xrod { translate <0,12, 0> }
+
+xrod { translate <0, 0, 4> }
+xrod { translate <0, 4, 4> }
+xrod { translate <0, 8, 4> }
+xrod { translate <0,12, 4> }
+
+xrod { translate <0, 0, 8> }
+xrod { translate <0, 4, 8> }
+xrod { translate <0, 8, 8> }
+xrod { translate <0,12, 8> }
+
+xrod { translate <0, 0,12> }
+xrod { translate <0, 4,12> }
+xrod { translate <0, 8,12> }
+xrod { translate <0,12,12> }
+
+

@@ -1,0 +1,27 @@
+viewpoint {
+   from <0,4,-20>
+   at <-0.8,0.5,0>
+   up <0,1,0>
+   angle 23
+   resolution 256, 256
+   }
+
+background white
+light <0, 20, -40>
+
+include "../colors.inc"
+
+// Create a sphere with a checker texture
+define two_sphere object { sphere <0, 0, 0>, 2 }
+
+define short_box object { box <-2, -0.4, -0.5>, <0.5, 0.4, 2> shiny_red }
+define cylinder_z object { cylinder <0, 0, -2>, <0, 0, 2>, 0.5 shiny_green }
+define unit_sphere object { sphere <0, 0, 0>, 1 shiny_blue }
+
+// Define a CSG shape by deleting a cylinder from a sphere
+object {
+     object { short_box + unit_sphere  rotate <-45, -30, 0> translate <-2, 2, 0> }
+   + object { short_box * unit_sphere  rotate <-45, -30, 0> translate < 2, 2, 0> }
+   + object { short_box - unit_sphere  rotate <0,  20, 0> translate <-2,-2, 0> }
+   + object { short_box & ~unit_sphere rotate <0,  20, 0> translate < 2,-2, 0> }
+   }
