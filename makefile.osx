@@ -3,8 +3,8 @@
 #
 
 NAME=polyray
-X11INC=$(shell pkg-config --cflags x11)
-X11LIB=$(shell pkg-config  --libs x11)
+X11INC=-I/opt/X11/include
+X11LIB=-L/opt/X11/lib -lX11
 OBJ=o
 
 O1  = alight.$(OBJ) bezier.$(OBJ) blob.$(OBJ) bound.$(OBJ) box.$(OBJ)
@@ -30,8 +30,8 @@ OBJS = $(O1) $(O2) $(O3) $(O4) $(O5) $(O6) $(O7) $(O8) $(O9) $(O10) $(O11) $(O12
 #
 # Use these definitions with GNU C++
 #
-CC     =gcc
-LINKER =gcc
+CC     =clang
+LINKER =clang
 CFLAGS  =-fomit-frame-pointer -Wall -Wno-return-type -c -Dunix $(X11INC)
 #CFLAGS  =-c -pipe
 #BIN_FLG =
