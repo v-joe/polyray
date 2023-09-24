@@ -1,0 +1,553 @@
+This file contains an extremely abbreviated description of the command line
+flags, initialization file statements, and data file declarations for Polyray.
+See "polyray.doc" and "addendum" for more details.
+
+Syntax:
+
+   polyray datafile [ options ]
+
+Command line options:
+
+ Status options:
+   -t status_vals  Status display type [0=none,1=totals,2=line,3=pixel].
+
+ Antialiasing options for ray-tracing:
+   -a mode         Antialiasing (0=none,1=corner average,2-4=adaptive)
+   -S samples      # of samples per pixel when performing focal blur
+   -T threshold    Threshold to start oversampling (default 0.2)
+
+ Optimization options:
+   -O optimizer    0 = none, 1 = slabs
+
+ Display option:
+   -V mode         Display mode while tracing
+                       [    0=none,    1-5=8bit,   6-10=15bit,
+                        11-15=16bit, 16-20=24bit, 21-22=4bit/EGA  ]
+   -P pallette     Which pallette to use [0=grey, 1=666, 2=884, 3=EGA]
+   -e start        Start position in VGA pallette (for palletted displays)
+   -W              Wait for key before clearing display
+   -D dither       Dithering of display [0=no dither, 1 = use dither]
+
+
+ Frame counter option:
+   -F start_frame  Skip frames until start_frame
+
+ Abort option:
+   -Q abort_option 0=no abort, 1=check by pixel, 2=by line/object
+
+
+ File options:
+   -R              Resume an interrupted trace
+   -z y0 y1        Render from line y0 to line y1
+   -u              Write the output file in uncompressed form
+   -x columns      Set the x resolution
+   -y lines        Set the y resolution
+   -z start_line   Start a trace at a specified line
+   -o filename     Output file name (default "out.tga")
+   -p bits/pixel   Number of bits per pixel 8/16/24/32 (default 16)
+   -d              Render as a depth map
+   -N              Don't generate an image file
+
+ Rendering options:
+   -M kbytes       Max # of KBytes for image buffer
+   -q flags        Turn on/off various global shading options
+                     [1=can be shadowed, 2=reflect, 4=transmit,
+                      8=two sides, 16=check uv, 32=correct normals,
+                      63=all flags]
+   -r renderer     Which rendering method: [0=raytrace, 1=scan convert,
+                   2=wireframe, 3=hidden line, 4=Gourad shaded,
+                   5=raw triangle information,6=uv triangles]
+
+Initialization file ("polyray.ini") keywords:
+
+   abort_test        true/false/on/off/slow
+   alias_threshold   [Value to cause adaptive anitaliasing to start]
+   antialias         none/filter/adaptive1/adaptive2
+   clustersize       [# of objects stored in a slab]
+   csg_tolerance     [Smallest size triangle that is checked for CSG]
+   csg_subdivisions  [Max # of subdivisions on CSG triangles]
+   display           none/vga1...vga5/hicolor1...hicolor5/
+                     16bit1...16bit5/truecolor1...truecolor5
+   dither            on/off [Dither colors on the display]
+   error_log         [Name of file to write errors and warnings]
+   errors            on/off
+   max_level         [max depth of recursion]
+   max_samples       [# of samples to use with antialiasing, or focal blur]
+   maxscreenbuffer   [Max number of kbytes allocated to screen buffer]
+   optimizer         none/bounding_slabs/bsp_tree
+   pallette          884/666/grey/4bit
+   pallette_start    [Start location the VGA palette]
+   pixel_size        8/16/24/32
+   pixel_encoding    none/rle
+   renderer          ray_trace/scan_convert/wire_frame/
+                     raw_triangles/uv_triangles
+   resolution        [xres, yres - default image size]
+   screen_window     [x0, y0, xl, yl - placement, size of preview image]
+   shade_flags       [default/bit mask of flags, see section 1.7.1.4]
+   shadow_tolerance  [miminum distance for blocking objects]
+   status            none/totals/line/pixel
+   warnings          on/off
+
+   Any lines starting with "//" will be treated as comments & ignored.
+   Any lines surrounded with "/*" ... "*/" will be ignored
+
+Input file syntax:
+
+   [viewpoint statement]
+   [object declaration]
+   [conditional statement]
+   define token expression
+   define token [object declaration]
+   define token [surface declaration]
+   define token [texture declaration]
+   define token texture_map([a, b, texture1, texture2]
+                            ...
+                            [x, y, texturei, texturej])
+   define token particle { [particle declarations] }
+   define token transform { [rotate/translate/scale/shear statements] }
+   total_frames val
+   start_frame val
+   end_frame val
+   frame_time val
+   outfile "name"
+   outfile name
+   file_flush xxx
+   include "filename"
+   system(arg1, ..., argn)
+   background color
+   background expression
+   haze coeff, starting_distance, color
+   light [noshadow] color, location
+   light [noshadow] location
+   spot_light [noshadow] color, location, pointed_at, Tightness, Angle, Falloff
+   spot_light [noshadow] location, pointed_at
+   textured_light {
+      color color_expression
+      [noshadow]
+      [sphere center, radius]
+      [polygon ures, vres, adaptive_depth, jitter_amount]
+      [rotate/translate/... statements]
+      }
+   directional_light color, direction
+   directional_light direction
+   depthmapped_light {
+      [ angle fexper ]
+      [ aspect fexper ]
+      [ at vexper ]
+      [ color expression ]
+      [ depth "depthfile.tga" ]
+      [ from vexper ]
+      [ hither fexper ]
+      [ up vexper ]
+      [ noshadow ]
+      }
+
+Expressions:
+   Floating point operators:
+      +, -, *, /, ^
+   Functions returning floats:
+      acos(x),                  asin(x),                atan(x),
+      atan2(x, y),              bias(x, l),             ceil(x),
+      cos(x),                   cosh(x),                degrees(x),
+      exp(x),                   fabs(x),                floor(x),
+      fmod(x, y),               fnoise(P),              fnoise(P, o),
+      fnoise(P, <p, n, o>),     gain(x, l),             legendre(l, m, x),
+      ln(x),                    log(x),                 max(x, y),
+      min(x, y),                noise(P),               noise(P, o),
+      noise(P, <p, n, o>),      pow(x, y),              radians(x),
+      ramp(x),                  random,                 sawtooth(x),
+      sin(x),                   sinh(x),
+      spline(type, t, [P0, P1, ..., Pn]),               sqrt(x),
+      tan(x),                   tanh(x),                visible(V1, V2),
+      V1 . V2,                  |x|
+   Vector operators:
+      +,
+      -,
+      * (cross product, or float times a vector),
+      ^ (exterior product)
+   Functions returning vectors:
+      color_wheel(x, y, z),            dnoise(P, o),
+      dnoise(P, <p, n, o>),            rotate(V1, <xdeg, ydeg, zdeg>),
+      rotate(V1, V2, deg),             reflect(V1, V2)
+      ripple(P),                       ripple(P, freq, phase),
+      spline(type, t, points)          spline(type, t, points, params)
+      trace(P, D)
+   Predefined and runtime variables:
+      u, v, w, x, y, z, P, W, N, I, start_frame, frame, end_frame
+   Image file manipulation:
+      environment("file1", "file2", ..., "file6")
+      image("file")
+      planar_imagemap(image, V [, repeat flag])
+      indexed_map(image, V [, repeat flag])
+      cylindrical_imagemap(image, V [, repeat flag])
+      cylindrical_bumpmap(image, V [, repeat flag])
+      cylindrical_indexed_map(image, V [, repeat flag])
+      spherical_imagemap(image, V [, repeat flag])
+      spherical_bumpmap(image, V [, repeat flag])
+      spherical_indexed_map(image, V [, repeat flag])
+      heightmap(image, V)
+      environment_map(environment, V)
+   Color map:
+      color_map([v0, v1, Color0, Color1]
+                [v2, v3, Color2, Color3]
+                ...
+                [vx, vy, Colorx, Colory])
+   String manipulation (build single string from a set of string,
+   numerical, or vector arguments):
+      concat(arg1, arg2, ..., arg3)
+
+
+Viewpoint declaration:
+
+    viewpoint {
+       [ from vexper ]                // Location of the eye
+       [ at vexper ]                  // Location we are looking towards
+       [ up vexper ]                  // Direction of cameras idea of up
+       [ angle fexper ]               // Vertical Field of view
+       [ resolution fexper, fexper ]  // Resolution of output image
+       [ aspect fexper ]              // Width/Height ratio of image
+
+       [ hither fexper ]              // Near clipping plane
+       [ yon fexper ]                 // Far clipping plane
+
+       [ max_trace_depth fexper ]     // Max # of recursions when tracing
+
+       [ image_format fexper ]        // 0 = normal render, 1 = depth render
+       [ pixel_encoding fexper ]      // 0=uncompressed, 1=RLE compressed
+       [ pixelsize fexper ]           // bits/pixel, one of: 8,16,24,32
+
+       [ antialias fexper ]           // 0=none, 1=filter, 2-4=adaptive
+       [ antialias_threshold fexper ]
+
+       [ aperture fexper ]            // Aperture for focal blur
+       [ focal_distance fexper ]      // Distance to focal point for blur
+       [ maxsamples fexper ]          // # of samples/pixel for focal blur
+       }
+
+Object declaration:
+
+   object {
+      Shape declaration [or light declaration]
+      [ texture declaration ]
+      [ Object modifier declaration ]
+      }
+
+Shape Declarations:
+
+   bezier patch_type, flatness_value,
+          u_subdivisions, v_subdivision,
+          [ 16 comma-separated vertices, i.e.
+             <x0, y0, z0>, <x1, y1, z1>, ..., <x15, y15, z15> ]
+
+      Patch types: [0-3 = Bezier, 4 = B-Spline, 5 =  Catmull-Rom, 6 = Hermite]
+      Flatness value is ignored
+
+   blob threshold:
+      blob_component1
+      sphere <x, y, z>, strength, radius
+      cylinder <x0, y0, z0>, <x1, y1, z1>, strength, radius
+      plane <nx, ny, nz>, d, strength, distance
+      torus <x0, y0, z0>, <nx, ny, nz>, major_radius, strength, minor_radius
+
+      Components must be separated by commas.  The last component doesn't have
+      a comma following it.
+
+   box <x0, y0, z0>, <x1, y1, z1>
+
+   cone <x0, y0, z0>, r0, <x1, y1, z1>, r1
+
+   cylinder <x0, y0, z0>, <x1, y1, z1>, r
+
+   disc <cx, cy, cz>, <nx, ny, nz>, r
+   disc <cx, cy, cz>, <nx, ny, nz>, ir, or
+
+   function f(x,y,z)
+
+   glyph contour_count,
+      contour num_points1, V11, ..., V1n
+      ...
+      contour num_pointsm, Vm1, ..., Vmn
+
+      The vertices Vnm are essentially 2D, with the z-value indicating if
+      the vertex is on-curve (z = 0) or off curve (z = 1).  The resulting
+      splined outline is a quadratic Bezier.  Depth is from z=0 to z = 1.
+
+   gridded "filename", object1 object2 ...
+
+   height_field "filename"
+   smooth_height_field "filename"
+
+   height_fn xsize, zsize, min_x, max_x, min_z, max_z, expression
+   height_fn xsize, zsize, expression
+   smooth_height_fn xsize, zsize, min_x, max_x, min_z, max_z, expression
+   smooth_height_fn xsize, zsize, expression
+
+   sheight_field "filename"
+   sheight_field "filename", base_radius, scale
+   smooth_sheight_field "filename"
+   smooth_sheight_field "filename", base_radius, scale
+
+   sheight_fn usize, vsize, expression
+   sheight_fn usize, vsize, expression, base_radius, scale
+   smooth_sheight_fn usize, vsize, expression
+   smooth_sheight_fn usize, vsize, expression, base_radius, scale
+
+   cheight_field "filename"
+   cheight_field "filename", base_radius, scale
+   smooth_cheight_field "filename"
+   smooth_cheight_field "filename", base_radius, scale
+
+   cheight_fn usize, vsize, expression
+   cheight_fn usize, vsize, expression, base_radius, scale
+   smooth_cheight_fn usize, vsize, expression
+   smooth_cheight_fn usize, vsize, expression, base_radius, scale
+
+   hypertexture density
+
+   lathe type, direction, total_vertices,
+      <vert1.x,vert1.y,vert1.z>
+      [, <vert2.x, vert2.y, vert2.z>]
+      [, etc. for total_vertices vertices]
+
+   nurb u_order, u_vertices, v_order, v_vertices,
+        [u_knot1, ..., u_knot(u_order+u_vertices)],
+        [v_knot1, ..., v_knot(v_order+v_vertices)],
+        [[<vert(1,1)>, ..., <vert(1,v_order)>],
+         ...
+         [<vert(u_order,1)>, ..., <vert(u_order,v_order)>]]
+
+   nurb u_order, u_vertices, v_order, v_vertices,
+        [[<vert(1,1)>, ..., <vert(1,v_order)>],
+         ...
+         [<vert(u_order,1)>, ..., <vert(u_order,v_order)>]]
+
+   parabola <x0, y0, z0>, <x1, y1, z1>, r
+
+   parametric f(u, v)
+   
+       The value of u_steps and v_steps for the object determine
+       the coarseness of the surface.  The value of uv_bounds
+       determines the range that u and v are evaluated.
+
+   polygon total_vertices,
+      <vert1.x,vert1.y,vert1.z>
+      [, <vert2.x, vert2.y, vert2.z>]
+      [, etc. for total_vertices vertices]
+
+   polynomial f(x,y,z)
+
+   raw "rawfile"
+   raw "rawfile", smooth_angle
+
+      rawfile may be either ASCII raw file or WaveFront .obj file
+
+   sphere <center.x, center.y, center.z>, radius
+
+   superq n, e
+
+   sweep type, direction, total_vertices,
+      <vert1.x,vert1.y,vert1.z>
+      [, <vert2.x, vert2.y, vert2.z>]
+      [, etc. for total_vertices vertices]
+
+   torus r0, r1, <center.x, center.y, center.z>, <dir.x, dir.y, dir.z>
+
+   patch <vert1.x,vert1.y,vert1.z>, <norm1.x,norm1.y,norm1.z>,
+         <vert2.x,vert2.y,vert2.z>, <norm2.x,norm2.y,norm2.z>,
+         <vert3.x,vert3.y,vert3.z>, <norm3.x,norm3.y,norm3.z>
+
+   object1 + object2  - Union
+   object1 * object2  - Intersection
+   object1 - object2  - Difference
+   object1 & object2  - Clipping
+   object1 ^ object2  - Merge
+   ~object1           - Inverse
+
+Root solver declarations (for blobs, polynomials, splined lathes, and tori):
+
+   root_solver Ferrari
+   root_solver Vieta
+   root_solver Sturm
+
+Object modifier statements:
+
+   translate <tx, ty, tz>
+   rotate <rx,ry,rz>
+   scale <sx,sy,sz>
+   shear yx, zx, xy, zy, xz, yz
+   shading_flags flag1+flag2+...
+   u_steps u
+   v_steps v
+   w_steps w
+   uv_steps u, v
+   uv_steps u, v, w
+   uv_bounds u0, u1, v0, v1
+   bounding_box <x0,y0,z0>, <x1,y1,z1>
+   displace expression
+
+Shading flag values:
+
+    1 = Surface can be shadowed
+    2 = Surface may be reflective
+    4 = Surface may contain transparency
+    8 = Both sides of surface can be lit
+   16 = u/v coordinates will be calculated
+   32 = Flip normals towards light
+   64 = Object casts shadows
+
+Textures:
+   texture {
+      [ texture declaration ]
+      [ rotate/translate/scale/shear ]
+      }
+
+Texture declarations:
+
+   surface { [ surface declarations ] }
+   noise surface { [ surface declarations ] }
+   noise surface_sym
+   noise surface_sym { [ surface declarations ] }
+   special surface { [ surface declarations ] }
+   special surface_sym
+   special surface_sym { [ surface declarations ] }
+   checker texture1, texture2
+   hexagon texture1, texture2, texture3
+   layered texture1, texture2, ..., textureN
+   indexed fn, texture_map([a, b, texture1, texture2]
+                           ...
+                           [x, y, texturei, texturej])
+   indexed fn, texture_map_sym
+   summed fexper, texture1,
+          ...
+          fexper, texturen
+
+Surface declarations:
+
+   color <r, g, b>
+   color <r, g, b, o>
+   ambient scale
+   ambient color, scale
+   brilliance coefficient
+   diffuse scale
+   diffuse color, scale
+   specular color, scale
+   specular scale
+   reflection color, scale
+   reflection scale
+   transmission color, scale, ior
+   transmission scale, ior
+   microfacet kind angle
+
+Microfacet kinds: Blinn, Cook, Gaussian, Phong, Reitz.
+
+Special Surface declarations add the following to Surface declarations:
+
+   position vexper
+   normal vexper
+
+   runtime variables: color, opacity
+   [derived from the color statement/color_map]
+
+Noise Surface declarations include all surface declarations plus:
+
+   color_map(map_entries)
+   bump_scale fexper
+   frequency fexper
+   phase fexper
+   lookup_fn index
+   normal_fn index
+   octaves fexper
+   position_fn index
+   position_scale fexper
+   turbulence fexper
+
+The output of the following function is passed through the lookup function,
+then into the color map.
+   nval = pos * position_scale + turbulence * noise(P, octaves);
+
+Valid values for position_fn are:
+   0 - No position function used (default)
+   1 - X coordinate in object space
+   2 - X coordinate in world space
+   3 - Distance from z-axis
+   4 - Distance from the origin
+   5 - Radial measure (counter clockwise) around y-axis
+
+Valid values for normal_fn are:
+   0 - No modification made to normal (default)
+   1 - Bumpy
+   2 - Rippled
+   3 - Dented
+
+Valid values for lookup_fn are:
+   0 - Use nval directly
+   1 - sawtooth applied to nval
+   2 - sin function
+   3 - ramp function
+
+Conditional processing:
+
+   if (cexper)
+      [single declaration]
+
+   if (cexper) {
+      [object/light/... declarations]
+      }
+   else {
+      [other object/light/... declarations]
+      }
+
+Particles:
+
+   particle { [particle_declarations] }
+   particle_sym
+   particle_sym { [particle_declarations] }
+
+
+Particle declarations:
+   birth expression           // count particles born when exper is non-zero
+   death expression           // Dies when the expression is non-zero
+   position vexper            // Starting position
+   velocity vexper            // Starting velocity
+   acceleration vexper        // Acceleration added every frame
+   avoid expression           // Any non-null expression invokes avoid
+   count fexper               // # of objects to create at birth
+   object object_sym          // Previously defined object
+
+   Runtime variables for particles:
+
+   P   - Current location of the particle as a vector (same as <x, y, z>)
+   I   - Current velocity of the particle as a vector
+   u   - Age of the particle (frame_time * elapsed frames since birth)
+
+Drawing commands:
+
+   point location, color
+
+   draw min_t, max_t, steps, location, color
+
+
+Lens Flares:
+
+   textured_light {
+      color ...
+      flare {
+         color color_expression
+         count num_flares
+         spacing power_fn
+         seed random_seed
+         size min_radius, max_radius
+         sphere radius
+         }
+      }
+
+   Runtime variables for flares:
+
+   u - Distance from the center of the flare (at the current pixel)
+   v - Angle from the x-axis to the current pixel
+   w - Which flare (between 0 and count-1)
+   x - 1 if the flare has a hot center, 0 if the flare has a hot outer edge
+
+Search path for include files:
+
+   set POLYRAY_PATH=;c:\polyray\include;c:\images

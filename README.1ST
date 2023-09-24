@@ -1,0 +1,28 @@
+Polyray - an algebraic input rendering program
+(c) 1995 Alexander Enzmann
+Version 1.8
+All Rights Reserved
+
+Polyray is a combination of an extensive set of modelling primitives together
+with a comprehensive renderer.  Models are specified in an ASCII file, which
+are then parsed, and subsequently rendered.  An IBM-AT or compatible is the
+only platform currently supported.  An 80386/80387 combination, 80486DX, or
+Pentium CPU plus at least 2Mb of RAM is required.
+
+Polyray provides a number of distinct features, the most important of which
+are the freedom of use of expressions in the modelling file and the ability
+to render very complex mathematical surfaces.
+
+There are three archives necessary: ply18doc.zip, ply18dat.zip, and
+ply18exe.zip. These contain the documents for Polyray, a set of data files,
+and the executable.  A few utilities, notably a TTF font to glyph converter
+are found in the archive ply18utl.zip
+
+See the file "quickref.txt", or "polyray.doc" for details on the command
+line options and data file syntax.  Unzip ply18dat (using -d flag) and run
+the batch file MAKEALL.BAT to automatically generate samples of what Polyray
+can do.
+
+Note that there have been a number of changes to the command line flags and
+ini file options.  Another important change is the use of the POLYRAY_PATH
+environment variable to find include files and image files.
