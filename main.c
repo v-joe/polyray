@@ -15,6 +15,7 @@
 
 */
 #include <time.h>
+#include <limits.h>
 
 #include "defs.h"
 #include "vector.h"
@@ -738,6 +739,18 @@ extern FILE *message_log;
 extern FILE *yyin;
 extern FILE *yyout;
 
+extern void *getcwd(void *, size_t);
+
+void set_polyray_env()
+{
+   char wd[PATH_MAX];
+
+   if(getcwd(wd, sizeof(wd)))
+      setenv(POLYRAY_PATH_STRING, wd, 1);
+   else
+      setenv(POLYRAY_PATH_STRING, ".", 1);
+}
+
 int
 main(int argc, char **argv)
 {
@@ -751,6 +764,9 @@ main(int argc, char **argv)
    message_log = stderr;
    yyin = stdin;
    yyout = stdout;
+
+   if(!getenv(POLYRAY_PATH_STRING))
+      set_polyray_env();
 
 #if defined( MAC )
    // InitProfile(1000, 200);
